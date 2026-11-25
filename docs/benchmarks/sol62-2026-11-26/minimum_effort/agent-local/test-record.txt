@@ -1,0 +1,9 @@
+Compile: g++ -std=gnu++20 -O2 -pipe -Wall -Wextra output/solution.cpp -o /tmp/avlmin_6d10/solution
+Public examples: python output/run_public.py /tmp/avlmin_6d10/solution
+Public example 1: actual=1040, expected=1040, PASS
+Public example 2: actual=138, expected=138, PASS
+Public example 3: actual=468922973, expected=468922973, PASS
+Randomized exhaustive comparisons: python output/toycheck.py /tmp/avlmin_6d10/solution
+All 874 legal general and 591 legal fixed toy cases matched the exhaustive oracle.
+Hand-derived stress test: python output/stresscheck.py /tmp/avlmin_6d10/solution
+Stress case: actual=354952936, expected=354952936, PASS

@@ -1,0 +1,47 @@
+{
+  "scoring_version": "scoring_v2",
+  "official": false,
+  "max_score": 100,
+  "mine": "sol62",
+  "seed_count": 3,
+  "seeds": [
+    20261126,
+    424242,
+    707070
+  ],
+  "rows": [
+    {
+      "opp": "passive",
+      "score": 95.51344566876678,
+      "w": 6,
+      "d": 0,
+      "l": 0,
+      "mine_cash": 128996.0,
+      "opp_cash": 3000.0,
+      "sec": 12.6,
+      "games": 6
+    },
+    {
+      "opp": "random",
+      "score": 97.70081599664549,
+      "w": 6,
+      "d": 0,
+      "l": 0,
+      "mine_cash": 155939.0,
+      "opp_cash": 1843.1666666666667,
+      "sec": 12.2,
+      "games": 6
+    },
+    {
+      "opp": "greedy",
+      "score": 94.68356156342647,
+      "w": 6,
+      "d": 0,
+      "l": 0,
+      "mine_cash": 123913.0,
+      "opp_cash": 4704.666666666667,
+      "sec": 12.8,
+      "games": 6
+    }
+  ]
+}
