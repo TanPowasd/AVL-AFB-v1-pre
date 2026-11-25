@@ -1,0 +1,74 @@
+{
+  "version": "scoring_v2",
+  "problem": "cache_duel",
+  "opponents": [
+    {
+      "id": "fifo",
+      "path": "agents/baselines/fifo.py"
+    },
+    {
+      "id": "lru",
+      "path": "agents/baselines/lru.py"
+    },
+    {
+      "id": "marking",
+      "path": "agents/baselines/marking.py"
+    },
+    {
+      "id": "rand",
+      "path": "agents/baselines/rand.py"
+    },
+    {
+      "id": "strong",
+      "path": "agents/reference/strong.py"
+    },
+    {
+      "id": "hark_strong",
+      "path": "agents/reference/hark_strong.py"
+    },
+    {
+      "id": "adaptive_strong",
+      "path": "agents/reference/adaptive_strong.py"
+    }
+  ],
+  "component_weights": {
+    "defense": 0.5,
+    "attack": 0.5
+  },
+  "game_timeout_s": 180,
+  "frozen_files": {
+    "agents/baselines/fifo.py": "ec8a20513bebe53394064657dfc5a0ce02f16efe3ad6849ffc78bae030adaf44",
+    "agents/baselines/lru.py": "e4a04c916e054dea76be9e2d95c45c48263bdab00626a0346b97a0f3402b6ffc",
+    "agents/baselines/marking.py": "438972f1cc2dfbfba92d80ae02b6b290df2da7335eead8afe79e7817da08e937",
+    "agents/baselines/rand.py": "59c30fce4b791efee63cd904841f434d19970b37a1051210121b969959b7f504",
+    "agents/reference/adaptive_strong.py": "36969f6296634920e38921f9f1ef2cd612aba166aa42bd12bca85a4f94b9db98",
+    "agents/reference/hark_strong.py": "1fccff9bf7b6fcb2a40a2222812a71133bb29e5fa9bb4d137ea80eca6d84de5e",
+    "agents/reference/strong.py": "ffb1c7518c4f1b80fff699931f256b5587aca5f496a40b2817c4100fd90d9f42",
+    "config/format.json": "438f2af86910d7cee1aa4927eb7166a4921ecfa8334ba8d92947e2e017c6ad03",
+    "engine/engine.py": "bf5b27bb5beecf1e3fb6d69dba368c55de0fae28290d87098f7143d8006d9777",
+    "engine/policy.py": "e4d578157ac39a182d09e018896a3e348b486e4882ecf9c52df17e9774a3e2f9"
+  },
+  "configs": [
+    {
+      "cache_size": 8,
+      "universe": 64,
+      "length": 3000
+    },
+    {
+      "cache_size": 32,
+      "universe": 256,
+      "length": 5000
+    },
+    {
+      "cache_size": 64,
+      "universe": 4096,
+      "length": 5000
+    }
+  ],
+  "seed_count": 64,
+  "scenario_sampling": "per_run_random",
+  "calibration_seeds": [],
+  "seed_source": "os_csprng",
+  "profile_revision": "2026-11-24-cache-opponent-forfeit",
+  "game_memory_bytes": 134217728
+}

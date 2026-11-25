@@ -1,0 +1,1051 @@
+{
+ "what": "裂陆纪元 tier bots r8 校准（开发用 runner 同局对比，非正式分）",
+ "engine_rules": "rift_era_rules_r8 (rift-core 1deca3f)",
+ "seats": "super,advanced,medium,none,super,advanced,medium,none",
+ "runner": "python3 -m organizer.rift_era.bots.runner --legacy-map --ticks 400",
+ "before_super": "rift-super-3 (d37f254 bot.py + r8 P033 skip)",
+ "after_super": "rift-super-4",
+ "files_sha256": {
+  "medium": {
+   "main.py": "559e586e46332dee349b3d6f86ed1f233aa97b88ae60978269e335666125323d",
+   "bot.py": "cfb6590f7a5e79b5fd8d681f0244936cf005efabbc62aca1662be8460a1b7eff",
+   "sdk.py": "eb4d8e2a7c7305c08336486a674b0a562b121b9282060c8801c203eac5bf7636"
+  },
+  "advanced": {
+   "main.py": "559e586e46332dee349b3d6f86ed1f233aa97b88ae60978269e335666125323d",
+   "bot.py": "8df78f62e754bb7db8fadf6bae1d179ee8321a4c19a131e818e9699e4b2c2599",
+   "sdk.py": "eb4d8e2a7c7305c08336486a674b0a562b121b9282060c8801c203eac5bf7636"
+  },
+  "super": {
+   "main.py": "559e586e46332dee349b3d6f86ed1f233aa97b88ae60978269e335666125323d",
+   "bot.py": "1eb36826d448450ab0fca1eb5d567eea64b1560b1d7fde8b6042155d2bda30ea",
+   "sdk.py": "eb4d8e2a7c7305c08336486a674b0a562b121b9282060c8801c203eac5bf7636"
+  }
+ },
+ "before": [
+  {
+   "seed": 1000,
+   "ticks": 400,
+   "map": "legacy",
+   "sim_seconds_per_tick": 0.7286,
+   "seats": {
+    "n0": {
+     "tier": "super",
+     "V": 41.1174,
+     "decision_ms_mean": 0.526,
+     "mean_pillars": {
+      "population": 116.9466,
+      "industry": -3.7545,
+      "control": 59.9409,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 40.2862,
+      "va": -10.7231
+     }
+    },
+    "n1": {
+     "tier": "advanced",
+     "V": 39.7344,
+     "decision_ms_mean": 0.268,
+     "mean_pillars": {
+      "population": 116.4125,
+      "industry": -5.0762,
+      "control": 56.0128,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 39.0366,
+      "va": -14.6082
+     }
+    },
+    "n2": {
+     "tier": "medium",
+     "V": 37.0992,
+     "decision_ms_mean": 0.173,
+     "mean_pillars": {
+      "population": 114.7968,
+      "industry": -11.9493,
+      "control": 55.8144,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 36.8747,
+      "va": -34.1719
+     }
+    },
+    "n3": {
+     "tier": "none",
+     "V": 24.6074,
+     "decision_ms_mean": null,
+     "mean_pillars": {
+      "population": 108.8151,
+      "industry": -43.1361,
+      "control": 54.6297,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 27.3457,
+      "va": -122.8402
+     }
+    },
+    "n4": {
+     "tier": "super",
+     "V": 41.1006,
+     "decision_ms_mean": 0.626,
+     "mean_pillars": {
+      "population": 116.8919,
+      "industry": -4.098,
+      "control": 59.9894,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 40.1963,
+      "va": -11.6644
+     }
+    },
+    "n5": {
+     "tier": "advanced",
+     "V": 39.983,
+     "decision_ms_mean": 0.291,
+     "mean_pillars": {
+      "population": 116.4161,
+      "industry": -4.5921,
+      "control": 56.0275,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 39.1615,
+      "va": -13.2416
+     }
+    },
+    "n6": {
+     "tier": "medium",
+     "V": 36.0548,
+     "decision_ms_mean": 0.23,
+     "mean_pillars": {
+      "population": 114.6781,
+      "industry": -14.8611,
+      "control": 55.9914,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 36.1525,
+      "va": -42.4498
+     }
+    },
+    "n7": {
+     "tier": "none",
+     "V": 23.8319,
+     "decision_ms_mean": null,
+     "mean_pillars": {
+      "population": 108.9049,
+      "industry": -44.998,
+      "control": 54.6553,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 26.9078,
+      "va": -128.1561
+     }
+    }
+   }
+  },
+  {
+   "seed": 2000,
+   "ticks": 400,
+   "map": "legacy",
+   "sim_seconds_per_tick": 0.7495,
+   "seats": {
+    "n0": {
+     "tier": "super",
+     "V": 40.758,
+     "decision_ms_mean": 0.643,
+     "mean_pillars": {
+      "population": 117.1124,
+      "industry": -4.3158,
+      "control": 59.2926,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 40.0577,
+      "va": -12.3829
+     }
+    },
+    "n1": {
+     "tier": "advanced",
+     "V": 39.7836,
+     "decision_ms_mean": 0.311,
+     "mean_pillars": {
+      "population": 116.4507,
+      "industry": -5.0083,
+      "control": 56.0202,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 39.0646,
+      "va": -14.3987
+     }
+    },
+    "n2": {
+     "tier": "medium",
+     "V": 36.1434,
+     "decision_ms_mean": 0.165,
+     "mean_pillars": {
+      "population": 114.7371,
+      "industry": -14.5702,
+      "control": 55.9906,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 36.2398,
+      "va": -41.6177
+     }
+    },
+    "n3": {
+     "tier": "none",
+     "V": 23.6641,
+     "decision_ms_mean": null,
+     "mean_pillars": {
+      "population": 108.9753,
+      "industry": -46.0217,
+      "control": 54.6829,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 26.675,
+      "va": -131.1606
+     }
+    },
+    "n4": {
+     "tier": "super",
+     "V": 41.3195,
+     "decision_ms_mean": 0.629,
+     "mean_pillars": {
+      "population": 116.9386,
+      "industry": -3.5145,
+      "control": 59.933,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 40.3426,
+      "va": -9.9955
+     }
+    },
+    "n5": {
+     "tier": "advanced",
+     "V": 39.9746,
+     "decision_ms_mean": 0.324,
+     "mean_pillars": {
+      "population": 116.4293,
+      "industry": -4.5593,
+      "control": 56.0196,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 39.1714,
+      "va": -13.1063
+     }
+    },
+    "n6": {
+     "tier": "medium",
+     "V": 36.1603,
+     "decision_ms_mean": 0.228,
+     "mean_pillars": {
+      "population": 114.6154,
+      "industry": -14.4456,
+      "control": 55.9815,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 36.2388,
+      "va": -41.278
+     }
+    },
+    "n7": {
+     "tier": "none",
+     "V": 25.5196,
+     "decision_ms_mean": null,
+     "mean_pillars": {
+      "population": 108.9591,
+      "industry": -41.0795,
+      "control": 54.6166,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 27.8932,
+      "va": -117.0272
+     }
+    }
+   }
+  },
+  {
+   "seed": 3000,
+   "ticks": 400,
+   "map": "legacy",
+   "sim_seconds_per_tick": 0.6387,
+   "seats": {
+    "n0": {
+     "tier": "super",
+     "V": 40.9136,
+     "decision_ms_mean": 0.489,
+     "mean_pillars": {
+      "population": 117.0872,
+      "industry": -3.9676,
+      "control": 59.297,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 40.1393,
+      "va": -11.3091
+     }
+    },
+    "n1": {
+     "tier": "advanced",
+     "V": 40.1496,
+     "decision_ms_mean": 0.279,
+     "mean_pillars": {
+      "population": 116.4432,
+      "industry": -3.8148,
+      "control": 56.0182,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 39.3607,
+      "va": -10.9886
+     }
+    },
+    "n2": {
+     "tier": "medium",
+     "V": 36.3197,
+     "decision_ms_mean": 0.096,
+     "mean_pillars": {
+      "population": 114.6797,
+      "industry": -13.7072,
+      "control": 55.9832,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 36.4398,
+      "va": -39.1645
+     }
+    },
+    "n3": {
+     "tier": "none",
+     "V": 24.8046,
+     "decision_ms_mean": null,
+     "mean_pillars": {
+      "population": 108.8705,
+      "industry": -42.6746,
+      "control": 54.6379,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 27.4766,
+      "va": -121.4745
+     }
+    },
+    "n4": {
+     "tier": "super",
+     "V": 41.117,
+     "decision_ms_mean": 0.443,
+     "mean_pillars": {
+      "population": 116.8427,
+      "industry": -4.139,
+      "control": 60.0278,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 40.1815,
+      "va": -11.8212
+     }
+    },
+    "n5": {
+     "tier": "advanced",
+     "V": 40.0637,
+     "decision_ms_mean": 0.176,
+     "mean_pillars": {
+      "population": 116.4352,
+      "industry": -4.2919,
+      "control": 56.0198,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 39.2398,
+      "va": -12.3404
+     }
+    },
+    "n6": {
+     "tier": "medium",
+     "V": 36.1257,
+     "decision_ms_mean": 0.086,
+     "mean_pillars": {
+      "population": 114.6715,
+      "industry": -14.5415,
+      "control": 55.8341,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 36.1993,
+      "va": -41.5602
+     }
+    },
+    "n7": {
+     "tier": "none",
+     "V": 24.8433,
+     "decision_ms_mean": null,
+     "mean_pillars": {
+      "population": 109.0034,
+      "industry": -42.902,
+      "control": 54.6453,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 27.4544,
+      "va": -122.2271
+     }
+    }
+   }
+  }
+ ],
+ "after": [
+  {
+   "seed": 1000,
+   "ticks": 400,
+   "map": "legacy",
+   "sim_seconds_per_tick": 0.9459,
+   "seats": {
+    "n0": {
+     "tier": "super",
+     "V": 50.6105,
+     "decision_ms_mean": 1.567,
+     "mean_pillars": {
+      "population": 118.3673,
+      "industry": 37.6387,
+      "control": 54.7312,
+      "technology": 0.0,
+      "international": 0.0125,
+      "total": 49.9496,
+      "va": 45.3768
+     }
+    },
+    "n1": {
+     "tier": "advanced",
+     "V": 39.735,
+     "decision_ms_mean": 0.246,
+     "mean_pillars": {
+      "population": 116.4125,
+      "industry": -5.0747,
+      "control": 56.0129,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 39.037,
+      "va": -14.6169
+     }
+    },
+    "n2": {
+     "tier": "medium",
+     "V": 37.0995,
+     "decision_ms_mean": 0.258,
+     "mean_pillars": {
+      "population": 114.7975,
+      "industry": -11.9559,
+      "control": 55.8144,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 36.8733,
+      "va": -34.213
+     }
+    },
+    "n3": {
+     "tier": "none",
+     "V": 24.6137,
+     "decision_ms_mean": null,
+     "mean_pillars": {
+      "population": 108.8149,
+      "industry": -43.1136,
+      "control": 54.6296,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 27.3512,
+      "va": -122.8338
+     }
+    },
+    "n4": {
+     "tier": "super",
+     "V": 50.4799,
+     "decision_ms_mean": 1.467,
+     "mean_pillars": {
+      "population": 118.2873,
+      "industry": 36.9304,
+      "control": 54.7358,
+      "technology": 0.0,
+      "international": 0.0124,
+      "total": 49.7535,
+      "va": 43.7763
+     }
+    },
+    "n5": {
+     "tier": "advanced",
+     "V": 39.9848,
+     "decision_ms_mean": 0.306,
+     "mean_pillars": {
+      "population": 116.4161,
+      "industry": -4.5858,
+      "control": 56.0275,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 39.1631,
+      "va": -13.2416
+     }
+    },
+    "n6": {
+     "tier": "medium",
+     "V": 36.0573,
+     "decision_ms_mean": 0.251,
+     "mean_pillars": {
+      "population": 114.6781,
+      "industry": -14.8519,
+      "control": 55.9914,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 36.1548,
+      "va": -42.4498
+     }
+    },
+    "n7": {
+     "tier": "none",
+     "V": 23.8372,
+     "decision_ms_mean": null,
+     "mean_pillars": {
+      "population": 108.9049,
+      "industry": -44.9776,
+      "control": 54.6553,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 26.9129,
+      "va": -128.1561
+     }
+    }
+   }
+  },
+  {
+   "seed": 2000,
+   "ticks": 400,
+   "map": "legacy",
+   "sim_seconds_per_tick": 0.9652,
+   "seats": {
+    "n0": {
+     "tier": "super",
+     "V": 50.6442,
+     "decision_ms_mean": 1.767,
+     "mean_pillars": {
+      "population": 118.5056,
+      "industry": 38.2171,
+      "control": 53.4284,
+      "technology": 0.0,
+      "international": 0.0119,
+      "total": 49.8681,
+      "va": 46.4854
+     }
+    },
+    "n1": {
+     "tier": "advanced",
+     "V": 39.7866,
+     "decision_ms_mean": 0.298,
+     "mean_pillars": {
+      "population": 116.4507,
+      "industry": -4.9989,
+      "control": 56.0202,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 39.067,
+      "va": -14.3991
+     }
+    },
+    "n2": {
+     "tier": "medium",
+     "V": 36.152,
+     "decision_ms_mean": 0.149,
+     "mean_pillars": {
+      "population": 114.7327,
+      "industry": -14.5415,
+      "control": 55.9903,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 36.2459,
+      "va": -41.5717
+     }
+    },
+    "n3": {
+     "tier": "none",
+     "V": 23.6732,
+     "decision_ms_mean": null,
+     "mean_pillars": {
+      "population": 108.9753,
+      "industry": -45.9917,
+      "control": 54.6829,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 26.6825,
+      "va": -131.1606
+     }
+    },
+    "n4": {
+     "tier": "super",
+     "V": 50.7968,
+     "decision_ms_mean": 1.885,
+     "mean_pillars": {
+      "population": 117.9611,
+      "industry": 38.6171,
+      "control": 54.7107,
+      "technology": 0.0,
+      "international": 0.0128,
+      "total": 50.0886,
+      "va": 47.7388
+     }
+    },
+    "n5": {
+     "tier": "advanced",
+     "V": 39.9792,
+     "decision_ms_mean": 0.395,
+     "mean_pillars": {
+      "population": 116.4293,
+      "industry": -4.5461,
+      "control": 56.0196,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 39.1747,
+      "va": -13.1024
+     }
+    },
+    "n6": {
+     "tier": "medium",
+     "V": 36.1578,
+     "decision_ms_mean": 0.144,
+     "mean_pillars": {
+      "population": 114.6112,
+      "industry": -14.4611,
+      "control": 55.9815,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 36.2338,
+      "va": -41.3509
+     }
+    },
+    "n7": {
+     "tier": "none",
+     "V": 25.5291,
+     "decision_ms_mean": null,
+     "mean_pillars": {
+      "population": 108.9591,
+      "industry": -41.0485,
+      "control": 54.6166,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 27.901,
+      "va": -117.0272
+     }
+    }
+   }
+  },
+  {
+   "seed": 3000,
+   "ticks": 400,
+   "map": "legacy",
+   "sim_seconds_per_tick": 0.6565,
+   "seats": {
+    "n0": {
+     "tier": "super",
+     "V": 50.5497,
+     "decision_ms_mean": 1.118,
+     "mean_pillars": {
+      "population": 118.7349,
+      "industry": 38.1804,
+      "control": 53.4441,
+      "technology": 0.0,
+      "international": 0.0123,
+      "total": 49.9195,
+      "va": 45.8698
+     }
+    },
+    "n1": {
+     "tier": "advanced",
+     "V": 40.1509,
+     "decision_ms_mean": 0.239,
+     "mean_pillars": {
+      "population": 116.4432,
+      "industry": -3.8102,
+      "control": 56.0182,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 39.3619,
+      "va": -10.9886
+     }
+    },
+    "n2": {
+     "tier": "medium",
+     "V": 36.322,
+     "decision_ms_mean": 0.176,
+     "mean_pillars": {
+      "population": 114.6795,
+      "industry": -13.6986,
+      "control": 55.9832,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 36.4419,
+      "va": -39.1646
+     }
+    },
+    "n3": {
+     "tier": "none",
+     "V": 24.8108,
+     "decision_ms_mean": null,
+     "mean_pillars": {
+      "population": 108.8705,
+      "industry": -42.6524,
+      "control": 54.6379,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 27.4821,
+      "va": -121.4745
+     }
+    },
+    "n4": {
+     "tier": "super",
+     "V": 50.6611,
+     "decision_ms_mean": 1.127,
+     "mean_pillars": {
+      "population": 118.3014,
+      "industry": 37.4708,
+      "control": 54.7032,
+      "technology": 0.0,
+      "international": 0.0124,
+      "total": 49.8856,
+      "va": 45.2118
+     }
+    },
+    "n5": {
+     "tier": "advanced",
+     "V": 40.0658,
+     "decision_ms_mean": 0.234,
+     "mean_pillars": {
+      "population": 116.4352,
+      "industry": -4.2847,
+      "control": 56.0198,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 39.2416,
+      "va": -12.3404
+     }
+    },
+    "n6": {
+     "tier": "medium",
+     "V": 36.1282,
+     "decision_ms_mean": 0.177,
+     "mean_pillars": {
+      "population": 114.6715,
+      "industry": -14.5329,
+      "control": 55.8341,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 36.2015,
+      "va": -41.5602
+     }
+    },
+    "n7": {
+     "tier": "none",
+     "V": 24.8485,
+     "decision_ms_mean": null,
+     "mean_pillars": {
+      "population": 109.0034,
+      "industry": -42.8823,
+      "control": 54.6453,
+      "technology": 0.0,
+      "international": 0.0,
+      "total": 27.4593,
+      "va": -122.2271
+     }
+    }
+   }
+  }
+ ],
+ "long_1200": {
+  "rift-super-4 (b51378e)": {
+   "seed": 1000,
+   "ticks": 1200,
+   "seats": {
+    "n0": {
+     "tier": "super",
+     "V": 49.7449,
+     "total_every_100_ticks": [
+      49.047,
+      50.853,
+      51.431,
+      51.126,
+      51.601,
+      53.28,
+      53.448,
+      55.204,
+      51.477,
+      51.499,
+      50.482,
+      44.681
+     ]
+    },
+    "n1": {
+     "tier": "advanced",
+     "V": 38.1894,
+     "total_every_100_ticks": [
+      37.317,
+      38.106,
+      41.289,
+      41.595,
+      41.891,
+      41.074,
+      42.467,
+      38.04,
+      39.107,
+      38.899,
+      40.123,
+      38.942
+     ]
+    },
+    "n2": {
+     "tier": "medium",
+     "V": 23.2997,
+     "total_every_100_ticks": [
+      37.706,
+      34.961,
+      37.908,
+      36.624,
+      36.959,
+      36.909,
+      37.827,
+      33.924,
+      20.185,
+      21.37,
+      15.275,
+      17.87
+     ]
+    },
+    "n3": {
+     "tier": "none",
+     "V": 19.4684,
+     "total_every_100_ticks": [
+      30.605,
+      24.184,
+      22.874,
+      22.739,
+      23.3,
+      22.652,
+      27.171,
+      26.976,
+      29.728,
+      22.551,
+      9.285,
+      9.185
+     ]
+    },
+    "n4": {
+     "tier": "super",
+     "V": 50.0798,
+     "total_every_100_ticks": [
+      49.375,
+      50.256,
+      50.743,
+      52.214,
+      51.898,
+      52.203,
+      53.557,
+      54.749,
+      51.24,
+      53.506,
+      52.208,
+      46.027
+     ]
+    },
+    "n5": {
+     "tier": "advanced",
+     "V": 38.0777,
+     "total_every_100_ticks": [
+      37.317,
+      38.184,
+      40.781,
+      42.323,
+      40.729,
+      40.349,
+      42.454,
+      39.658,
+      38.686,
+      38.328,
+      39.277,
+      38.484
+     ]
+    },
+    "n6": {
+     "tier": "medium",
+     "V": 24.313,
+     "total_every_100_ticks": [
+      37.706,
+      34.317,
+      36.453,
+      35.471,
+      35.317,
+      34.216,
+      36.43,
+      33.218,
+      32.889,
+      15.49,
+      15.05,
+      17.549
+     ]
+    },
+    "n7": {
+     "tier": "none",
+     "V": 20.737,
+     "total_every_100_ticks": [
+      30.909,
+      23.453,
+      22.141,
+      21.627,
+      21.336,
+      26.166,
+      27.229,
+      27.322,
+      28.076,
+      19.613,
+      17.831,
+      17.243
+     ]
+    }
+   }
+  },
+  "rift-super-4 final": {
+   "seed": 1000,
+   "ticks": 1200,
+   "seats": {
+    "n0": {
+     "tier": "super",
+     "V": 51.2576,
+     "total_every_100_ticks": [
+      48.932,
+      51.973,
+      50.492,
+      51.484,
+      51.571,
+      52.166,
+      53.119,
+      52.967,
+      53.447,
+      53.815,
+      52.059,
+      52.591
+     ]
+    },
+    "n1": {
+     "tier": "advanced",
+     "V": 38.2856,
+     "total_every_100_ticks": [
+      37.318,
+      38.103,
+      41.291,
+      41.597,
+      41.893,
+      41.195,
+      42.577,
+      38.247,
+      39.251,
+      38.868,
+      40.071,
+      38.926
+     ]
+    },
+    "n2": {
+     "tier": "medium",
+     "V": 23.2095,
+     "total_every_100_ticks": [
+      37.707,
+      34.963,
+      37.911,
+      36.614,
+      37.261,
+      36.886,
+      37.898,
+      34.283,
+      20.452,
+      21.245,
+      15.697,
+      18.13
+     ]
+    },
+    "n3": {
+     "tier": "none",
+     "V": 19.4785,
+     "total_every_100_ticks": [
+      30.606,
+      24.187,
+      22.877,
+      22.744,
+      23.305,
+      22.657,
+      27.177,
+      27.0,
+      29.733,
+      22.548,
+      9.295,
+      9.174
+     ]
+    },
+    "n4": {
+     "tier": "super",
+     "V": 51.158,
+     "total_every_100_ticks": [
+      49.28,
+      51.4,
+      50.206,
+      51.115,
+      51.185,
+      51.68,
+      52.405,
+      52.875,
+      52.795,
+      53.854,
+      52.384,
+      52.792
+     ]
+    },
+    "n5": {
+     "tier": "advanced",
+     "V": 38.0433,
+     "total_every_100_ticks": [
+      37.318,
+      38.185,
+      40.782,
+      42.324,
+      40.732,
+      40.351,
+      42.456,
+      39.664,
+      38.692,
+      38.425,
+      39.114,
+      38.698
+     ]
+    },
+    "n6": {
+     "tier": "medium",
+     "V": 24.2768,
+     "total_every_100_ticks": [
+      37.707,
+      34.318,
+      36.454,
+      35.475,
+      35.32,
+      34.23,
+      36.688,
+      33.195,
+      32.72,
+      17.461,
+      14.51,
+      16.935
+     ]
+    },
+    "n7": {
+     "tier": "none",
+     "V": 20.7469,
+     "total_every_100_ticks": [
+      30.91,
+      23.455,
+      22.144,
+      21.633,
+      21.342,
+      26.173,
+      27.242,
+      27.356,
+      27.975,
+      19.634,
+      17.829,
+      17.264
+     ]
+    }
+   }
+  }
+ }
+}

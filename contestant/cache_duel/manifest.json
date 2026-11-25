@@ -1,0 +1,33 @@
+{
+  "format": "afb-contestant-kit/2",
+  "submission": "agents/submissions/my_agent.py",
+  "unified_submission": "../submissions/cache_duel.py",
+  "files": {
+    "agents/baselines/fifo.py": "ec8a20513bebe53394064657dfc5a0ce02f16efe3ad6849ffc78bae030adaf44",
+    "agents/baselines/lru.py": "e4a04c916e054dea76be9e2d95c45c48263bdab00626a0346b97a0f3402b6ffc",
+    "agents/baselines/marking.py": "438972f1cc2dfbfba92d80ae02b6b290df2da7335eead8afe79e7817da08e937",
+    "agents/baselines/rand.py": "59c30fce4b791efee63cd904841f434d19970b37a1051210121b969959b7f504",
+    "agents/starter.py": "d64cd10cc00e34fadcecbba794ce3d527260aa9c5f498e482d9d7dd38e33cbfe",
+    "agents/submissions/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "AGENTS.md": "c1c5aedbb01fe37e86ba0a9b3561ce6b3c67f8d86ee13a3d672d8374f3a3a903",
+    "AI_README.md": "8c3ae86d75932eea0930f327c188d17882aa467c98a04a1ee9b3fb069b70bac1",
+    "config/format.json": "438f2af86910d7cee1aa4927eb7166a4921ecfa8334ba8d92947e2e017c6ad03",
+    "config/workspace.json": "9cf4ab89de1894470affdf88a76c64adc0bb0f95a07d131fe986f271c8b47963",
+    "engine/engine.py": "bf5b27bb5beecf1e3fb6d69dba368c55de0fae28290d87098f7143d8006d9777",
+    "engine/policy.py": "e4d578157ac39a182d09e018896a3e348b486e4882ecf9c52df17e9774a3e2f9",
+    "engine/replay.py": "bc32a822ea1bdf2347cb905a55e8682807e054a5b847df8e16d5e6efe74f0b99",
+    "FORMAT.md": "e27fb968cdd33af1b4c8457c841b4f088a1b2aeef1ceaca550ca6e3665fbf15b",
+    "handbook/contest-rules.md": "e27fb968cdd33af1b4c8457c841b4f088a1b2aeef1ceaca550ca6e3665fbf15b",
+    "handbook/game-facts.md": "6b78fafd982d14619fbb7f90d88280bd6439f520869e1a7a696acfcd330025e5",
+    "handbook/player-guide.md": "35a2338f5bc872ef9079eca5254a5a0b854126df8d36427f4fcd98b5c098665e",
+    "logs/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "prompts/task.txt": "329037b8f4ccd20e8d893690334ad48c8ded26f68fd0a5042fb88d9f8369f2b5",
+    "README.md": "afde44795ac57647dde944de51afdbe333b3f11ff5ee54b8a295cbe7837ab8b2",
+    "replays/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "results/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "scripts/record_replay.py": "6315fc4c16de500fa3de08f8a69771f0bc9ce51c47365797fd6961980fa56917",
+    "scripts/run_match.py": "575b32ea20443e59d77de3d1fa34f58533ac2898c5ed6986e9614a27a9a5d342",
+    "scripts/spar.py": "df73ce9f4d9587e16c2f1887753e55e8ccaa750ab7372f5c4d9b34cbf227dd19",
+    "viz/player.html": "774329c22ec350761a0ecd3f073b3d145d1c1d25c52fa8403734e842badb4d63"
+  }
+}

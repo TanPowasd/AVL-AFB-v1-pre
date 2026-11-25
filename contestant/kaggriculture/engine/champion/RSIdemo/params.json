@@ -1,0 +1,10 @@
+{
+  "backend": "elite",
+  "elite_structure": true,
+  "elite_fast_dp": true,
+  "elite_compute_budget": true,
+  "elite_response_game": true,
+  "elite_cfr": true,
+  "elite_cfr_iterations": 256,
+  "elite_cfr_risk_penalty": 0.5
+}

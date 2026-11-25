@@ -1,0 +1,1117 @@
+{
+  "format": "sk-singularity-replay/1",
+  "problem": "sk_singularity",
+  "title": "双符奇点（The SK Singularity）",
+  "solver": "beam_evo",
+  "case": {
+    "name": "P1_03",
+    "family": "P1_StdSK",
+    "N": 16,
+    "a_S": 3,
+    "a_K": 2,
+    "rhs_S": "((0 2) (1 2))",
+    "rhs_K": "0",
+    "req": "-",
+    "max_nodes": 10000000,
+    "time_limit_ms": 2000,
+    "l_ref": 59.61
+  },
+  "solver_metrics": {
+    "cpu_ms": 406.25,
+    "wall_ms": 419.71,
+    "mem_mb": 17.9
+  },
+  "result": {
+    "verdict": "AC",
+    "message": "OK",
+    "halted": true,
+    "leaves": 16,
+    "expr_canonical": "(((((((((((S S) (S ((S S) S))) S) (S S)) K) S) K) K) K) S) S)",
+    "is_exact": true,
+    "exact_steps": 245795,
+    "steps_display": "245795",
+    "log2_steps": 17.907102,
+    "norm_score": 26.4593,
+    "singularity": false,
+    "dag_nodes": 384,
+    "redex_fires": 174,
+    "whnf_hits": 181,
+    "nf_hits": 5,
+    "peak_stack": 34,
+    "nf_preview": "((S (K ((S (S S)) K))) ((S (K (K ((S (S S)) K)))) ((S (S S)) K)))",
+    "judge_ms": 0.045,
+    "trace": [
+      {
+        "step": 0,
+        "expr": "(((((((((((S S) (S ((S S) S))) S) (S S)) K) S) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLLLLL",
+        "leaves": 16
+      },
+      {
+        "step": 1,
+        "expr": "((((((((((S S) ((S ((S S) S)) S)) (S S)) K) S) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLLLL",
+        "leaves": 16
+      },
+      {
+        "step": 2,
+        "expr": "(((((((((S (S S)) (((S ((S S) S)) S) (S S))) K) S) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLLL",
+        "leaves": 17
+      },
+      {
+        "step": 3,
+        "expr": "(((((((((S S) K) ((((S ((S S) S)) S) (S S)) K)) S) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLLL",
+        "leaves": 17
+      },
+      {
+        "step": 4,
+        "expr": "((((((((S ((((S ((S S) S)) S) (S S)) K)) (K ((((S ((S S) S)) S) (S S)) K))) S) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLL",
+        "leaves": 24
+      },
+      {
+        "step": 5,
+        "expr": "(((((((((((S ((S S) S)) S) (S S)) K) S) ((K ((((S ((S S) S)) S) (S S)) K)) S)) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLLLLL",
+        "leaves": 24
+      },
+      {
+        "step": 6,
+        "expr": "((((((((((((S S) S) (S S)) (S (S S))) K) S) ((K ((((S ((S S) S)) S) (S S)) K)) S)) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLLLLLL",
+        "leaves": 25
+      },
+      {
+        "step": 7,
+        "expr": "(((((((((((S (S S)) (S (S S))) (S (S S))) K) S) ((K ((((S ((S S) S)) S) (S S)) K)) S)) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLLLLL",
+        "leaves": 26
+      },
+      {
+        "step": 8,
+        "expr": "(((((((((((S S) (S (S S))) ((S (S S)) (S (S S)))) K) S) ((K ((((S ((S S) S)) S) (S S)) K)) S)) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLLLLL",
+        "leaves": 28
+      },
+      {
+        "step": 9,
+        "expr": "((((((((((S ((S (S S)) (S (S S)))) ((S (S S)) ((S (S S)) (S (S S))))) K) S) ((K ((((S ((S S) S)) S) (S S)) K)) S)) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLLLL",
+        "leaves": 33
+      },
+      {
+        "step": 10,
+        "expr": "(((((((((((S (S S)) (S (S S))) K) (((S (S S)) ((S (S S)) (S (S S)))) K)) S) ((K ((((S ((S S) S)) S) (S S)) K)) S)) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLLLLL",
+        "leaves": 33
+      },
+      {
+        "step": 11,
+        "expr": "(((((((((((S S) K) ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K)) S) ((K ((((S ((S S) S)) S) (S S)) K)) S)) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLLLLL",
+        "leaves": 33
+      },
+      {
+        "step": 12,
+        "expr": "((((((((((S ((S (S S)) K)) (K ((S (S S)) K))) (((S (S S)) ((S (S S)) (S (S S)))) K)) S) ((K ((((S ((S S) S)) S) (S S)) K)) S)) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLLLL",
+        "leaves": 36
+      },
+      {
+        "step": 13,
+        "expr": "(((((((((((S (S S)) K) (((S (S S)) ((S (S S)) (S (S S)))) K)) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) S) ((K ((((S ((S S) S)) S) (S S)) K)) S)) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLLLLL",
+        "leaves": 45
+      },
+      {
+        "step": 14,
+        "expr": "(((((((((((S S) (((S (S S)) ((S (S S)) (S (S S)))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) S) ((K ((((S ((S S) S)) S) (S S)) K)) S)) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLLLLL",
+        "leaves": 54
+      },
+      {
+        "step": 15,
+        "expr": "((((((((((S (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) S) ((K ((((S ((S S) S)) S) (S S)) K)) S)) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLLLL",
+        "leaves": 64
+      },
+      {
+        "step": 16,
+        "expr": "((((((((((K (((S (S S)) ((S (S S)) (S (S S)))) K)) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K)))) S) ((K ((((S ((S S) S)) S) (S S)) K)) S)) K) K) K) S) S)",
+        "rule": "K",
+        "path": "LLLLLLLL",
+        "leaves": 78
+      },
+      {
+        "step": 17,
+        "expr": "(((((((((((S (S S)) ((S (S S)) (S (S S)))) K) (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K)))) S) ((K ((((S ((S S) S)) S) (S S)) K)) S)) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLLLLL",
+        "leaves": 62
+      },
+      {
+        "step": 18,
+        "expr": "(((((((((((S S) K) (((S (S S)) (S (S S))) K)) (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K)))) S) ((K ((((S ((S S) S)) S) (S S)) K)) S)) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLLLLL",
+        "leaves": 62
+      },
+      {
+        "step": 19,
+        "expr": "((((((((((S (((S (S S)) (S (S S))) K)) (K (((S (S S)) (S (S S))) K))) (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K)))) S) ((K ((((S ((S S) S)) S) (S S)) K)) S)) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLLLL",
+        "leaves": 68
+      },
+      {
+        "step": 20,
+        "expr": "((((((((((((S (S S)) (S (S S))) K) (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K (((S (S S)) (S (S S))) K)) (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))))) S) ((K ((((S ((S S) S)) S) (S S)) K)) S)) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLLLLLL",
+        "leaves": 103
+      },
+      {
+        "step": 21,
+        "expr": "((((((((((((S S) K) ((S (S S)) K)) (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K (((S (S S)) (S (S S))) K)) (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))))) S) ((K ((((S ((S S) S)) S) (S S)) K)) S)) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLLLLLL",
+        "leaves": 103
+      },
+      {
+        "step": 22,
+        "expr": "(((((((((((S ((S (S S)) K)) (K ((S (S S)) K))) (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K (((S (S S)) (S (S S))) K)) (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))))) S) ((K ((((S ((S S) S)) S) (S S)) K)) S)) K) K) K) S) S)",
+        "rule": "S",
+        "path": "LLLLLLLL",
+        "leaves": 106
+      },
+      {
+        "step": 23,
+        "expr": "((((((((((((S (S S)) K) (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K ((S (S S)) K)) (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K (((S (S S)) (S (S S))) K)) (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))))) S) ((K ((((S ((...",
+        "rule": "S",
+        "path": "LLLLLLLLL",
+        "leaves": 141
+      },
+      {
+        "step": 24,
+        "expr": "((((((((((((S S) (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K)))) (K (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K (((S (S S)) (S (S S))) K)) (((((S (S S)) ((S (...",
+        "rule": "S",
+        "path": "LLLLLLLLL",
+        "leaves": 176
+      },
+      {
+        "step": 25,
+        "expr": "(((((((((((S (K (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (K (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K ((S (S S)) K)) (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S...",
+        "rule": "S",
+        "path": "LLLLLLLL",
+        "leaves": 212
+      },
+      {
+        "step": 26,
+        "expr": "(((((((((((K (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K ((S (S S)) K)) (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (K (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S))...",
+        "rule": "K",
+        "path": "LLLLLLLLL",
+        "leaves": 252
+      },
+      {
+        "step": 27,
+        "expr": "((((((((((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (K (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S ...",
+        "rule": "S",
+        "path": "LLLLLLLLLLL",
+        "leaves": 210
+      },
+      {
+        "step": 28,
+        "expr": "((((((((((((((S S) K) (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (K (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S ...",
+        "rule": "S",
+        "path": "LLLLLLLLLLL",
+        "leaves": 210
+      },
+      {
+        "step": 29,
+        "expr": "(((((((((((((S (((S (S S)) (S (S S))) K)) (K (((S (S S)) (S (S S))) K))) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (K (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) (((((S (S S)) ((S (S S)) (S (S S)))...",
+        "rule": "S",
+        "path": "LLLLLLLLLL",
+        "leaves": 216
+      },
+      {
+        "step": 30,
+        "expr": "(((((((((((((((S (S S)) (S (S S))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (K (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S))...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLL",
+        "leaves": 226
+      },
+      {
+        "step": 31,
+        "expr": "(((((((((((((((S S) K) ((S (S S)) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (K (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S))...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLL",
+        "leaves": 226
+      },
+      {
+        "step": 32,
+        "expr": "((((((((((((((S ((S (S S)) K)) (K ((S (S S)) K))) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (K (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((...",
+        "rule": "S",
+        "path": "LLLLLLLLLLL",
+        "leaves": 229
+      },
+      {
+        "step": 33,
+        "expr": "(((((((((((((((S (S S)) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (K (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLL",
+        "leaves": 239
+      },
+      {
+        "step": 34,
+        "expr": "(((((((((((((((S S) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K ((S (S S)) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (K (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) ...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLL",
+        "leaves": 249
+      },
+      {
+        "step": 35,
+        "expr": "((((((((((((((S (K (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K (((S (S S)) ((S (S S)) (S (S S)))) K)) (K (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (K (((((S (S S)) ((S (S S...",
+        "rule": "S",
+        "path": "LLLLLLLLLLL",
+        "leaves": 260
+      },
+      {
+        "step": 36,
+        "expr": "((((((((((((((K (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) (((K (((S (S S)) ((S (S S)) (S (S S)))) K)) (K (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K ((S (S S)) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S ...",
+        "rule": "K",
+        "path": "LLLLLLLLLLLL",
+        "leaves": 275
+      },
+      {
+        "step": 37,
+        "expr": "(((((((((((((K (((S (S S)) ((S (S S)) (S (S S)))) K)) (((K (((S (S S)) ((S (S S)) (S (S S)))) K)) (K (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K ((S (S S)) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (K (((((S (S S)) ((S (S S)) (S (S...",
+        "rule": "K",
+        "path": "LLLLLLLLLLL",
+        "leaves": 258
+      },
+      {
+        "step": 38,
+        "expr": "((((((((((((((S (S S)) ((S (S S)) (S (S S)))) K) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (K (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) (((((S (S S)) ((S (S S)) (S...",
+        "rule": "S",
+        "path": "LLLLLLLLLLL",
+        "leaves": 218
+      },
+      {
+        "step": 39,
+        "expr": "((((((((((((((S S) K) (((S (S S)) (S (S S))) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (K (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) (((((S (S S)) ((S (S S)) (S...",
+        "rule": "S",
+        "path": "LLLLLLLLLLL",
+        "leaves": 218
+      },
+      {
+        "step": 40,
+        "expr": "(((((((((((((S (((S (S S)) (S (S S))) K)) (K (((S (S S)) (S (S S))) K))) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (K (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) (((...",
+        "rule": "S",
+        "path": "LLLLLLLLLL",
+        "leaves": 224
+      },
+      {
+        "step": 41,
+        "expr": "(((((((((((((((S (S S)) (S (S S))) K) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K (((S (S S)) (S (S S))) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (K (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S ...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLL",
+        "leaves": 242
+      },
+      {
+        "step": 42,
+        "expr": "(((((((((((((((S S) K) ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K (((S (S S)) (S (S S))) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (K (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S ...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLL",
+        "leaves": 242
+      },
+      {
+        "step": 43,
+        "expr": "((((((((((((((S ((S (S S)) K)) (K ((S (S S)) K))) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K (((S (S S)) (S (S S))) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (K (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))...",
+        "rule": "S",
+        "path": "LLLLLLLLLLL",
+        "leaves": 245
+      },
+      {
+        "step": 44,
+        "expr": "(((((((((((((((S (S S)) K) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K (((S (S S)) (S (S S))) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (K (((((S (S ...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLL",
+        "leaves": 263
+      },
+      {
+        "step": 45,
+        "expr": "(((((((((((((((S S) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K (((S (S S)) (S (S S))) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLL",
+        "leaves": 281
+      },
+      {
+        "step": 46,
+        "expr": "((((((((((((((S (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) (((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K (((S (S S)) (S (S S))) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S ...",
+        "rule": "S",
+        "path": "LLLLLLLLLLL",
+        "leaves": 300
+      },
+      {
+        "step": 47,
+        "expr": "((((((((((((((K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K (((S (S S)) (S (S S))) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S...",
+        "rule": "K",
+        "path": "LLLLLLLLLLLL",
+        "leaves": 323
+      },
+      {
+        "step": 48,
+        "expr": "((((((((((((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K (((S (S S)) (S (S S))) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) (...",
+        "rule": "K",
+        "path": "LLLLLLLLLLLL",
+        "leaves": 298
+      },
+      {
+        "step": 49,
+        "expr": "(((((((((((((((S (S S)) (S (S S))) K) ((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K (((S (S S)) (S (S S))) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLL",
+        "leaves": 286
+      },
+      {
+        "step": 50,
+        "expr": "(((((((((((((((S S) K) ((S (S S)) K)) ((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K (((S (S S)) (S (S S))) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLL",
+        "leaves": 286
+      },
+      {
+        "step": 51,
+        "expr": "((((((((((((((S ((S (S S)) K)) (K ((S (S S)) K))) ((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K (((S (S S)) (S (S S))) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S ...",
+        "rule": "S",
+        "path": "LLLLLLLLLLL",
+        "leaves": 289
+      },
+      {
+        "step": 52,
+        "expr": "(((((((((((((((S (S S)) K) ((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K ((S (S S)) K)) ((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLL",
+        "leaves": 351
+      },
+      {
+        "step": 53,
+        "expr": "(((((((((((((((S S) ((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) (K ((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLL",
+        "leaves": 413
+      },
+      {
+        "step": 54,
+        "expr": "((((((((((((((S (K ((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))))) (((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))...",
+        "rule": "S",
+        "path": "LLLLLLLLLLL",
+        "leaves": 476
+      },
+      {
+        "step": 55,
+        "expr": "((((((((((((((K ((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K ((S (S S)) K)) ((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S ...",
+        "rule": "K",
+        "path": "LLLLLLLLLLLL",
+        "leaves": 543
+      },
+      {
+        "step": 56,
+        "expr": "((((((((((((((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) (K (((...",
+        "rule": "K",
+        "path": "LLLLLLLLLLLLLL",
+        "leaves": 474
+      },
+      {
+        "step": 57,
+        "expr": "(((((((((((((((((S (S S)) (S (S S))) K) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) (K ((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLLLL",
+        "leaves": 462
+      },
+      {
+        "step": 58,
+        "expr": "(((((((((((((((((S S) K) ((S (S S)) K)) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) (K ((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLLLL",
+        "leaves": 462
+      },
+      {
+        "step": 59,
+        "expr": "((((((((((((((((S ((S (S S)) K)) (K ((S (S S)) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) (K ((((K (((S (S S)) (S (S S))) K)) (K (((...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLLL",
+        "leaves": 465
+      },
+      {
+        "step": 60,
+        "expr": "(((((((((((((((((S (S S)) K) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S ...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLLLL",
+        "leaves": 484
+      },
+      {
+        "step": 61,
+        "expr": "(((((((((((((((((S S) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) (K (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K ((S (S S)) K)) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLLLL",
+        "leaves": 503
+      },
+      {
+        "step": 62,
+        "expr": "((((((((((((((((S (K (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) (K (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))))) ((K ((S (S S)) K)) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLLL",
+        "leaves": 523
+      },
+      {
+        "step": 63,
+        "expr": "((((((((((((((((K (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) (((K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) (K (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K ((S (S S)) K)) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S ...",
+        "rule": "K",
+        "path": "LLLLLLLLLLLLLL",
+        "leaves": 547
+      },
+      {
+        "step": 64,
+        "expr": "(((((((((((((((K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) (((K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) (K (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K ((S (S S)) K)) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S))...",
+        "rule": "K",
+        "path": "LLLLLLLLLLLLL",
+        "leaves": 521
+      },
+      {
+        "step": 65,
+        "expr": "(((((((((((((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) (K ((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K ...",
+        "rule": "K",
+        "path": "LLLLLLLLLLLLL",
+        "leaves": 454
+      },
+      {
+        "step": 66,
+        "expr": "((((((((((((((((S (S S)) (S (S S))) K) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) (K ((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLLL",
+        "leaves": 442
+      },
+      {
+        "step": 67,
+        "expr": "((((((((((((((((S S) K) ((S (S S)) K)) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) (K ((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLLL",
+        "leaves": 442
+      },
+      {
+        "step": 68,
+        "expr": "(((((((((((((((S ((S (S S)) K)) (K ((S (S S)) K))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) (K ((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLL",
+        "leaves": 445
+      },
+      {
+        "step": 69,
+        "expr": "((((((((((((((((S (S S)) K) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) (K ((((K (((S (S S)) (S (S S))...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLLL",
+        "leaves": 468
+      },
+      {
+        "step": 70,
+        "expr": "((((((((((((((((S S) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) (K ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K ((S (S S)) K)) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLLL",
+        "leaves": 491
+      },
+      {
+        "step": 71,
+        "expr": "(((((((((((((((S (K ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) (((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) (K ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))))) ((K ((S (S S)) K)) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLL",
+        "leaves": 515
+      },
+      {
+        "step": 72,
+        "expr": "(((((((((((((((K ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) (K ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K ((S (S S)) K)) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S ...",
+        "rule": "K",
+        "path": "LLLLLLLLLLLLL",
+        "leaves": 543
+      },
+      {
+        "step": 73,
+        "expr": "(((((((((((((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) (K ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K ((S (S S)) K)) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))))) ((((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S...",
+        "rule": "K",
+        "path": "LLLLLLLLLLLLL",
+        "leaves": 513
+      },
+      {
+        "step": 74,
+        "expr": "(((((((((((((((S (S S)) K) ((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) (K ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K ((S (S S)) K)) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))))) ((((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K ((...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLL",
+        "leaves": 493
+      },
+      {
+        "step": 75,
+        "expr": "(((((((((((((((S S) ((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) (K ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K ((S (S S)) K)) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))))) (K ((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) (K ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S))))...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLL",
+        "leaves": 570
+      },
+      {
+        "step": 76,
+        "expr": "((((((((((((((S (K ((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) (K ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K ((S (S S)) K)) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))))) (((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) (K ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K...",
+        "rule": "S",
+        "path": "LLLLLLLLLLL",
+        "leaves": 648
+      },
+      {
+        "step": 77,
+        "expr": "((((((((((((((K ((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) (K ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K ((S (S S)) K)) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))))) ((((((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) (K ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))) ((K ((S (S S)) K)) ((K (((S (S S)) (...",
+        "rule": "K",
+        "path": "LLLLLLLLLLLL",
+        "leaves": 842
+      },
+      {
+        "step": 78,
+        "expr": "((((((((((((((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) (K ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K ((S (S S)) K)) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) (K ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) (...",
+        "rule": "K",
+        "path": "LLLLLLLLLLLLLL",
+        "leaves": 646
+      },
+      {
+        "step": 79,
+        "expr": "((((((((((((((((S (S S)) K) (K ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K ((S (S S)) K)) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) (K ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((K ((S (S S)) K)) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S...",
+        "rule": "S",
+        "path": "LLLLLLLLLLLLL",
+        "leaves": 626
+      },
+      {
+        "step": 80,
+        "expr": "((((((((((((((((S S) (K ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) (K (K ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))))))) ((K ((S (S S)) K)) ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))))) ((((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) (K ((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)) (S (S...",
+        "rule": "TRUNC",
+        "path": "",
+        "leaves": 650
+      }
+    ],
+    "dag_growth": [
+      {
+        "id": 1,
+        "log2": 1.0
+      },
+      {
+        "id": 3,
+        "log2": 1.0
+      },
+      {
+        "id": 5,
+        "log2": 1.0
+      },
+      {
+        "id": 7,
+        "log2": 1.0
+      },
+      {
+        "id": 9,
+        "log2": 1.0
+      },
+      {
+        "id": 11,
+        "log2": 1.0
+      },
+      {
+        "id": 13,
+        "log2": 1.0
+      },
+      {
+        "id": 15,
+        "log2": 1.0
+      },
+      {
+        "id": 17,
+        "log2": 1.0
+      },
+      {
+        "id": 19,
+        "log2": 1.0
+      },
+      {
+        "id": 21,
+        "log2": 1.0
+      },
+      {
+        "id": 23,
+        "log2": 1.0
+      },
+      {
+        "id": 25,
+        "log2": 1.0
+      },
+      {
+        "id": 27,
+        "log2": 1.0
+      },
+      {
+        "id": 29,
+        "log2": 1.0
+      },
+      {
+        "id": 31,
+        "log2": 1.0
+      },
+      {
+        "id": 33,
+        "log2": 1.0
+      },
+      {
+        "id": 35,
+        "log2": 1.0
+      },
+      {
+        "id": 37,
+        "log2": 1.0
+      },
+      {
+        "id": 39,
+        "log2": 1.0
+      },
+      {
+        "id": 41,
+        "log2": 1.0
+      },
+      {
+        "id": 43,
+        "log2": 1.0
+      },
+      {
+        "id": 45,
+        "log2": 1.0
+      },
+      {
+        "id": 47,
+        "log2": 1.0
+      },
+      {
+        "id": 49,
+        "log2": 1.0
+      },
+      {
+        "id": 51,
+        "log2": 1.0
+      },
+      {
+        "id": 53,
+        "log2": 1.0
+      },
+      {
+        "id": 55,
+        "log2": 1.0
+      },
+      {
+        "id": 57,
+        "log2": 1.585
+      },
+      {
+        "id": 59,
+        "log2": 1.585
+      },
+      {
+        "id": 61,
+        "log2": 1.585
+      },
+      {
+        "id": 63,
+        "log2": 1.585
+      },
+      {
+        "id": 65,
+        "log2": 1.585
+      },
+      {
+        "id": 67,
+        "log2": 1.585
+      },
+      {
+        "id": 69,
+        "log2": 2.0
+      },
+      {
+        "id": 71,
+        "log2": 2.0
+      },
+      {
+        "id": 73,
+        "log2": 2.3219
+      },
+      {
+        "id": 75,
+        "log2": 2.3219
+      },
+      {
+        "id": 77,
+        "log2": 2.3219
+      },
+      {
+        "id": 79,
+        "log2": 3.0
+      },
+      {
+        "id": 81,
+        "log2": 3.0
+      },
+      {
+        "id": 83,
+        "log2": 3.1699
+      },
+      {
+        "id": 85,
+        "log2": 3.3219
+      },
+      {
+        "id": 87,
+        "log2": 3.4594
+      },
+      {
+        "id": 89,
+        "log2": 4.3219
+      },
+      {
+        "id": 91,
+        "log2": 4.3923
+      },
+      {
+        "id": 93,
+        "log2": 4.4594
+      },
+      {
+        "id": 95,
+        "log2": 4.5236
+      },
+      {
+        "id": 97,
+        "log2": 5.1699
+      },
+      {
+        "id": 99,
+        "log2": 5.4594
+      },
+      {
+        "id": 101,
+        "log2": 5.4919
+      },
+      {
+        "id": 103,
+        "log2": 5.5236
+      },
+      {
+        "id": 105,
+        "log2": 5.5546
+      },
+      {
+        "id": 107,
+        "log2": 6.3399
+      },
+      {
+        "id": 109,
+        "log2": 6.5236
+      },
+      {
+        "id": 111,
+        "log2": 6.5546
+      },
+      {
+        "id": 113,
+        "log2": 6.5699
+      },
+      {
+        "id": 115,
+        "log2": 7.0444
+      },
+      {
+        "id": 117,
+        "log2": 7.5622
+      },
+      {
+        "id": 119,
+        "log2": 7.5699
+      },
+      {
+        "id": 121,
+        "log2": 7.8265
+      },
+      {
+        "id": 123,
+        "log2": 7.8642
+      },
+      {
+        "id": 125,
+        "log2": 8.5736
+      },
+      {
+        "id": 127,
+        "log2": 8.5774
+      },
+      {
+        "id": 129,
+        "log2": 8.7279
+      },
+      {
+        "id": 131,
+        "log2": 8.7515
+      },
+      {
+        "id": 133,
+        "log2": 8.7781
+      },
+      {
+        "id": 135,
+        "log2": 9.5793
+      },
+      {
+        "id": 137,
+        "log2": 9.5812
+      },
+      {
+        "id": 139,
+        "log2": 9.683
+      },
+      {
+        "id": 141,
+        "log2": 10.5821
+      },
+      {
+        "id": 143,
+        "log2": 10.5831
+      },
+      {
+        "id": 145,
+        "log2": 10.6339
+      },
+      {
+        "id": 147,
+        "log2": 11.5831
+      },
+      {
+        "id": 149,
+        "log2": 11.584
+      },
+      {
+        "id": 151,
+        "log2": 11.5845
+      },
+      {
+        "id": 153,
+        "log2": 12.584
+      },
+      {
+        "id": 155,
+        "log2": 12.5845
+      },
+      {
+        "id": 157,
+        "log2": 12.5847
+      },
+      {
+        "id": 159,
+        "log2": 13.5845
+      },
+      {
+        "id": 161,
+        "log2": 13.5847
+      },
+      {
+        "id": 163,
+        "log2": 13.5848
+      },
+      {
+        "id": 165,
+        "log2": 14.5847
+      },
+      {
+        "id": 167,
+        "log2": 14.5848
+      },
+      {
+        "id": 169,
+        "log2": 14.5849
+      },
+      {
+        "id": 171,
+        "log2": 15.5848
+      },
+      {
+        "id": 173,
+        "log2": 15.5848
+      },
+      {
+        "id": 175,
+        "log2": 17.1698
+      },
+      {
+        "id": 176,
+        "log2": 17.9071
+      }
+    ],
+    "hot_dag_nodes": [
+      {
+        "id": 14,
+        "l": 13,
+        "r": 0,
+        "log2": 17.9071,
+        "steps_display": "245795",
+        "preview": "(((((((((((S S) (S ((S S) S))) S) (S S)) K) S) K) K) K) S) S)"
+      },
+      {
+        "id": 362,
+        "l": 347,
+        "r": 359,
+        "log2": 17.1698,
+        "steps_display": "147444",
+        "preview": "(((((((((((((((((((((((((((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S ..."
+      },
+      {
+        "id": 377,
+        "l": 359,
+        "r": 374,
+        "log2": 15.5849,
+        "steps_display": "49148",
+        "preview": "((K ((((((((((((((((((((((((((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) (..."
+      },
+      {
+        "id": 347,
+        "l": 344,
+        "r": 0,
+        "log2": 15.5848,
+        "steps_display": "49147",
+        "preview": "((((((((((((((((((((((((((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (..."
+      },
+      {
+        "id": 359,
+        "l": 1,
+        "r": 347,
+        "log2": 15.5848,
+        "steps_display": "49147",
+        "preview": "(K ((((((((((((((((((((((((((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((..."
+      },
+      {
+        "id": 374,
+        "l": 1,
+        "r": 359,
+        "log2": 15.5848,
+        "steps_display": "49147",
+        "preview": "(K (K ((((((((((((((((((((((((((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S))..."
+      },
+      {
+        "id": 13,
+        "l": 12,
+        "r": 0,
+        "log2": 14.5881,
+        "steps_display": "24629",
+        "preview": "((((((((((S S) (S ((S S) S))) S) (S S)) K) S) K) K) K) S)"
+      },
+      {
+        "id": 348,
+        "l": 346,
+        "r": 347,
+        "log2": 14.5849,
+        "steps_display": "24574",
+        "preview": "(((K ((((((((((((((((((((((((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((..."
+      },
+      {
+        "id": 372,
+        "l": 370,
+        "r": 371,
+        "log2": 14.5848,
+        "steps_display": "24573",
+        "preview": "(((K (K ((((((((((((((((((((((((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S))..."
+      },
+      {
+        "id": 344,
+        "l": 329,
+        "r": 341,
+        "log2": 14.5848,
+        "steps_display": "24573",
+        "preview": "(((((((((((((((((((((((((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S..."
+      },
+      {
+        "id": 346,
+        "l": 341,
+        "r": 0,
+        "log2": 14.5848,
+        "steps_display": "24572",
+        "preview": "((K ((((((((((((((((((((((((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S..."
+      },
+      {
+        "id": 329,
+        "l": 326,
+        "r": 0,
+        "log2": 14.5847,
+        "steps_display": "24571",
+        "preview": "((((((((((((((((((((((((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S ..."
+      },
+      {
+        "id": 12,
+        "l": 11,
+        "r": 1,
+        "log2": 13.5914,
+        "steps_display": "12342",
+        "preview": "(((((((((S S) (S ((S S) S))) S) (S S)) K) S) K) K) K)"
+      },
+      {
+        "id": 330,
+        "l": 328,
+        "r": 329,
+        "log2": 13.5848,
+        "steps_display": "12286",
+        "preview": "(((K ((((((((((((((((((((((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S ..."
+      },
+      {
+        "id": 326,
+        "l": 311,
+        "r": 323,
+        "log2": 13.5847,
+        "steps_display": "12285",
+        "preview": "(((((((((((((((((((((((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S..."
+      },
+      {
+        "id": 357,
+        "l": 355,
+        "r": 356,
+        "log2": 13.5847,
+        "steps_display": "12285",
+        "preview": "(((K (K ((((((((((((((((((((((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) (..."
+      },
+      {
+        "id": 328,
+        "l": 323,
+        "r": 0,
+        "log2": 13.5846,
+        "steps_display": "12284",
+        "preview": "((K ((((((((((((((((((((((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (..."
+      },
+      {
+        "id": 311,
+        "l": 308,
+        "r": 1,
+        "log2": 13.5845,
+        "steps_display": "12283",
+        "preview": "((((((((((((((((((((((((K ((S (S S)) K)) ((K (((S (S S)) (S (S S))) K)) (K (((S (S S)) ((S (S S)..."
+      }
+    ]
+  }
+}

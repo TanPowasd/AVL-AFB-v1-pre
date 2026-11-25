@@ -1,0 +1,2228 @@
+{
+  "purpose": "Independent full-length calibration with isolated policy RNG; seeds disjoint from official scoring_v2",
+  "method": "median absolute nonzero gap / atanh(0.6)",
+  "seeds": [
+    11,
+    23
+  ],
+  "opponents": [
+    "agronomy_arbitrage",
+    "ranch_compounder",
+    "tactical_counterplay"
+  ],
+  "margin_scale": 80096.26,
+  "games": [
+    {
+      "candidate": "passive",
+      "opponent": "greedy_farm",
+      "seed": 11,
+      "seat": 0,
+      "wall_s": 0.1377593000070192,
+      "raw": {
+        "cash": 3000.0,
+        "opponent_cash": 4157.0,
+        "cash_gap": -1157.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 0.1,
+          "total_s": 0.01,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 0.3,
+          "total_s": 0.03,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 11,
+        "cash": [
+          3000.0,
+          4157.0
+        ],
+        "winner": 1,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 0.1,
+            "total_s": 0.01,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 0.3,
+            "total_s": 0.03,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 49.28
+    },
+    {
+      "candidate": "passive",
+      "opponent": "greedy_farm",
+      "seed": 11,
+      "seat": 1,
+      "wall_s": 0.13748979999218136,
+      "raw": {
+        "cash": 3000.0,
+        "opponent_cash": 4446.0,
+        "cash_gap": -1446.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 0.2,
+          "total_s": 0.01,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 0.2,
+          "total_s": 0.03,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 11,
+        "cash": [
+          4446.0,
+          3000.0
+        ],
+        "winner": 0,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 0.2,
+            "total_s": 0.03,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 0.2,
+            "total_s": 0.01,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 49.1
+    },
+    {
+      "candidate": "passive",
+      "opponent": "greedy_farm",
+      "seed": 23,
+      "seat": 0,
+      "wall_s": 0.1474519000039436,
+      "raw": {
+        "cash": 3000.0,
+        "opponent_cash": 4280.0,
+        "cash_gap": -1280.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 0.1,
+          "total_s": 0.01,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 0.2,
+          "total_s": 0.03,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 23,
+        "cash": [
+          3000.0,
+          4280.0
+        ],
+        "winner": 1,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 0.1,
+            "total_s": 0.01,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 0.2,
+            "total_s": 0.03,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 49.2
+    },
+    {
+      "candidate": "passive",
+      "opponent": "greedy_farm",
+      "seed": 23,
+      "seat": 1,
+      "wall_s": 0.14452790000359528,
+      "raw": {
+        "cash": 3000.0,
+        "opponent_cash": 4666.0,
+        "cash_gap": -1666.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 0.2,
+          "total_s": 0.01,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 0.3,
+          "total_s": 0.03,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 23,
+        "cash": [
+          4666.0,
+          3000.0
+        ],
+        "winner": 0,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 0.3,
+            "total_s": 0.03,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 0.2,
+            "total_s": 0.01,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 48.96
+    },
+    {
+      "candidate": "greedy_farm",
+      "opponent": "agronomy_arbitrage",
+      "seed": 11,
+      "seat": 0,
+      "wall_s": 3.9458932999987155,
+      "raw": {
+        "cash": 4800.0,
+        "opponent_cash": 212105.0,
+        "cash_gap": -207305.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 0.2,
+          "total_s": 0.04,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 288.6,
+          "total_s": 3.66,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 11,
+        "cash": [
+          4800.0,
+          212105.0
+        ],
+        "winner": 1,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 0.2,
+            "total_s": 0.04,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 288.6,
+            "total_s": 3.66,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 0.56
+    },
+    {
+      "candidate": "greedy_farm",
+      "opponent": "agronomy_arbitrage",
+      "seed": 11,
+      "seat": 1,
+      "wall_s": 3.909965099999681,
+      "raw": {
+        "cash": 4829.0,
+        "opponent_cash": 198503.0,
+        "cash_gap": -193674.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 0.2,
+          "total_s": 0.03,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 359.7,
+          "total_s": 3.65,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 11,
+        "cash": [
+          198503.0,
+          4829.0
+        ],
+        "winner": 0,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 359.7,
+            "total_s": 3.65,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 0.2,
+            "total_s": 0.03,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 0.79
+    },
+    {
+      "candidate": "greedy_farm",
+      "opponent": "agronomy_arbitrage",
+      "seed": 23,
+      "seat": 0,
+      "wall_s": 3.8895394999999553,
+      "raw": {
+        "cash": 4746.0,
+        "opponent_cash": 122209.0,
+        "cash_gap": -117463.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 0.2,
+          "total_s": 0.04,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 421.7,
+          "total_s": 3.61,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 23,
+        "cash": [
+          4746.0,
+          122209.0
+        ],
+        "winner": 1,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 0.2,
+            "total_s": 0.04,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 421.7,
+            "total_s": 3.61,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 5.05
+    },
+    {
+      "candidate": "greedy_farm",
+      "opponent": "agronomy_arbitrage",
+      "seed": 23,
+      "seat": 1,
+      "wall_s": 3.860127599997213,
+      "raw": {
+        "cash": 4633.0,
+        "opponent_cash": 175387.0,
+        "cash_gap": -170754.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 0.2,
+          "total_s": 0.03,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 466.2,
+          "total_s": 3.61,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 23,
+        "cash": [
+          175387.0,
+          4633.0
+        ],
+        "winner": 0,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 466.2,
+            "total_s": 3.61,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 0.2,
+            "total_s": 0.03,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 1.39
+    },
+    {
+      "candidate": "greedy_farm",
+      "opponent": "ranch_compounder",
+      "seed": 11,
+      "seat": 0,
+      "wall_s": 1.8449192000261974,
+      "raw": {
+        "cash": 5508.0,
+        "opponent_cash": 148195.0,
+        "cash_gap": -142687.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 0.2,
+          "total_s": 0.04,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 125.1,
+          "total_s": 1.61,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 11,
+        "cash": [
+          5508.0,
+          148195.0
+        ],
+        "winner": 1,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 0.2,
+            "total_s": 0.04,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 125.1,
+            "total_s": 1.61,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 2.76
+    },
+    {
+      "candidate": "greedy_farm",
+      "opponent": "ranch_compounder",
+      "seed": 11,
+      "seat": 1,
+      "wall_s": 2.0899967000004835,
+      "raw": {
+        "cash": 5484.0,
+        "opponent_cash": 172938.0,
+        "cash_gap": -167454.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 0.2,
+          "total_s": 0.03,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 164.6,
+          "total_s": 1.85,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 11,
+        "cash": [
+          172938.0,
+          5484.0
+        ],
+        "winner": 0,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 164.6,
+            "total_s": 1.85,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 0.2,
+            "total_s": 0.03,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 1.5
+    },
+    {
+      "candidate": "greedy_farm",
+      "opponent": "ranch_compounder",
+      "seed": 23,
+      "seat": 0,
+      "wall_s": 1.6607707999937702,
+      "raw": {
+        "cash": 5444.0,
+        "opponent_cash": 122916.0,
+        "cash_gap": -117472.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 0.2,
+          "total_s": 0.03,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 138.5,
+          "total_s": 1.45,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 23,
+        "cash": [
+          5444.0,
+          122916.0
+        ],
+        "winner": 1,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 0.2,
+            "total_s": 0.03,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 138.5,
+            "total_s": 1.45,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 5.05
+    },
+    {
+      "candidate": "greedy_farm",
+      "opponent": "ranch_compounder",
+      "seed": 23,
+      "seat": 1,
+      "wall_s": 1.9018007999984547,
+      "raw": {
+        "cash": 5547.0,
+        "opponent_cash": 141401.0,
+        "cash_gap": -135854.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 0.2,
+          "total_s": 0.03,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 128.9,
+          "total_s": 1.68,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 23,
+        "cash": [
+          141401.0,
+          5547.0
+        ],
+        "winner": 0,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 128.9,
+            "total_s": 1.68,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 0.2,
+            "total_s": 0.03,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 3.25
+    },
+    {
+      "candidate": "greedy_farm",
+      "opponent": "tactical_counterplay",
+      "seed": 11,
+      "seat": 0,
+      "wall_s": 1.713670600001933,
+      "raw": {
+        "cash": 5412.0,
+        "opponent_cash": 206482.0,
+        "cash_gap": -201070.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 0.2,
+          "total_s": 0.04,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 96.8,
+          "total_s": 1.45,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 11,
+        "cash": [
+          5412.0,
+          206482.0
+        ],
+        "winner": 1,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 0.2,
+            "total_s": 0.04,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 96.8,
+            "total_s": 1.45,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 0.66
+    },
+    {
+      "candidate": "greedy_farm",
+      "opponent": "tactical_counterplay",
+      "seed": 11,
+      "seat": 1,
+      "wall_s": 1.7851694999844767,
+      "raw": {
+        "cash": 5418.0,
+        "opponent_cash": 195544.0,
+        "cash_gap": -190126.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 0.2,
+          "total_s": 0.03,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 115.8,
+          "total_s": 1.53,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 11,
+        "cash": [
+          195544.0,
+          5418.0
+        ],
+        "winner": 0,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 115.8,
+            "total_s": 1.53,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 0.2,
+            "total_s": 0.03,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 0.86
+    },
+    {
+      "candidate": "greedy_farm",
+      "opponent": "tactical_counterplay",
+      "seed": 23,
+      "seat": 0,
+      "wall_s": 1.839927200024249,
+      "raw": {
+        "cash": 5461.0,
+        "opponent_cash": 184470.0,
+        "cash_gap": -179009.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 0.2,
+          "total_s": 0.03,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 119.7,
+          "total_s": 1.59,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 23,
+        "cash": [
+          5461.0,
+          184470.0
+        ],
+        "winner": 1,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 0.2,
+            "total_s": 0.03,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 119.7,
+            "total_s": 1.59,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 1.13
+    },
+    {
+      "candidate": "greedy_farm",
+      "opponent": "tactical_counterplay",
+      "seed": 23,
+      "seat": 1,
+      "wall_s": 1.7586008999787737,
+      "raw": {
+        "cash": 5466.0,
+        "opponent_cash": 160142.0,
+        "cash_gap": -154676.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 0.2,
+          "total_s": 0.03,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 93.3,
+          "total_s": 1.5,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 23,
+        "cash": [
+          160142.0,
+          5466.0
+        ],
+        "winner": 0,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 93.3,
+            "total_s": 1.5,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 0.2,
+            "total_s": 0.03,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 2.06
+    },
+    {
+      "candidate": "agronomy_arbitrage",
+      "opponent": "ranch_compounder",
+      "seed": 11,
+      "seat": 0,
+      "wall_s": 5.343236499989871,
+      "raw": {
+        "cash": 112368.0,
+        "opponent_cash": 87401.0,
+        "cash_gap": 24967.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 325.6,
+          "total_s": 3.69,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 103.1,
+          "total_s": 1.36,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 11,
+        "cash": [
+          112368.0,
+          87401.0
+        ],
+        "winner": 0,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 325.6,
+            "total_s": 3.69,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 103.1,
+            "total_s": 1.36,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 65.1
+    },
+    {
+      "candidate": "agronomy_arbitrage",
+      "opponent": "ranch_compounder",
+      "seed": 11,
+      "seat": 1,
+      "wall_s": 5.815463700011605,
+      "raw": {
+        "cash": 73970.0,
+        "opponent_cash": 77988.0,
+        "cash_gap": -4018.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 405.5,
+          "total_s": 4.07,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 97.0,
+          "total_s": 1.44,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 11,
+        "cash": [
+          77988.0,
+          73970.0
+        ],
+        "winner": 0,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 97.0,
+            "total_s": 1.44,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 405.5,
+            "total_s": 4.07,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 47.49
+    },
+    {
+      "candidate": "agronomy_arbitrage",
+      "opponent": "ranch_compounder",
+      "seed": 23,
+      "seat": 0,
+      "wall_s": 5.548980299994582,
+      "raw": {
+        "cash": 80713.0,
+        "opponent_cash": 86617.0,
+        "cash_gap": -5904.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 330.0,
+          "total_s": 3.93,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 89.0,
+          "total_s": 1.33,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 23,
+        "cash": [
+          80713.0,
+          86617.0
+        ],
+        "winner": 1,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 330.0,
+            "total_s": 3.93,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 89.0,
+            "total_s": 1.33,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 46.32
+    },
+    {
+      "candidate": "agronomy_arbitrage",
+      "opponent": "ranch_compounder",
+      "seed": 23,
+      "seat": 1,
+      "wall_s": 5.4544388000213075,
+      "raw": {
+        "cash": 68545.0,
+        "opponent_cash": 68255.0,
+        "cash_gap": 290.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 322.9,
+          "total_s": 3.94,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 83.0,
+          "total_s": 1.23,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 23,
+        "cash": [
+          68255.0,
+          68545.0
+        ],
+        "winner": -1,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 83.0,
+            "total_s": 1.23,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 322.9,
+            "total_s": 3.94,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 50.18
+    },
+    {
+      "candidate": "agronomy_arbitrage",
+      "opponent": "tactical_counterplay",
+      "seed": 11,
+      "seat": 0,
+      "wall_s": 5.537902999989456,
+      "raw": {
+        "cash": 101681.0,
+        "opponent_cash": 168645.0,
+        "cash_gap": -66964.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 310.3,
+          "total_s": 3.61,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 116.0,
+          "total_s": 1.58,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 11,
+        "cash": [
+          101681.0,
+          168645.0
+        ],
+        "winner": 1,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 310.3,
+            "total_s": 3.61,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 116.0,
+            "total_s": 1.58,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 15.81
+    },
+    {
+      "candidate": "agronomy_arbitrage",
+      "opponent": "tactical_counterplay",
+      "seed": 11,
+      "seat": 1,
+      "wall_s": 5.381126399995992,
+      "raw": {
+        "cash": 133545.0,
+        "opponent_cash": 164258.0,
+        "cash_gap": -30713.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 259.2,
+          "total_s": 3.48,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 106.7,
+          "total_s": 1.57,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 11,
+        "cash": [
+          164258.0,
+          133545.0
+        ],
+        "winner": 0,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 106.7,
+            "total_s": 1.57,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 259.2,
+            "total_s": 3.48,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 31.71
+    },
+    {
+      "candidate": "agronomy_arbitrage",
+      "opponent": "tactical_counterplay",
+      "seed": 23,
+      "seat": 0,
+      "wall_s": 6.063934000005247,
+      "raw": {
+        "cash": 80624.0,
+        "opponent_cash": 122056.0,
+        "cash_gap": -41432.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 383.1,
+          "total_s": 4.25,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 131.7,
+          "total_s": 1.51,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 23,
+        "cash": [
+          80624.0,
+          122056.0
+        ],
+        "winner": 1,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 383.1,
+            "total_s": 4.25,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 131.7,
+            "total_s": 1.51,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 26.22
+    },
+    {
+      "candidate": "agronomy_arbitrage",
+      "opponent": "tactical_counterplay",
+      "seed": 23,
+      "seat": 1,
+      "wall_s": 5.271394699986558,
+      "raw": {
+        "cash": 77293.0,
+        "opponent_cash": 112911.0,
+        "cash_gap": -35618.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 313.9,
+          "total_s": 3.5,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 90.1,
+          "total_s": 1.46,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 23,
+        "cash": [
+          112911.0,
+          77293.0
+        ],
+        "winner": 0,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 90.1,
+            "total_s": 1.46,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 313.9,
+            "total_s": 3.5,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 29.12
+    },
+    {
+      "candidate": "ranch_compounder",
+      "opponent": "tactical_counterplay",
+      "seed": 11,
+      "seat": 0,
+      "wall_s": 2.943910500005586,
+      "raw": {
+        "cash": 112144.0,
+        "opponent_cash": 165430.0,
+        "cash_gap": -53286.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 107.9,
+          "total_s": 1.23,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 108.5,
+          "total_s": 1.43,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 11,
+        "cash": [
+          112144.0,
+          165430.0
+        ],
+        "winner": 1,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 107.9,
+            "total_s": 1.23,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 108.5,
+            "total_s": 1.43,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 20.91
+    },
+    {
+      "candidate": "ranch_compounder",
+      "opponent": "tactical_counterplay",
+      "seed": 11,
+      "seat": 1,
+      "wall_s": 2.945289600000251,
+      "raw": {
+        "cash": 88225.0,
+        "opponent_cash": 145976.0,
+        "cash_gap": -57751.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 108.9,
+          "total_s": 1.18,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 101.3,
+          "total_s": 1.47,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 11,
+        "cash": [
+          145976.0,
+          88225.0
+        ],
+        "winner": 0,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 101.3,
+            "total_s": 1.47,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 108.9,
+            "total_s": 1.18,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 19.12
+    },
+    {
+      "candidate": "ranch_compounder",
+      "opponent": "tactical_counterplay",
+      "seed": 23,
+      "seat": 0,
+      "wall_s": 3.029451100010192,
+      "raw": {
+        "cash": 63809.0,
+        "opponent_cash": 115474.0,
+        "cash_gap": -51665.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 98.6,
+          "total_s": 1.17,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 117.4,
+          "total_s": 1.57,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 23,
+        "cash": [
+          63809.0,
+          115474.0
+        ],
+        "winner": 1,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 98.6,
+            "total_s": 1.17,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 117.4,
+            "total_s": 1.57,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 21.58
+    },
+    {
+      "candidate": "ranch_compounder",
+      "opponent": "tactical_counterplay",
+      "seed": 23,
+      "seat": 1,
+      "wall_s": 3.0780479999957606,
+      "raw": {
+        "cash": 64865.0,
+        "opponent_cash": 111321.0,
+        "cash_gap": -46456.0
+      },
+      "candidate_fault": false,
+      "opponent_fault": false,
+      "faults": [
+        {
+          "errors": 0,
+          "step_ms_max": 97.8,
+          "total_s": 1.26,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 128.0,
+          "total_s": 1.54,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "result": {
+        "seed": 23,
+        "cash": [
+          111321.0,
+          64865.0
+        ],
+        "winner": 0,
+        "reason": "cash",
+        "forfeited": [
+          false,
+          false
+        ],
+        "stats": [
+          {
+            "errors": 0,
+            "step_ms_max": 128.0,
+            "total_s": 1.54,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          },
+          {
+            "errors": 0,
+            "step_ms_max": 97.8,
+            "total_s": 1.26,
+            "calls": 719,
+            "overage_used_s": 0.0,
+            "overage_left_s": 60.0,
+            "timeout": false,
+            "timeout_step": -1,
+            "first_error": ""
+          }
+        ],
+        "final_day": 29
+      },
+      "component": "adv",
+      "config_id": "0",
+      "score": 23.87
+    }
+  ]
+}

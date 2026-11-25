@@ -1,0 +1,21 @@
+你正在参加 AVL Final Bench 赛题《双符奇点》（sk_singularity）。
+
+任务：编写单文件独立 C++20 求解程序，保存至 `../submissions/sk_singularity.cpp`。
+每组测试点从 stdin 读入 4 行：
+  第 1 行：N a_S a_K V_max TL_ms
+  第 2 行：RHS_S（S 的满二叉树重写模板，叶子为 0..a_S-1 或字面常量 S/K）
+  第 3 行：RHS_K（K 的满二叉树重写模板，叶子为 0..a_K-1 或字面常量 S/K）
+  第 4 行：E_req（强制包含的残骸子树，无约束时为 -）
+
+你的程序需在 TL_ms（正式评测 5000 ms，内存 1024 MiB）内向 stdout 输出一行合法的 SK 满二叉树表达式 E（仅含 S, K, (, ) 与可选空格，|E| <= N，若 E_req != "-" 则须包含 E_req 为子树），在白盒 Hash-Consed 记忆化最左最外归约引擎（唯一 DAG 节点数 <= V_max = 10000000）中合法停机，并最大化精确停机步数 T(E)。
+
+正式评分标准（双轨计分）：
+- 测试规模：OS CSPRNG 动态生成 512 个隐藏测试点（8 类正交盲规则/强制残骸家族 × 每家族 64 测，均匀分布于 N ∈ {14, 18, 21, 24}，每测以 50% 概率施加精确 S<->K 符号对换同构）。
+- 单测折算分：合法停机记 L = log2(T(E) + 1)（出现 DIV/NL/WA/PE/TLE/MLE/RE/OLE/CE 均记 0），每测由冻结强参考求解器在同一批动态测试点上以 600 ms 现场标定专属锚点 L_ref,i = round(clamp(1.40 * L_基准,i, 12.0, 600.0), 2)，单测折算分 NormScore_i = 100 * L^0.85 / (L^0.85 + L_ref,i^0.85)（倍率 0.5x/1x/2x/5x/10x/25x 分别对应 35.68/50.00/64.32/79.71/87.62/93.91 分）。
+- 汇总指标：套题正式 0-100 总分为全部 512 测 NormScore_i 的等权算术均值；附加不封顶原始指标为 RawLog2Mean（全批 log2(T+1) 均值）、RawLog2Max 与 SingularityCount（T(E) >= 2^64 - 1 的奇点测试点数）。
+
+关键提醒：
+1. 阅读 `README.md`、`FORMAT.md`、`engine/sk_core.hpp` 与 `handbook/combinator-guide.md`。
+2. 正式评测包含多类未知盲规则并随机施加精确 S<->K 符号对换同构，切勿硬编码标准 SK 符号角色。
+3. 使用 `python scripts/spar.py ../submissions/sk_singularity.cpp --workers 4` 与追加 `--flip` 进行本地验证。
+4. 最终文件 `../submissions/sk_singularity.cpp` 必须完全独立可编译（`g++ -std=gnu++20 -O2 -pipe`），不得依赖工作区头文件、外部文件或网络。

@@ -1,0 +1,29 @@
+{
+  "problem": "minimum_effort",
+  "title": "最小努力（Minimum Effort）",
+  "language": "C++20",
+  "submission_ext": ".cpp",
+  "compiler_flags": [
+    "-std=gnu++20",
+    "-O2",
+    "-pipe"
+  ],
+  "evaluation_protocol": "exact_per_test_subtasks_weighted",
+  "memory_limit_mb": 128,
+  "max_score": 100,
+  "official_cases": 36,
+  "sample_cases": 3,
+  "efficiency_weights": {
+    "time_weight": 0.70,
+    "mem_weight": 0.30,
+    "time_free_ms": 50.0,
+    "mem_free_mb": 16.0,
+    "formula": "E = (1 - 0.70 * clamp(log(t/50)/log(TL/50), 0, 1)) * (1 - 0.30 * clamp(log(m/16)/log(ML/16), 0, 1))"
+  },
+  "subtasks": [
+    {"id": 1, "name": "一般组（H <= 2）", "points": 8, "cases": 2, "input_type": 0, "time_limit_ms": 1000},
+    {"id": 2, "name": "一般组（H <= 5）", "points": 12, "cases": 4, "input_type": 0, "time_limit_ms": 1000},
+    {"id": 3, "name": "一般组（H <= 10）", "points": 60, "cases": 20, "input_type": 0, "time_limit_ms": 2000},
+    {"id": 4, "name": "固定形态组（H <= 10000）", "points": 20, "cases": 10, "input_type": 1, "time_limit_ms": 1500}
+  ]
+}

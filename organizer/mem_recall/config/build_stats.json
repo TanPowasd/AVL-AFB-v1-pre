@@ -1,0 +1,956 @@
+{
+  "DuRetrieval/dev": {
+    "name": "DuRetrieval",
+    "group": "zh",
+    "metric": "ndcg@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": false,
+    "n_questions": 233,
+    "n_scored": 233,
+    "n_banks": 1,
+    "n_docs": 8579,
+    "n_chars": 2999859,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/DuRetrieval.json.gz",
+        "bytes": 3941086,
+        "sha256": "2dc3ef71faa6871c8e26df13bc5f290cebd94edbf6dd26dd17342a13b2680cec"
+      }
+    ],
+    "license": "未标注（HF C-MTEB 数据卡无 license 字段；上游许可未核实，存疑）",
+    "notes": "UMB v0.1 抽样（≤500 题）与划分；语料按 UMB 规则 2 重抽到 ≤3,000,000 字（UMB 原为 600 万字；金标全保留），dev/test 共用同一语料；文本 = title + '\\n' + text"
+  },
+  "DuRetrieval/test": {
+    "name": "DuRetrieval",
+    "group": "zh",
+    "metric": "ndcg@10",
+    "split": "test",
+    "official": true,
+    "practice_only": false,
+    "n_questions": 267,
+    "n_scored": 267,
+    "n_banks": 1,
+    "n_docs": 8579,
+    "n_chars": 2999859,
+    "files": [
+      {
+        "file": "scoring/mem_recall/hidden/DuRetrieval.json.gz",
+        "bytes": 3914008,
+        "sha256": "86d0e30b23538a96efa37b66586c4bd83ac48b896a3a188a0c03efb260b3873b"
+      }
+    ],
+    "license": "未标注（HF C-MTEB 数据卡无 license 字段；上游许可未核实，存疑）",
+    "notes": "UMB v0.1 抽样（≤500 题）与划分；语料按 UMB 规则 2 重抽到 ≤3,000,000 字（UMB 原为 600 万字；金标全保留），dev/test 共用同一语料；文本 = title + '\\n' + text"
+  },
+  "EcomRetrieval/dev": {
+    "name": "EcomRetrieval",
+    "group": "zh",
+    "metric": "ndcg@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": false,
+    "n_questions": 257,
+    "n_scored": 257,
+    "n_banks": 1,
+    "n_docs": 90977,
+    "n_chars": 3000000,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/EcomRetrieval.json.gz",
+        "bytes": 4945116,
+        "sha256": "b75a6e38ed4bc256a7b8747de9803ded6af9d6d0277f4800490567f6ff7b5e35"
+      }
+    ],
+    "license": "未标注（HF C-MTEB 数据卡无 license 字段；上游许可未核实，存疑）",
+    "notes": "UMB v0.1 抽样（≤500 题）与划分；语料按 UMB 规则 2 重抽到 ≤3,000,000 字（UMB 原为 600 万字；金标全保留），dev/test 共用同一语料；文本 = title + '\\n' + text"
+  },
+  "EcomRetrieval/test": {
+    "name": "EcomRetrieval",
+    "group": "zh",
+    "metric": "ndcg@10",
+    "split": "test",
+    "official": true,
+    "practice_only": false,
+    "n_questions": 243,
+    "n_scored": 243,
+    "n_banks": 1,
+    "n_docs": 90977,
+    "n_chars": 3000000,
+    "files": [
+      {
+        "file": "scoring/mem_recall/hidden/EcomRetrieval.json.gz",
+        "bytes": 4892265,
+        "sha256": "c8ae98dcb874f7147c8dc2aee36f6f778d86be3eb16b8e0204586083afb95be2"
+      }
+    ],
+    "license": "未标注（HF C-MTEB 数据卡无 license 字段；上游许可未核实，存疑）",
+    "notes": "UMB v0.1 抽样（≤500 题）与划分；语料按 UMB 规则 2 重抽到 ≤3,000,000 字（UMB 原为 600 万字；金标全保留），dev/test 共用同一语料；文本 = title + '\\n' + text"
+  },
+  "MMarcoRetrieval/dev": {
+    "name": "MMarcoRetrieval",
+    "group": "zh",
+    "metric": "ndcg@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": false,
+    "n_questions": 258,
+    "n_scored": 258,
+    "n_banks": 1,
+    "n_docs": 26179,
+    "n_chars": 2999913,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/MMarcoRetrieval.json.gz",
+        "bytes": 3636790,
+        "sha256": "6c03a96c656a032bf3331192205b0fb017f01aa3d8bb00cd74d45ff25dcf2cfc"
+      }
+    ],
+    "license": "未标注（HF C-MTEB 数据卡无 license 字段；上游许可未核实，存疑）",
+    "notes": "UMB v0.1 抽样（≤500 题）与划分；语料按 UMB 规则 2 重抽到 ≤3,000,000 字（UMB 原为 600 万字；金标全保留），dev/test 共用同一语料；文本 = title + '\\n' + text"
+  },
+  "MMarcoRetrieval/test": {
+    "name": "MMarcoRetrieval",
+    "group": "zh",
+    "metric": "ndcg@10",
+    "split": "test",
+    "official": true,
+    "practice_only": false,
+    "n_questions": 242,
+    "n_scored": 242,
+    "n_banks": 1,
+    "n_docs": 26179,
+    "n_chars": 2999913,
+    "files": [
+      {
+        "file": "scoring/mem_recall/hidden/MMarcoRetrieval.json.gz",
+        "bytes": 3600859,
+        "sha256": "e2b8de45cff0d58e2491fd6ab2adb54d95234f80179740a17728203fccafd55d"
+      }
+    ],
+    "license": "未标注（HF C-MTEB 数据卡无 license 字段；上游许可未核实，存疑）",
+    "notes": "UMB v0.1 抽样（≤500 题）与划分；语料按 UMB 规则 2 重抽到 ≤3,000,000 字（UMB 原为 600 万字；金标全保留），dev/test 共用同一语料；文本 = title + '\\n' + text"
+  },
+  "MedicalRetrieval/dev": {
+    "name": "MedicalRetrieval",
+    "group": "zh",
+    "metric": "ndcg@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": false,
+    "n_questions": 227,
+    "n_scored": 227,
+    "n_banks": 1,
+    "n_docs": 24655,
+    "n_chars": 2999981,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/MedicalRetrieval.json.gz",
+        "bytes": 3793178,
+        "sha256": "cb67b9c406938de67bcc1c8f4b88b81c54d75192ecda5087dd09bd1817c5bb87"
+      }
+    ],
+    "license": "未标注（HF C-MTEB 数据卡无 license 字段；上游许可未核实，存疑）",
+    "notes": "UMB v0.1 抽样（≤500 题）与划分；语料按 UMB 规则 2 重抽到 ≤3,000,000 字（UMB 原为 600 万字；金标全保留），dev/test 共用同一语料；文本 = title + '\\n' + text"
+  },
+  "MedicalRetrieval/test": {
+    "name": "MedicalRetrieval",
+    "group": "zh",
+    "metric": "ndcg@10",
+    "split": "test",
+    "official": true,
+    "practice_only": false,
+    "n_questions": 273,
+    "n_scored": 273,
+    "n_banks": 1,
+    "n_docs": 24655,
+    "n_chars": 2999981,
+    "files": [
+      {
+        "file": "scoring/mem_recall/hidden/MedicalRetrieval.json.gz",
+        "bytes": 3772278,
+        "sha256": "9b4e9d88e83b786ca0daa46b0d1390a52ac5bdb054a9544cb58a822f84c4aba0"
+      }
+    ],
+    "license": "未标注（HF C-MTEB 数据卡无 license 字段；上游许可未核实，存疑）",
+    "notes": "UMB v0.1 抽样（≤500 题）与划分；语料按 UMB 规则 2 重抽到 ≤3,000,000 字（UMB 原为 600 万字；金标全保留），dev/test 共用同一语料；文本 = title + '\\n' + text"
+  },
+  "VideoRetrieval/dev": {
+    "name": "VideoRetrieval",
+    "group": "zh",
+    "metric": "ndcg@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": false,
+    "n_questions": 260,
+    "n_scored": 260,
+    "n_banks": 1,
+    "n_docs": 96837,
+    "n_chars": 2999990,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/VideoRetrieval.json.gz",
+        "bytes": 4520410,
+        "sha256": "7aeb1049d7cb2895b07666283315eded7988a30ad44e3ab6b1b7a60a86acdf9c"
+      }
+    ],
+    "license": "未标注（HF C-MTEB 数据卡无 license 字段；上游许可未核实，存疑）",
+    "notes": "UMB v0.1 抽样（≤500 题）与划分；语料按 UMB 规则 2 重抽到 ≤3,000,000 字（UMB 原为 600 万字；金标全保留），dev/test 共用同一语料；文本 = title + '\\n' + text"
+  },
+  "VideoRetrieval/test": {
+    "name": "VideoRetrieval",
+    "group": "zh",
+    "metric": "ndcg@10",
+    "split": "test",
+    "official": true,
+    "practice_only": false,
+    "n_questions": 240,
+    "n_scored": 240,
+    "n_banks": 1,
+    "n_docs": 96837,
+    "n_chars": 2999990,
+    "files": [
+      {
+        "file": "scoring/mem_recall/hidden/VideoRetrieval.json.gz",
+        "bytes": 4433734,
+        "sha256": "fd768b007e9d6de6d1a717b3e269bf0f6fb86b0c3df28ab0b980e006a71985c8"
+      }
+    ],
+    "license": "未标注（HF C-MTEB 数据卡无 license 字段；上游许可未核实，存疑）",
+    "notes": "UMB v0.1 抽样（≤500 题）与划分；语料按 UMB 规则 2 重抽到 ≤3,000,000 字（UMB 原为 600 万字；金标全保留），dev/test 共用同一语料；文本 = title + '\\n' + text"
+  },
+  "_retr_cap": {
+    "scifact": {
+      "umb_docs": 3982,
+      "kept_docs": 1998,
+      "kept_chars_title_text": 2999741
+    },
+    "nfcorpus": {
+      "umb_docs": 3633,
+      "kept_docs": 3128,
+      "kept_chars_title_text": 4951765
+    },
+    "arguana": {
+      "umb_docs": 5867,
+      "kept_docs": 2978,
+      "kept_chars_title_text": 2999243
+    },
+    "scidocs": {
+      "umb_docs": 5104,
+      "kept_docs": 2636,
+      "kept_chars_title_text": 2999774
+    },
+    "EcomRetrieval": {
+      "umb_docs": 100902,
+      "kept_docs": 90977,
+      "kept_chars_title_text": 3000000
+    },
+    "VideoRetrieval": {
+      "umb_docs": 100930,
+      "kept_docs": 96837,
+      "kept_chars_title_text": 2999990
+    },
+    "MedicalRetrieval": {
+      "umb_docs": 49234,
+      "kept_docs": 24655,
+      "kept_chars_title_text": 2999981
+    },
+    "DuRetrieval": {
+      "umb_docs": 17538,
+      "kept_docs": 8579,
+      "kept_chars_title_text": 2999859
+    },
+    "MMarcoRetrieval": {
+      "umb_docs": 52391,
+      "kept_docs": 26179,
+      "kept_chars_title_text": 2999938
+    }
+  },
+  "arguana/dev": {
+    "name": "arguana",
+    "group": "en",
+    "metric": "ndcg@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": false,
+    "n_questions": 252,
+    "n_scored": 252,
+    "n_banks": 1,
+    "n_docs": 2978,
+    "n_chars": 3000423,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/arguana.json.gz",
+        "bytes": 1214436,
+        "sha256": "9fa73676006c8a327bb158136d8d0b68930a2c4118e83daca94eb68063f65df1"
+      }
+    ],
+    "license": "CC BY-SA 4.0（HF BeIR 数据卡标注）",
+    "notes": "UMB v0.1 抽样（≤500 题）与划分；语料按 UMB 规则 2 重抽到 ≤3,000,000 字（UMB 原为 600 万字；金标全保留），dev/test 共用同一语料；文本 = title + '\\n' + text；1 篇金标文档上游缺失（test-science-sghwbdgmo-con03b），该题保留"
+  },
+  "arguana/test": {
+    "name": "arguana",
+    "group": "en",
+    "metric": "ndcg@10",
+    "split": "test",
+    "official": true,
+    "practice_only": false,
+    "n_questions": 248,
+    "n_scored": 248,
+    "n_banks": 1,
+    "n_docs": 2978,
+    "n_chars": 3000423,
+    "files": [
+      {
+        "file": "scoring/mem_recall/hidden/arguana.json.gz",
+        "bytes": 1212967,
+        "sha256": "119d7a00baa3386c6b172792a438cbe560be3748a8a9ba95a3ed243287ef7e2a"
+      }
+    ],
+    "license": "CC BY-SA 4.0（HF BeIR 数据卡标注）",
+    "notes": "UMB v0.1 抽样（≤500 题）与划分；语料按 UMB 规则 2 重抽到 ≤3,000,000 字（UMB 原为 600 万字；金标全保留），dev/test 共用同一语料；文本 = title + '\\n' + text；1 篇金标文档上游缺失（test-science-sghwbdgmo-con03b），该题保留"
+  },
+  "convomem/dev": {
+    "name": "convomem",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": false,
+    "n_questions": 1936,
+    "n_scored": 1936,
+    "n_banks": 1936,
+    "n_docs": 166586,
+    "n_chars": 21916519,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/convomem.json.gz",
+        "bytes": 8542923,
+        "sha256": "ca024b2ddf058462b24c3e4f58f13e9a0684b8de8659deb46040ae4fefee53fa"
+      }
+    ],
+    "license": "MIT（HF KaLM-Embedding/LMEB 数据卡标注）",
+    "notes": "记忆bench 划分 md5('子集/场景')%3==0 dev，其余 test；无金标题丢弃"
+  },
+  "convomem/test": {
+    "name": "convomem",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "test",
+    "official": true,
+    "practice_only": false,
+    "n_questions": 3931,
+    "n_scored": 3931,
+    "n_banks": 3931,
+    "n_docs": 333635,
+    "n_chars": 43801779,
+    "files": [
+      {
+        "file": "scoring/mem_recall/hidden/convomem.json.gz",
+        "bytes": 17016097,
+        "sha256": "2756be51f4ed4128416cb345fe66b01f43278477aa79ef47aebea4dd4a526e2f"
+      }
+    ],
+    "license": "MIT（HF KaLM-Embedding/LMEB 数据卡标注）",
+    "notes": "记忆bench 划分 md5('子集/场景')%3==0 dev，其余 test；无金标题丢弃"
+  },
+  "cpzh/dev": {
+    "name": "cpzh",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": false,
+    "n_questions": 44,
+    "n_scored": 41,
+    "n_banks": 1,
+    "n_docs": 652,
+    "n_chars": 33329,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/cpzh.json",
+        "bytes": 149827,
+        "sha256": "4ede7cb5ca25881ec0a3c46b8b526c71360fb1b01918ea68d74ad05a9cbf443e"
+      }
+    ],
+    "license": "LicenseRef-TanPowasd-Proprietary（自建）",
+    "notes": "crossproj-zh v0.1（6a222a5）dev/hold 原划分；abstention 题不计分"
+  },
+  "cpzh/test": {
+    "name": "cpzh",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "test",
+    "official": true,
+    "practice_only": false,
+    "n_questions": 183,
+    "n_scored": 171,
+    "n_banks": 1,
+    "n_docs": 652,
+    "n_chars": 33329,
+    "files": [
+      {
+        "file": "scoring/mem_recall/hidden/cpzh.json",
+        "bytes": 177305,
+        "sha256": "12264b5f73f20061894c98a23e6e5c87771d6ef333cef6f968da84d2664f0cb0"
+      }
+    ],
+    "license": "LicenseRef-TanPowasd-Proprietary（自建）",
+    "notes": "crossproj-zh v0.1（6a222a5）dev/hold 原划分；abstention 题不计分"
+  },
+  "cpzh_bodydate/dev": {
+    "name": "cpzh_bodydate",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": true,
+    "n_questions": 210,
+    "n_scored": 210,
+    "n_banks": 1,
+    "n_docs": 534,
+    "n_chars": 62171,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/cpzh_bodydate.json",
+        "bytes": 239656,
+        "sha256": "5d3317a0a93985a33d2bc4e13166ba7552d04c76bdf42b0fb227b8134c9e5143"
+      }
+    ],
+    "license": "LicenseRef-TanPowasd-Proprietary（自建）",
+    "notes": "仅练习、不计正式分：源集只有 hold（已被灵枢消耗），无 dev"
+  },
+  "cpzh_dialog/dev": {
+    "name": "cpzh_dialog",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": true,
+    "n_questions": 176,
+    "n_scored": 176,
+    "n_banks": 4,
+    "n_docs": 160,
+    "n_chars": 97267,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/cpzh_dialog.json",
+        "bytes": 304854,
+        "sha256": "e2ae812ad667e77867dc0f6e59557b7503504f55d844c348f4808404bbe50b3e"
+      }
+    ],
+    "license": "LicenseRef-TanPowasd-Proprietary（自建）",
+    "notes": "仅练习、不计正式分：源集只有 hold（已被灵枢消耗）；每题证据单元合成一组（源 evidence 为单元列表，命中任一即算）"
+  },
+  "cpzh_long/dev": {
+    "name": "cpzh_long",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": true,
+    "n_questions": 200,
+    "n_scored": 200,
+    "n_banks": 1,
+    "n_docs": 646,
+    "n_chars": 62519,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/cpzh_long.json",
+        "bytes": 240104,
+        "sha256": "a6c8c7f6d01cb0130495944f9ebd2b1d056c91b1d5dd6bcb1c211827faa8a95f"
+      }
+    ],
+    "license": "LicenseRef-TanPowasd-Proprietary（自建）",
+    "notes": "仅练习、不计正式分：源集只有 hold（已被灵枢消耗），无 dev"
+  },
+  "hive/dev": {
+    "name": "hive",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": false,
+    "n_questions": 46,
+    "n_scored": 46,
+    "n_banks": 1,
+    "n_docs": 303,
+    "n_chars": 61335,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/hive.json",
+        "bytes": 203897,
+        "sha256": "8649480de1d4fffea04c9465c955813f4915bb640286362692a799b4bd4b7857"
+      }
+    ],
+    "license": "CC BY 4.0（FuRongJun-1999/hive-memory-bench 数据部分；须署名）",
+    "notes": "偏离原口径：8000 字上下文完整率 → 块级证据组 r@10；跨块证据句 8 条按相邻两块成组；找不到的证据句 0 条丢弃"
+  },
+  "hive/test": {
+    "name": "hive",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "test",
+    "official": true,
+    "practice_only": false,
+    "n_questions": 46,
+    "n_scored": 46,
+    "n_banks": 1,
+    "n_docs": 303,
+    "n_chars": 61335,
+    "files": [
+      {
+        "file": "scoring/mem_recall/hidden/hive.json",
+        "bytes": 203891,
+        "sha256": "a83ed0baecf3edeea92559f2a9625d3fa80d62065486f6ffdd23c8f50b6e864c"
+      }
+    ],
+    "license": "CC BY 4.0（FuRongJun-1999/hive-memory-bench 数据部分；须署名）",
+    "notes": "偏离原口径：8000 字上下文完整率 → 块级证据组 r@10；跨块证据句 8 条按相邻两块成组；找不到的证据句 0 条丢弃"
+  },
+  "kmb/dev": {
+    "name": "kmb",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": false,
+    "n_questions": 1050,
+    "n_scored": 1050,
+    "n_banks": 3,
+    "n_docs": 27062,
+    "n_chars": 8809690,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/kmb.json.gz",
+        "bytes": 2620069,
+        "sha256": "a8fd2ce7ded0e7fced40f9afb7841bf292221f8b43315e2e73dcc0a2ad5256bf"
+      }
+    ],
+    "license": "MIT（HF KaLM-Embedding/LMEB 数据卡标注；KnowMeBench 上游许可未核实）",
+    "notes": "记忆bench 划分 md5('语料/题型/qid')%2：0=dev，1=hold（此处 test）"
+  },
+  "kmb/test": {
+    "name": "kmb",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "test",
+    "official": true,
+    "practice_only": false,
+    "n_questions": 1081,
+    "n_scored": 1081,
+    "n_banks": 3,
+    "n_docs": 27062,
+    "n_chars": 8809690,
+    "files": [
+      {
+        "file": "scoring/mem_recall/hidden/kmb.json.gz",
+        "bytes": 2628084,
+        "sha256": "f247cc49972d1eea36c0a2cea6e46710a095ef559264ce7df08f6f538ed4550e"
+      }
+    ],
+    "license": "MIT（HF KaLM-Embedding/LMEB 数据卡标注；KnowMeBench 上游许可未核实）",
+    "notes": "记忆bench 划分 md5('语料/题型/qid')%2：0=dev，1=hold（此处 test）"
+  },
+  "lme/dev": {
+    "name": "lme",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": false,
+    "n_questions": 236,
+    "n_scored": 236,
+    "n_banks": 236,
+    "n_docs": 116159,
+    "n_chars": 115378867,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/lme.json.gz",
+        "bytes": 36400276,
+        "sha256": "282ee2f0bf2b9b0470701294dc8c2193b89e5773673ff7116da5f8dcf40f5ee0"
+      }
+    ],
+    "license": "MIT（xiaowu0162/LongMemEval）",
+    "notes": "UMB 抽样（有金标轮的 479 题）与划分；每题一个 bank（自带草堆）；doc id = 草堆内轮序号；text 去掉了 UMB 的 'role: ' 前缀，改放 speaker 字段"
+  },
+  "lme/test": {
+    "name": "lme",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "test",
+    "official": true,
+    "practice_only": false,
+    "n_questions": 243,
+    "n_scored": 243,
+    "n_banks": 243,
+    "n_docs": 120025,
+    "n_chars": 118990896,
+    "files": [
+      {
+        "file": "scoring/mem_recall/hidden/lme.json.gz",
+        "bytes": 37581983,
+        "sha256": "1abc0aeeba708c619a022f07572676dfab2256f20ec94a4bdfe897f16b2a6195"
+      }
+    ],
+    "license": "MIT（xiaowu0162/LongMemEval）",
+    "notes": "UMB 抽样（有金标轮的 479 题）与划分；每题一个 bank（自带草堆）；doc id = 草堆内轮序号；text 去掉了 UMB 的 'role: ' 前缀，改放 speaker 字段"
+  },
+  "locomo/dev": {
+    "name": "locomo",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": false,
+    "n_questions": 257,
+    "n_scored": 257,
+    "n_banks": 10,
+    "n_docs": 5882,
+    "n_chars": 807062,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/locomo.json",
+        "bytes": 1314065,
+        "sha256": "4fb7a3c638cbb3c70c8606b5b6533defff29d6a3a7ed0ec62881cc68fff6ebdc"
+      }
+    ],
+    "license": "CC BY-NC 4.0（snap-research/locomo LICENSE）",
+    "notes": "UMB 抽样 500 题与题级划分；同一段对话可同时出现在 dev 与 test 文件（语料相同、问题不同）"
+  },
+  "locomo/test": {
+    "name": "locomo",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "test",
+    "official": true,
+    "practice_only": false,
+    "n_questions": 243,
+    "n_scored": 243,
+    "n_banks": 10,
+    "n_docs": 5882,
+    "n_chars": 807062,
+    "files": [
+      {
+        "file": "scoring/mem_recall/hidden/locomo.json",
+        "bytes": 1311933,
+        "sha256": "83e43a4306bb60602091e945eb4c48539730b578fe94003b5afa6acf915312e9"
+      }
+    ],
+    "license": "CC BY-NC 4.0（snap-research/locomo LICENSE）",
+    "notes": "UMB 抽样 500 题与题级划分；同一段对话可同时出现在 dev 与 test 文件（语料相同、问题不同）"
+  },
+  "locomo_zh/dev": {
+    "name": "locomo_zh",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": false,
+    "n_questions": 201,
+    "n_scored": 201,
+    "n_banks": 2,
+    "n_docs": 1058,
+    "n_chars": 53126,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/locomo_zh.json",
+        "bytes": 252270,
+        "sha256": "146fb8155d5f2b9621fd335ca57e9bb261fafe25268beffd03f1d4c9c9774c28"
+      }
+    ],
+    "license": "MIT（justis-xu/memory-eval-zh 标注；源 LoCoMo 为 CC BY-NC 4.0，按较严者理解，存疑）",
+    "notes": "记忆bench 划分（dev=conv-30/47）；为防与 UMB locomo 互泄，去掉英文原题落在 locomo 另一侧的题：dev 去 30、test 去 218"
+  },
+  "locomo_zh/test": {
+    "name": "locomo_zh",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "test",
+    "official": true,
+    "practice_only": false,
+    "n_questions": 1083,
+    "n_scored": 1083,
+    "n_banks": 8,
+    "n_docs": 4824,
+    "n_chars": 267534,
+    "files": [
+      {
+        "file": "scoring/mem_recall/hidden/locomo_zh.json",
+        "bytes": 1229185,
+        "sha256": "def4d055744d4ffde14e131f1a744984bdf996ccc819b2aceeeba552d44f786d"
+      }
+    ],
+    "license": "MIT（justis-xu/memory-eval-zh 标注；源 LoCoMo 为 CC BY-NC 4.0，按较严者理解，存疑）",
+    "notes": "记忆bench 划分（dev=conv-30/47）；为防与 UMB locomo 互泄，去掉英文原题落在 locomo 另一侧的题：dev 去 30、test 去 218"
+  },
+  "membench/dev": {
+    "name": "membench",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": false,
+    "n_questions": 3353,
+    "n_scored": 3353,
+    "n_banks": 3353,
+    "n_docs": 314307,
+    "n_chars": 53788076,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/membench.json.gz",
+        "bytes": 17352336,
+        "sha256": "181a26a620a21b7e5a858b4cdb50c1bb462073b7d850464d8a52dd5df60efc9b"
+      }
+    ],
+    "license": "MIT（HF KaLM-Embedding/LMEB 数据卡标注）",
+    "notes": "记忆bench 三分：dev = md5%3==0；test = 保留 A(==1) ∪ 保留 B(==2)；单位为轮次（User+Assistant 一条）"
+  },
+  "membench/test": {
+    "name": "membench",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "test",
+    "official": true,
+    "practice_only": false,
+    "n_questions": 6647,
+    "n_scored": 6647,
+    "n_banks": 6647,
+    "n_docs": 614808,
+    "n_chars": 105610502,
+    "files": [
+      {
+        "file": "scoring/mem_recall/hidden/membench.part1.json.gz",
+        "bytes": 27333520,
+        "sha256": "def0a15bda48b374bfb6bc1e91b826fba4210ed38a7425c8e9fa51cbc542f855"
+      },
+      {
+        "file": "scoring/mem_recall/hidden/membench.part2.json.gz",
+        "bytes": 6693754,
+        "sha256": "34ee9794e8ddbea432dc3f99060511f7c0ec4783f3548ff242e2b2f48e3faf5c"
+      }
+    ],
+    "license": "MIT（HF KaLM-Embedding/LMEB 数据卡标注）",
+    "notes": "记忆bench 三分：dev = md5%3==0；test = 保留 A(==1) ∪ 保留 B(==2)；单位为轮次（User+Assistant 一条）"
+  },
+  "nfcorpus/dev": {
+    "name": "nfcorpus",
+    "group": "en",
+    "metric": "ndcg@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": false,
+    "n_questions": 171,
+    "n_scored": 171,
+    "n_banks": 1,
+    "n_docs": 3128,
+    "n_chars": 4954893,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/nfcorpus.json.gz",
+        "bytes": 1674194,
+        "sha256": "b7cf691ad0b3c3b9621b2d1d21c2714d1ec4707feb579d847a394b4809816eba"
+      }
+    ],
+    "license": "CC BY-SA 4.0（HF BeIR 数据卡标注）",
+    "notes": "UMB v0.1 抽样（≤500 题）与划分；语料按 UMB 规则 2 重抽到 ≤3,000,000 字（UMB 原为 600 万字；金标全保留），dev/test 共用同一语料；文本 = title + '\\n' + text"
+  },
+  "nfcorpus/test": {
+    "name": "nfcorpus",
+    "group": "en",
+    "metric": "ndcg@10",
+    "split": "test",
+    "official": true,
+    "practice_only": false,
+    "n_questions": 152,
+    "n_scored": 152,
+    "n_banks": 1,
+    "n_docs": 3128,
+    "n_chars": 4954893,
+    "files": [
+      {
+        "file": "scoring/mem_recall/hidden/nfcorpus.json.gz",
+        "bytes": 1667516,
+        "sha256": "aaf4ec01ee94d2e1ca6b2eff66c821d36bdaad8884011be088439b2fccbcc097"
+      }
+    ],
+    "license": "CC BY-SA 4.0（HF BeIR 数据卡标注）",
+    "notes": "UMB v0.1 抽样（≤500 题）与划分；语料按 UMB 规则 2 重抽到 ≤3,000,000 字（UMB 原为 600 万字；金标全保留），dev/test 共用同一语料；文本 = title + '\\n' + text"
+  },
+  "perltqa/dev": {
+    "name": "perltqa",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": false,
+    "n_questions": 3956,
+    "n_scored": 3956,
+    "n_banks": 16,
+    "n_docs": 1042,
+    "n_chars": 259107,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/perltqa.json",
+        "bytes": 1454271,
+        "sha256": "0dddea60b1db06f4cadceab0bd121205fb2a37ed709b2a8c7decc5ef15712839"
+      }
+    ],
+    "license": "CC BY-NC 4.0（Elvin-Yiming-Du/PerLTQA）",
+    "notes": "记忆bench 口径（agm/all/perltqa.py）；金标解析不全的 0 题丢弃"
+  },
+  "perltqa/test": {
+    "name": "perltqa",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "test",
+    "official": true,
+    "practice_only": false,
+    "n_questions": 4637,
+    "n_scored": 4637,
+    "n_banks": 16,
+    "n_docs": 1105,
+    "n_chars": 270355,
+    "files": [
+      {
+        "file": "scoring/mem_recall/hidden/perltqa.json",
+        "bytes": 1601643,
+        "sha256": "79b8cb1fe92c597901aab2d57ce7baed954e8c2e4d68054be63d2a21f39b3cf6"
+      }
+    ],
+    "license": "CC BY-NC 4.0（Elvin-Yiming-Du/PerLTQA）",
+    "notes": "记忆bench 口径（agm/all/perltqa.py）；金标解析不全的 0 题丢弃"
+  },
+  "realtalk/dev": {
+    "name": "realtalk",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": true,
+    "n_questions": 679,
+    "n_scored": 679,
+    "n_banks": 10,
+    "n_docs": 8944,
+    "n_chars": 922077,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/realtalk.json",
+        "bytes": 1720506,
+        "sha256": "9ab4da79402ed6bc47c3f176497b5d2775371a4896c0d924ce72244ff05928a4"
+      }
+    ],
+    "license": "Apache-2.0（danny911kr/REALTALK）",
+    "notes": "仅练习、不计正式分：记忆bench 中整套是保留集（无 dev 划分）"
+  },
+  "scidocs/dev": {
+    "name": "scidocs",
+    "group": "en",
+    "metric": "ndcg@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": false,
+    "n_questions": 254,
+    "n_scored": 254,
+    "n_banks": 1,
+    "n_docs": 2636,
+    "n_chars": 3002337,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/scidocs.json.gz",
+        "bytes": 1194257,
+        "sha256": "b3f750cddfb15261b0971e32c0cb11a579ea85742cd4f0ca686306fe5a654985"
+      }
+    ],
+    "license": "CC BY-SA 4.0（HF BeIR 数据卡标注）",
+    "notes": "UMB v0.1 抽样（≤500 题）与划分；语料按 UMB 规则 2 重抽到 ≤3,000,000 字（UMB 原为 600 万字；金标全保留），dev/test 共用同一语料；文本 = title + '\\n' + text"
+  },
+  "scidocs/test": {
+    "name": "scidocs",
+    "group": "en",
+    "metric": "ndcg@10",
+    "split": "test",
+    "official": true,
+    "practice_only": false,
+    "n_questions": 246,
+    "n_scored": 246,
+    "n_banks": 1,
+    "n_docs": 2636,
+    "n_chars": 3002337,
+    "files": [
+      {
+        "file": "scoring/mem_recall/hidden/scidocs.json.gz",
+        "bytes": 1193733,
+        "sha256": "e6d40f57e5db178ef46cfc384049f80a2712557b6221808f7bad147eb3ac6062"
+      }
+    ],
+    "license": "CC BY-SA 4.0（HF BeIR 数据卡标注）",
+    "notes": "UMB v0.1 抽样（≤500 题）与划分；语料按 UMB 规则 2 重抽到 ≤3,000,000 字（UMB 原为 600 万字；金标全保留），dev/test 共用同一语料；文本 = title + '\\n' + text"
+  },
+  "scifact/dev": {
+    "name": "scifact",
+    "group": "en",
+    "metric": "ndcg@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": false,
+    "n_questions": 145,
+    "n_scored": 145,
+    "n_banks": 1,
+    "n_docs": 1998,
+    "n_chars": 3001739,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/scifact.json.gz",
+        "bytes": 1071543,
+        "sha256": "28d14f9d2c4b9844c00e7058c36616e3fb8d396668ada9c96bffba1090cc5e30"
+      }
+    ],
+    "license": "CC BY-SA 4.0（HF BeIR 数据卡标注）",
+    "notes": "UMB v0.1 抽样（≤500 题）与划分；语料按 UMB 规则 2 重抽到 ≤3,000,000 字（UMB 原为 600 万字；金标全保留），dev/test 共用同一语料；文本 = title + '\\n' + text"
+  },
+  "scifact/test": {
+    "name": "scifact",
+    "group": "en",
+    "metric": "ndcg@10",
+    "split": "test",
+    "official": true,
+    "practice_only": false,
+    "n_questions": 155,
+    "n_scored": 155,
+    "n_banks": 1,
+    "n_docs": 1998,
+    "n_chars": 3001739,
+    "files": [
+      {
+        "file": "scoring/mem_recall/hidden/scifact.json.gz",
+        "bytes": 1071962,
+        "sha256": "ea7f2ede115aa4601cbaf7e6ae4f9494683e999e5f6d18cc669005e323da8522"
+      }
+    ],
+    "license": "CC BY-SA 4.0（HF BeIR 数据卡标注）",
+    "notes": "UMB v0.1 抽样（≤500 题）与划分；语料按 UMB 规则 2 重抽到 ≤3,000,000 字（UMB 原为 600 万字；金标全保留），dev/test 共用同一语料；文本 = title + '\\n' + text"
+  },
+  "tmd/dev": {
+    "name": "tmd",
+    "group": "mem",
+    "metric": "r@10",
+    "split": "dev",
+    "official": false,
+    "practice_only": true,
+    "n_questions": 177,
+    "n_scored": 177,
+    "n_banks": 12,
+    "n_docs": 7463,
+    "n_chars": 1273300,
+    "files": [
+      {
+        "file": "testset/mem_recall/data/dev/tmd.json",
+        "bytes": 1987416,
+        "sha256": "a0032b5b7bcb2bc1c96b9e9b9909dbbf0a1007d834ea04c5d3befe44177e950e"
+      }
+    ],
+    "license": "MIT（HF KaLM-Embedding/LMEB 数据卡标注）",
+    "notes": "仅练习、不计正式分：记忆bench 中整套是保留集（无 dev 划分）；语料与 LoCoMo 相同"
+  }
+}

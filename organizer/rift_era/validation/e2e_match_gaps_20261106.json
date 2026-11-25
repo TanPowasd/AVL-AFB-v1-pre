@@ -1,0 +1,105 @@
+{
+ "date": "2026-11-06",
+ "commit": "9c618f540ad6e594c17bba8d6a87e15fb0051585",
+ "branch": "rift-gaps",
+ "note": "rift-gaps 收尾验证。rc=0 即 finalize_match 的 state.audit() 通过。共享 2 核机器，负载均值 8–16（其他代理同时跑 4–6 局），墙钟不可比；cpu_seconds 为子进程 user+sys，含地图生成/接受检查等启动开销。基线 330d756 同条件 CPU 324.1 s，本分支 317.9–322.9 s（无命令），无劣化。练习时钟故 full_rules_accepted=false。",
+ "hash_equal": {
+  "legacy_none": true,
+  "legacy_simple": true,
+  "formal_none": true
+ },
+ "runs": {
+  "legacy_none_0": {
+   "command": "python3 -m organizer.rift_era match --ticks 400 --legacy-map --bot none",
+   "PYTHONHASHSEED": "0",
+   "rc": 0,
+   "state_hash": "539fb4ce3ccdc0632a28c70905bd01c4e94a162b945e0eaf59f046bfc9aecf55",
+   "engine_hash": "814e4636575cb7d207c574819bf9379ea5fcf3e5bf164f28dba4ad48aea354d3",
+   "pending_rule_inputs": [],
+   "ticks": 400,
+   "wall_seconds": 1262.8,
+   "cpu_seconds": 317.9,
+   "cpu_s_per_tick_incl_startup": 0.795,
+   "map_version": "rift_spatial_stratified_v1"
+  },
+  "legacy_none_12345": {
+   "command": "python3 -m organizer.rift_era match --ticks 400 --legacy-map --bot none",
+   "PYTHONHASHSEED": "12345",
+   "rc": 0,
+   "state_hash": "539fb4ce3ccdc0632a28c70905bd01c4e94a162b945e0eaf59f046bfc9aecf55",
+   "engine_hash": "814e4636575cb7d207c574819bf9379ea5fcf3e5bf164f28dba4ad48aea354d3",
+   "pending_rule_inputs": [],
+   "ticks": 400,
+   "wall_seconds": 1876.4,
+   "cpu_seconds": 322.9,
+   "cpu_s_per_tick_incl_startup": 0.807,
+   "map_version": "rift_spatial_stratified_v1"
+  },
+  "legacy_simple_0": {
+   "command": "python3 -m organizer.rift_era match --ticks 400 --legacy-map --bot simple",
+   "PYTHONHASHSEED": "0",
+   "rc": 0,
+   "state_hash": "cd826b959fc92b0062bfcab6b255247096302db4f47e7ae4ade95cfc10bc67ed",
+   "engine_hash": "814e4636575cb7d207c574819bf9379ea5fcf3e5bf164f28dba4ad48aea354d3",
+   "pending_rule_inputs": [],
+   "ticks": 400,
+   "wall_seconds": 1308.3,
+   "cpu_seconds": 331.2,
+   "cpu_s_per_tick_incl_startup": 0.828,
+   "map_version": "rift_spatial_stratified_v1"
+  },
+  "legacy_simple_12345": {
+   "command": "python3 -m organizer.rift_era match --ticks 400 --legacy-map --bot simple",
+   "PYTHONHASHSEED": "12345",
+   "rc": 0,
+   "state_hash": "cd826b959fc92b0062bfcab6b255247096302db4f47e7ae4ade95cfc10bc67ed",
+   "engine_hash": "814e4636575cb7d207c574819bf9379ea5fcf3e5bf164f28dba4ad48aea354d3",
+   "pending_rule_inputs": [],
+   "ticks": 400,
+   "wall_seconds": 1935.7,
+   "cpu_seconds": 336.4,
+   "cpu_s_per_tick_incl_startup": 0.841,
+   "map_version": "rift_spatial_stratified_v1"
+  },
+  "formal_0": {
+   "command": "python3 -m organizer.rift_era match --ticks 200 --bot none",
+   "PYTHONHASHSEED": "0",
+   "rc": 0,
+   "state_hash": "3a3680474f584f6397933884e1cda043870fe8c2fb9e2be51ff88ec4d1c8e7ee",
+   "engine_hash": "814e4636575cb7d207c574819bf9379ea5fcf3e5bf164f28dba4ad48aea354d3",
+   "pending_rule_inputs": [],
+   "ticks": 200,
+   "wall_seconds": 1342.8,
+   "cpu_seconds": 320.4,
+   "cpu_s_per_tick_incl_startup": 1.602,
+   "map_version": "rift_world_atlas_v1"
+  },
+  "formal_12345": {
+   "command": "python3 -m organizer.rift_era match --ticks 200 --bot none",
+   "PYTHONHASHSEED": "12345",
+   "rc": 0,
+   "state_hash": "3a3680474f584f6397933884e1cda043870fe8c2fb9e2be51ff88ec4d1c8e7ee",
+   "engine_hash": "814e4636575cb7d207c574819bf9379ea5fcf3e5bf164f28dba4ad48aea354d3",
+   "pending_rule_inputs": [],
+   "ticks": 200,
+   "wall_seconds": 1296.9,
+   "cpu_seconds": 316.7,
+   "cpu_s_per_tick_incl_startup": 1.583,
+   "map_version": "rift_world_atlas_v1"
+  },
+  "base_none_0": {
+   "command": "python3 -m organizer.rift_era match --ticks 400 --legacy-map --bot none",
+   "PYTHONHASHSEED": "0",
+   "rc": 0,
+   "state_hash": "7604c2cc245ac82f7d4b51d612ae0ac2d305d74c96a0c4c8afea17fa5b89d6fa",
+   "engine_hash": "b7404503655cead3e5efd68b298e8e5b755e9a485f68ed18078e9f28bd7d794c",
+   "pending_rule_inputs": [],
+   "ticks": 400,
+   "wall_seconds": 1870.9,
+   "cpu_seconds": 324.1,
+   "cpu_s_per_tick_incl_startup": 0.81,
+   "map_version": "rift_spatial_stratified_v1",
+   "commit": "330d756 (origin/rift-core, baseline without rift-gaps)"
+  }
+ }
+}

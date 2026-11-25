@@ -1,0 +1,92 @@
+{
+  "source": "C:\\Users\\TanPowasd\\Downloads\\submission.tar.gz",
+  "archive_sha256": "cab6aa76e5376113028828aade4293bb905e91708ee0dcf564ae3100d3a74461",
+  "main_sha256": "0b3520b30671130b5c1248b2335878e8457dc13b9a04bf5a48460c2627399fb2",
+  "files": {
+    "native_routes.py": {
+      "bytes": 45589,
+      "sha256": "c9d02fc91c4e0161ae10409bd216002caf4ee5119e1d4bb740c217a8b6ea1194"
+    },
+    "gpt6_rules.py": {
+      "bytes": 29738,
+      "sha256": "5cf40fecd673f9ac94bb49025ee79d5ad512d7ce20359de4987750f7f13af379"
+    },
+    "gpt6_math_routes.py": {
+      "bytes": 10595,
+      "sha256": "252ff5602c8fc453844f66e4ae78d5b2edc4932e132376d3e9a3241543078483"
+    },
+    "gpt6_policy.py": {
+      "bytes": 25436,
+      "sha256": "ec8b582fa5f2394c556d894fdb9770b50c215af5b0f502d1528b91129c804262"
+    },
+    "project_model.py": {
+      "bytes": 12345,
+      "sha256": "bd93b6208b43249c792f5395801cc47ad96db35b791a25645b0a96682e9dbf12"
+    },
+    "supply_bank.py": {
+      "bytes": 240895,
+      "sha256": "2b549a7239dc54a1de653b9a7c3a5209584c3fca6f2225690113841475d22847"
+    },
+    "market_model.py": {
+      "bytes": 8200,
+      "sha256": "6dc6a11f82c076f87c7a50f773ca119ae448a685a7c1a3a9e2b0721669d83e49"
+    },
+    "exact_market_model.py": {
+      "bytes": 32458,
+      "sha256": "9cd4aba886c344f0b17b4411a9224a961a8d298b3a176a6ee7c4345ac6f1d8bd"
+    },
+    "portfolio.py": {
+      "bytes": 9810,
+      "sha256": "f36be55a4b3de619e85441c7564197e24ed5cef7807a5e602aa7712aa67db072"
+    },
+    "route_columns.py": {
+      "bytes": 20642,
+      "sha256": "b001e152547029827649b5275ccbbfc37452784f0989dc8440e27b7d7c17663e"
+    },
+    "joint_policy.py": {
+      "bytes": 660552,
+      "sha256": "01b7b93e725422f7e489ca8f1a7908b56a84906df814ebe5987997d75caa9bc6"
+    },
+    "joint_v2.py": {
+      "bytes": 12591,
+      "sha256": "e9f87345f4e905e82f813acaf4b79401be87ef7ae9da69d606d59c7c0b7b7b95"
+    },
+    "converged_portfolio.py": {
+      "bytes": 764,
+      "sha256": "afa7814b617ada3d4819fd3a068e8e9575f013311bbcce4a5a2e7fc75444e54b"
+    },
+    "inventory_belief.py": {
+      "bytes": 5343,
+      "sha256": "7834d5adfc3f8937aaffdcf441dd69cf76553cc94679453d55e6bc6c40f5ba67"
+    },
+    "inventory_bank.py": {
+      "bytes": 260962,
+      "sha256": "e783c7fc4f7883069ea53b018e8a78dd7bc3685b6df70a3b7de37196e2f53e4e"
+    },
+    "joint_adaptive.py": {
+      "bytes": 1376,
+      "sha256": "b52f1ca5daa7e9c750a684fb40a7276a93a8d55e92dda9e22b449e1fd2d4f9fa"
+    },
+    "elite_execution.py": {
+      "bytes": 5550,
+      "sha256": "877d70ef185c3bf9c7cc8da76a33b196e7f17c4468ab320c7957a2afc9a0bf4c"
+    },
+    "elite_execution_v2.py": {
+      "bytes": 15894,
+      "sha256": "86d47b24359dc3a84e079986513056554ace71787faa99d0a88a6e76925d0c74"
+    },
+    "elite_block.py": {
+      "bytes": 11909,
+      "sha256": "4df5e91a7a83eaf6894f2a17a6b62001cba9fcde9ef3e9f1ef9bed49e3892147"
+    },
+    "elite_conditional_market.py": {
+      "bytes": 6113,
+      "sha256": "935e5f6b624219700a298e37bee8b7200f28eaa1a97a999365898bc72b1dfae2"
+    },
+    "elite_conditional_block.py": {
+      "bytes": 1128,
+      "sha256": "472871ba497298f0063bdcfa13fb83a3a8a65dc25c6dfcc560092fe21eb681c9"
+    }
+  },
+  "method": "static AST constants + Base85/zlib; no submission code executed"
+}

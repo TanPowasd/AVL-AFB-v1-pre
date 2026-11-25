@@ -1,0 +1,633 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>双符奇点 · SK 归约轨迹与 DAG 共享爆炸回放器</title>
+<style>
+  :root {
+    --bg: #0b1020;
+    --panel: #131b31;
+    --panel-2: #192340;
+    --border: #263459;
+    --text: #e6edf7;
+    --muted: #8ea0c2;
+    --accent: #38bdf8;
+    --good: #34d399;
+    --warn: #fbbf24;
+    --bad: #f87171;
+    --purple: #a78bfa;
+    --pink: #f472b6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.45;
+  }
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 20px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 { margin: 0; font-size: 17px; letter-spacing: 0.4px; }
+  header .sub { color: var(--muted); font-size: 12px; }
+  .controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  button, label.btn, select {
+    background: var(--panel-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 11px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  button:hover, label.btn:hover, select:hover { border-color: var(--accent); }
+  button.primary { background: #1d4ed8; border-color: #2563eb; }
+  input[type="file"] { display: none; }
+  main { max-width: 1480px; margin: 0 auto; padding: 14px 18px 30px; }
+  .dropzone {
+    border: 1.5px dashed var(--border);
+    border-radius: 10px;
+    padding: 12px 16px;
+    text-align: center;
+    color: var(--muted);
+    background: rgba(19, 27, 49, 0.55);
+    margin-bottom: 14px;
+    font-size: 13px;
+  }
+  .dropzone.drag { border-color: var(--accent); color: var(--text); background: rgba(56, 189, 248, 0.08); }
+  .grid {
+    display: grid;
+    grid-template-columns: 1.45fr 1fr;
+    gap: 14px;
+    align-items: start;
+  }
+  @media (max-width: 1080px) { .grid { grid-template-columns: 1fr; } }
+  .box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+  }
+  .box h2 {
+    margin: 0 0 10px;
+    font-size: 14px;
+    color: var(--accent);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .kpi-row {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(128px, 1fr));
+    gap: 8px;
+    margin-bottom: 12px;
+  }
+  .kpi {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+  }
+  .kpi .k { font-size: 11px; color: var(--muted); }
+  .kpi .v { font-size: 16px; font-weight: 700; margin-top: 2px; font-variant-numeric: tabular-nums; }
+  .kpi .v.good { color: var(--good); }
+  .kpi .v.warn { color: var(--warn); }
+  .kpi .v.pink { color: var(--pink); }
+  .canvas-wrap {
+    position: relative;
+    width: 100%;
+    height: 410px;
+    background: #070b16;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .chart-wrap {
+    position: relative;
+    width: 100%;
+    height: 220px;
+    background: #070b16;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  canvas { display: block; width: 100%; height: 100%; }
+  .scrub-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+    flex-wrap: wrap;
+  }
+  input[type="range"] { flex: 1; min-width: 160px; accent-color: var(--accent); }
+  .expr-box {
+    margin-top: 10px;
+    background: #070b16;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 9px 11px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12.5px;
+    word-break: break-all;
+    max-height: 110px;
+    overflow-y: auto;
+  }
+  .tag {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 4px;
+    font-size: 11px;
+    font-weight: 600;
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+  }
+  .tag.rule-s { color: #38bdf8; border-color: #38bdf8; }
+  .tag.rule-k { color: #a78bfa; border-color: #a78bfa; }
+  .tag.rule-nf { color: #34d399; border-color: #34d399; }
+  .tag.rule-tr { color: #fbbf24; border-color: #fbbf24; }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  th, td {
+    padding: 5px 6px;
+    border-bottom: 1px solid var(--border);
+    text-align: left;
+  }
+  th { color: var(--muted); font-family: inherit; font-weight: 600; }
+  td.num, th.num { text-align: right; }
+  .rule-pre {
+    background: #070b16;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 12.5px;
+    margin: 0;
+    white-space: pre-wrap;
+  }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>双符奇点（The SK Singularity）· 归约轨迹与 DAG 共享爆炸回放器</h1>
+    <div class="sub">可视化最左最外语法树红式推进、唯一 DAG 节点记忆化步数增长与高热共享子图</div>
+  </div>
+  <div class="controls">
+    <label class="btn primary">
+      加载 Replay JSON
+      <input id="fileInput" type="file" accept=".json" />
+    </label>
+    <button id="btnBuiltin">恢复内置示例</button>
+    <button id="btnPlay">播放</button>
+    <button id="btnPrev">上一步</button>
+    <button id="btnNext">下一步</button>
+    <select id="selSpeed" title="播放速度">
+      <option value="900">慢速 (1.1x)</option>
+      <option value="450" selected>正常 (2.2x)</option>
+      <option value="180">快速 (5.5x)</option>
+      <option value="60">极速 (16x)</option>
+    </select>
+  </div>
+</header>
+
+<main>
+  <div id="dropzone" class="dropzone">
+    拖拽由 <code>python scripts/record_replay.py ...</code> 生成的 <code>replays/*.json</code> 到此处，或点击右上角“加载 Replay JSON”。当前展示内置示例（标准 SK，$N=8$ 全局最优解 $T=1958$ 步）。
+  </div>
+
+  <div class="kpi-row" id="kpiRow"></div>
+
+  <div class="grid">
+    <div>
+      <div class="box">
+        <h2>
+          <span>最左最外语法树归约视图</span>
+          <span id="frameMeta" style="font-size:12px;color:var(--muted);"></span>
+        </h2>
+        <div class="canvas-wrap">
+          <canvas id="treeCanvas"></canvas>
+        </div>
+        <div class="scrub-row">
+          <span style="font-size:12px;color:var(--muted);">帧进度</span>
+          <input id="scrub" type="range" min="0" max="0" value="0" />
+          <span id="frameCounter" style="font-size:12px;min-width:68px;text-align:right;">0 / 0</span>
+        </div>
+        <div class="expr-box" id="exprBox"></div>
+      </div>
+    </div>
+
+    <div>
+      <div class="box">
+        <h2><span>测试点规则规格</span><span id="caseTitle" style="font-size:12px;color:var(--muted);"></span></h2>
+        <pre class="rule-pre" id="ruleBox"></pre>
+      </div>
+
+      <div class="box">
+        <h2><span>DAG 记忆化步数放大曲线</span><span style="font-size:12px;color:var(--muted);">节点编号 vs log2(NF 步数)</span></h2>
+        <div class="chart-wrap">
+          <canvas id="dagCanvas"></canvas>
+        </div>
+      </div>
+
+      <div class="box">
+        <h2><span>高热共享 DAG 子图（Top NF 步数）</span></h2>
+        <div style="max-height:240px;overflow-y:auto;">
+          <table>
+            <thead>
+              <tr><th>ID</th><th class="num">log2(T)</th><th class="num">精确/科学计数</th><th>预览</th></tr>
+            </thead>
+            <tbody id="hotBody"></tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+const BUILTIN_REPLAY = {
+  format: "sk-singularity-replay/1",
+  problem: "sk_singularity",
+  title: "双符奇点（The SK Singularity）",
+  solver: "builtin_N8_champion",
+  case: {
+    name: "P1_01",
+    family: "P1_StdSK",
+    N: 8,
+    a_S: 3,
+    a_K: 2,
+    rhs_S: "((0 2) (1 2))",
+    rhs_K: "0",
+    req: "-",
+    max_nodes: 10000000,
+    time_limit_ms: 5000,
+    l_ref: 8.0
+  },
+  solver_metrics: { cpu_ms: 1.2, wall_ms: 1.5, mem_mb: 4.0 },
+  result: {
+    verdict: "AC",
+    message: "OK",
+    halted: true,
+    leaves: 8,
+    expr_canonical: "((((S (S ((S S) S))) S) S) K)",
+    is_exact: true,
+    exact_steps: 1958,
+    steps_display: "1958",
+    log2_steps: 10.935902,
+    norm_score: 56.60,
+    singularity: false,
+    dag_nodes: 242,
+    redex_fires: 107,
+    whnf_hits: 114,
+    nf_hits: 5,
+    peak_stack: 26,
+    nf_preview: "((S (K ((S (S S)) K))) ((S (K (K ((S (S S)) K)))) ((S (S S)) K)))",
+    judge_ms: 0.42,
+    trace: [
+      { step: 0, expr: "((((S (S ((S S) S))) S) S) K)", rule: "S", path: "L", leaves: 8 },
+      { step: 1, expr: "((((S ((S S) S)) S) (S S)) K)", rule: "S", path: "L", leaves: 8 },
+      { step: 2, expr: "(((((S S) S) (S S)) (S (S S))) K)", rule: "S", path: "LL", leaves: 9 },
+      { step: 3, expr: "((((S (S S)) (S (S S))) (S (S S))) K)", rule: "S", path: "L", leaves: 10 },
+      { step: 4, expr: "((((S S) (S (S S))) ((S (S S)) (S (S S)))) K)", rule: "S", path: "L", leaves: 12 },
+      { step: 5, expr: "(((S ((S (S S)) (S (S S)))) ((S (S S)) ((S (S S)) (S (S S))))) K)", rule: "S", path: "", leaves: 17 },
+      { step: 6, expr: "((((S (S S)) (S (S S))) K) (((S (S S)) ((S (S S)) (S (S S)))) K))", rule: "S", path: "L", leaves: 17 },
+      { step: 7, expr: "((((S S) K) ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))", rule: "S", path: "L", leaves: 17 },
+      { step: 8, expr: "(((S ((S (S S)) K)) (K ((S (S S)) K))) (((S (S S)) ((S (S S)) (S (S S)))) K))", rule: "S", path: "", leaves: 20 },
+      { step: 9, expr: "((((S (S S)) K) (((S (S S)) ((S (S S)) (S (S S)))) K)) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K)))", rule: "S", path: "L", leaves: 29 },
+      { step: 10, expr: "((((S S) (((S (S S)) ((S (S S)) (S (S S)))) K)) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K)))", rule: "S", path: "L", leaves: 38 },
+      { step: 11, expr: "(((S (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K)))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K)))", rule: "S", path: "", leaves: 48 },
+      { step: 12, expr: "(((K (((S (S S)) ((S (S S)) (S (S S)))) K)) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))) (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))))", rule: "K", path: "L", leaves: 62 },
+      { step: 13, expr: "((((S (S S)) ((S (S S)) (S (S S)))) K) (((((S (S S)) ((S (S S)) (S (S S)))) K) (K (((S (S S)) ((S (S S)) (S (S S)))) K))) ((K ((S (S S)) K)) (((S (S S)) ((S (S S)) (S (S S)))) K))))", rule: "TRUNC", path: "", leaves: 46 }
+    ],
+    dag_growth: [
+      { id: 1, log2: 1.0 }, { id: 16, log2: 2.32 }, { id: 32, log2: 3.70 },
+      { id: 50, log2: 5.17 }, { id: 70, log2: 6.81 }, { id: 92, log2: 8.57 },
+      { id: 108, log2: 10.16 }, { id: 114, log2: 10.94 }
+    ],
+    hot_dag_nodes: [
+      { id: 8, l: 7, r: 1, log2: 10.9359, steps_display: "1958", preview: "((((S (S ((S S) S))) S) S) K)" },
+      { id: 220, l: 205, r: 217, log2: 10.1561, steps_display: "1140", preview: "(((((((((((((((K ((S (S S)) K)) ..." },
+      { id: 235, l: 217, r: 232, log2: 8.5736, steps_display: "380", preview: "((K ((((((((((((((K ((S (S S)) K)) ..." },
+      { id: 205, l: 202, r: 46, log2: 8.5699, steps_display: "379", preview: "((((((((((((((K ((S (S S)) K)) ..." }
+    ]
+  }
+};
+
+let currentData = null;
+let curFrame = 0;
+let playTimer = null;
+
+function parseSexp(str) {
+  let pos = 0;
+  function skip() { while (pos < str.length && str[pos] === ' ') pos++; }
+  function rec(depth) {
+    skip();
+    if (pos >= str.length || depth > 70) return { sym: '...', leaves: 1 };
+    const c = str[pos];
+    if (c === 'S' || c === 'K') { pos++; return { sym: c, leaves: 1 }; }
+    if (c === '.') {
+      while (pos < str.length && str[pos] === '.') pos++;
+      return { sym: '...', leaves: 1 };
+    }
+    if (c === '(') {
+      pos++;
+      const l = rec(depth + 1);
+      const r = rec(depth + 1);
+      skip();
+      if (pos < str.length && str[pos] === ')') pos++;
+      return { sym: '@', l, r, leaves: l.leaves + r.leaves };
+    }
+    pos++;
+    return { sym: '?', leaves: 1 };
+  }
+  return rec(0);
+}
+
+function drawTree(exprStr, redexPath, ruleFired) {
+  const canvas = document.getElementById('treeCanvas');
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.clientWidth, H = canvas.clientHeight;
+  canvas.width = Math.max(1, Math.floor(W * dpr));
+  canvas.height = Math.max(1, Math.floor(H * dpr));
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.fillStyle = '#070b16';
+  ctx.fillRect(0, 0, W, H);
+
+  const root = parseSexp(exprStr);
+  // Assign layout positions (bounded cleanly for huge trees)
+  let nextX = 0;
+  let maxDepth = 0;
+  const nodes = [];
+  const edges = [];
+
+  function layout(nd, depth, path, inRedex) {
+    if (depth > 22 || nodes.length > 260) {
+      const x = nextX++;
+      maxDepth = Math.max(maxDepth, depth);
+      const item = { sym: '…', x, depth, isRedexRoot: false, inRedex };
+      nodes.push(item);
+      return item;
+    }
+    const isRoot = (ruleFired === 'S' || ruleFired === 'K') && (path === redexPath);
+    const subRedex = inRedex || isRoot;
+    if (nd.sym !== '@' || !nd.l || !nd.r) {
+      const x = nextX++;
+      maxDepth = Math.max(maxDepth, depth);
+      const item = { sym: nd.sym, x, depth, isRedexRoot: isRoot, inRedex: subRedex };
+      nodes.push(item);
+      return item;
+    }
+    const lc = layout(nd.l, depth + 1, path + 'L', subRedex);
+    const rc = layout(nd.r, depth + 1, path + 'R', subRedex);
+    const x = (lc.x + rc.x) * 0.5;
+    maxDepth = Math.max(maxDepth, depth);
+    const item = { sym: '@', x, depth, isRedexRoot: isRoot, inRedex: subRedex };
+    nodes.push(item);
+    edges.push([item, lc, subRedex]);
+    edges.push([item, rc, subRedex]);
+    return item;
+  }
+  layout(root, 0, '', false);
+
+  const padX = 28, padY = 28;
+  const spanX = Math.max(1, nextX - 1);
+  const spanY = Math.max(1, maxDepth);
+  const mapX = x => padX + (spanX === 0 ? (W - 2 * padX) * 0.5 : (x / spanX) * (W - 2 * padX));
+  const mapY = d => padY + (d / spanY) * (H - 2 * padY);
+
+  // Edges
+  for (const [p, c, hi] of edges) {
+    ctx.beginPath();
+    ctx.moveTo(mapX(p.x), mapY(p.depth));
+    ctx.lineTo(mapX(c.x), mapY(c.depth));
+    ctx.strokeStyle = hi ? 'rgba(244, 114, 182, 0.72)' : 'rgba(142, 160, 194, 0.35)';
+    ctx.lineWidth = hi ? 2.0 : 1.2;
+    ctx.stroke();
+  }
+
+  const rLeaf = Math.max(6, Math.min(13, (W - 60) / Math.max(24, nextX * 2.4)));
+  for (const n of nodes) {
+    const cx = mapX(n.x), cy = mapY(n.depth);
+    if (n.isRedexRoot) {
+      ctx.beginPath();
+      ctx.arc(cx, cy, rLeaf + 6, 0, Math.PI * 2);
+      ctx.fillStyle = 'rgba(244, 114, 182, 0.22)';
+      ctx.fill();
+      ctx.strokeStyle = '#f472b6';
+      ctx.lineWidth = 1.6;
+      ctx.stroke();
+    }
+    ctx.beginPath();
+    ctx.arc(cx, cy, n.sym === '@' ? Math.max(3.5, rLeaf * 0.55) : rLeaf, 0, Math.PI * 2);
+    if (n.sym === 'S') ctx.fillStyle = '#0284c7';
+    else if (n.sym === 'K') ctx.fillStyle = '#7c3aed';
+    else if (n.sym === '@') ctx.fillStyle = n.inRedex ? '#f472b6' : '#334155';
+    else ctx.fillStyle = '#475569';
+    ctx.fill();
+
+    if (n.sym !== '@' && rLeaf >= 7) {
+      ctx.fillStyle = '#f8fafc';
+      ctx.font = `bold ${Math.round(rLeaf * 1.05)}px ui-monospace, monospace`;
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText(n.sym, cx, cy + 0.5);
+    }
+  }
+}
+
+function drawDagChart(points) {
+  const canvas = document.getElementById('dagCanvas');
+  const dpr = window.devicePixelRatio || 1;
+  const W = canvas.clientWidth, H = canvas.clientHeight;
+  canvas.width = Math.max(1, Math.floor(W * dpr));
+  canvas.height = Math.max(1, Math.floor(H * dpr));
+  const ctx = canvas.getContext('2d');
+  ctx.scale(dpr, dpr);
+  ctx.fillStyle = '#070b16';
+  ctx.fillRect(0, 0, W, H);
+
+  if (!points || points.length === 0) {
+    ctx.fillStyle = '#8ea0c2';
+    ctx.font = '12px sans-serif';
+    ctx.fillText('无 DAG 增长曲线数据', 16, 30);
+    return;
+  }
+
+  const padL = 48, padR = 16, padT = 16, padB = 28;
+  const maxX = Math.max(1, ...points.map(p => p.id));
+  const maxY = Math.max(1, ...points.map(p => p.log2));
+
+  // Grid lines
+  ctx.strokeStyle = 'rgba(38, 52, 89, 0.7)';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= 4; ++i) {
+    const y = padT + (H - padT - padB) * (1 - i / 4);
+    ctx.beginPath(); ctx.moveTo(padL, y); ctx.lineTo(W - padR, y); ctx.stroke();
+    ctx.fillStyle = '#8ea0c2';
+    ctx.font = '11px ui-monospace, monospace';
+    ctx.textAlign = 'right';
+    ctx.fillText((maxY * i / 4).toFixed(1), padL - 6, y + 3);
+  }
+
+  // Area + Line
+  const mapX = id => padL + (id / maxX) * (W - padL - padR);
+  const mapY = v => padT + (1 - v / maxY) * (H - padT - padB);
+
+  ctx.beginPath();
+  ctx.moveTo(mapX(points[0].id), H - padB);
+  for (const p of points) ctx.lineTo(mapX(p.id), mapY(p.log2));
+  ctx.lineTo(mapX(points[points.length - 1].id), H - padB);
+  ctx.closePath();
+  const grad = ctx.createLinearGradient(0, padT, 0, H - padB);
+  grad.addColorStop(0, 'rgba(56, 189, 248, 0.40)');
+  grad.addColorStop(1, 'rgba(56, 189, 248, 0.02)');
+  ctx.fillStyle = grad;
+  ctx.fill();
+
+  ctx.beginPath();
+  points.forEach((p, i) => {
+    const x = mapX(p.id), y = mapY(p.log2);
+    if (i === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+  });
+  ctx.strokeStyle = '#38bdf8';
+  ctx.lineWidth = 2;
+  ctx.stroke();
+
+  ctx.fillStyle = '#8ea0c2';
+  ctx.font = '11px ui-monospace, monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(`DAG 节点数 (0 .. ${maxX})`, (padL + W - padR) * 0.5, H - 7);
+}
+
+function escHtml(s) {
+  return String(s ?? '').replace(/[&<>"']/g, ch => ({
+    '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+  }[ch]));
+}
+
+function renderFrame(idx) {
+  if (!currentData) return;
+  const trace = (currentData.result && currentData.result.trace) || [];
+  if (trace.length === 0) {
+    document.getElementById('frameCounter').textContent = '0 / 0';
+    document.getElementById('exprBox').textContent = currentData.result.expr_canonical || '(无归约轨迹)';
+    return;
+  }
+  curFrame = Math.max(0, Math.min(trace.length - 1, idx));
+  document.getElementById('scrub').value = curFrame;
+  document.getElementById('frameCounter').textContent = `${curFrame} / ${trace.length - 1}`;
+  const f = trace[curFrame];
+  let cls = 'rule-tr', label = f.rule;
+  if (f.rule === 'S') { cls = 'rule-s'; label = '触发 S-红式'; }
+  else if (f.rule === 'K') { cls = 'rule-k'; label = '触发 K-红式'; }
+  else if (f.rule === 'NF') { cls = 'rule-nf'; label = '已达范式 NF'; }
+  else { cls = 'rule-tr'; label = '后续由 DAG 记忆化精确接管'; }
+
+  document.getElementById('frameMeta').innerHTML =
+    `<span class="tag ${cls}">${escHtml(label)}</span> 步数 t=${Number(f.step || 0)} · 展开叶数=${Number(f.leaves || 0)}` +
+    (f.path !== undefined && (f.rule === 'S' || f.rule === 'K') ? ` · 红式路径="${escHtml(f.path || 'ROOT')}"` : '');
+  document.getElementById('exprBox').textContent = f.expr;
+  drawTree(f.expr, f.path || '', f.rule);
+}
+
+function loadReplay(data) {
+  stopPlay();
+  currentData = data;
+  const c = data.case || {};
+  const r = data.result || {};
+  const m = data.solver_metrics || {};
+
+  document.getElementById('caseTitle').textContent = `${c.name || '-'} · ${c.family || '-'}`;
+  document.getElementById('ruleBox').textContent =
+    `N = ${c.N}, V_max = ${c.max_nodes}, L_ref = ${c.l_ref}\n` +
+    `S (arity ${c.a_S}) -> ${c.rhs_S}\n` +
+    `K (arity ${c.a_K}) -> ${c.rhs_K}\n` +
+    `E_req = ${c.req || '-'}\n` +
+    `NF 预览 = ${r.nf_preview || '-'}`;
+
+  const kpis = [
+    ['判定 / 求解器', `${r.verdict || '-'} (${data.solver || '-'})`, r.verdict === 'AC' ? 'good' : 'warn'],
+    ['0-100 折算分', `${Number(r.norm_score || 0).toFixed(2)}`, 'good'],
+    ['log2(T + 1)', `${Number(r.log2_steps || 0).toFixed(4)}`, r.singularity ? 'pink' : ''],
+    ['精确步数 T(E)', `${r.steps_display || '0'}`, r.singularity ? 'pink' : ''],
+    ['规模 |E| / N', `${r.leaves || 0} / ${c.N || 0}`, ''],
+    ['唯一 DAG 节点', `${r.dag_nodes || 0}`, ''],
+    ['红式 / 缓存命中', `${r.redex_fires || 0} / ${(r.whnf_hits || 0) + (r.nf_hits || 0)}`, ''],
+    ['求解 / 校验耗时', `${Number(m.cpu_ms || 0).toFixed(0)}ms / ${Number(r.judge_ms || 0).toFixed(1)}ms`, '']
+  ];
+  document.getElementById('kpiRow').innerHTML = kpis.map(([k, v, cls]) =>
+    `<div class="kpi"><div class="k">${escHtml(k)}</div><div class="v ${cls}">${escHtml(v)}</div></div>`
+  ).join('');
+
+  const trace = r.trace || [];
+  const scrub = document.getElementById('scrub');
+  scrub.min = 0;
+  scrub.max = Math.max(0, trace.length - 1);
+  scrub.value = 0;
+  renderFrame(0);
+  drawDagChart(r.dag_growth || []);
+
+  const hot = r.hot_dag_nodes || [];
+  document.getElementById('hotBody').innerHTML = hot.map(h =>
+    `<tr><td>#${Number(h.id || 0)}</td><td class="num">${Number(h.log2).toFixed(2)}</td>` +
+    `<td class="num">${escHtml(h.steps_display)}</td><td>${escHtml(h.preview)}</td></tr>`
+  ).join('') || '<tr><td colspan="4" style="color:var(--muted);">无热点节点记录</td></tr>';
+}
+
+function stopPlay() {
+  if (playTimer) { clearInterval(playTimer); playTimer = null; }
+  document.getElementById('btnPlay').textContent = '播放';
+}
+
+document.getElementById('btnPlay').onclick = () => {
+  if (playTimer) { stopPlay(); return; }
+  const trace = (currentData && currentData.result && currentData.result.trace) || [];
+  if (trace.length <= 1) return;
+  if (curFrame >= trace.length - 1) curFrame = 0;
+  document.getElementById('btnPlay').textContent = '暂停';
+  const stepMs = Number(document.getElementById('selSpeed').value) || 450;
+  playTimer = setInterval(() => {
+    if (curFrame >= trace.length - 1) { stopPlay(); return; }
+    renderFrame(curFrame + 1);
+  }, stepMs);
+};
+document.getElementById('btnPrev').onclick = () => { stopPlay(); renderFrame(curFrame - 1); };
+document.getElementById('btnNext').onclick = () => { stopPlay(); renderFrame(curFrame + 1); };
+document.getElementById('scrub').oninput = e => { stopPlay(); renderFrame(Number(e.target.value)); };
+document.getElementById('btnBuiltin').onclick = () => loadReplay(BUILTIN_REPLAY);
+
+function handleFile(file) {
+  if (!file) return;
+  const rd = new FileReader();
+  rd.onload = () => {
+    try { loadReplay(JSON.parse(rd.result)); }
+    catch (err) { alert('JSON 解析失败: ' + err); }
+  };
+  rd.readAsText(file, 'utf-8');
+}
+document.getElementById('fileInput').onchange = e => handleFile(e.target.files[0]);
+const dz = document.getElementById('dropzone');
+dz.ondragover = e => { e.preventDefault(); dz.classList.add('drag'); };
+dz.ondragleave = () => dz.classList.remove('drag');
+dz.ondrop = e => { e.preventDefault(); dz.classList.remove('drag'); handleFile(e.dataTransfer.files[0]); };
+window.onresize = () => { if (currentData) { renderFrame(curFrame); drawDagChart((currentData.result && currentData.result.dag_growth) || []); } };
+
+loadReplay(BUILTIN_REPLAY);
+</script>
+</body>
+</html>

@@ -1,0 +1,24 @@
+{
+  "format": "afb-contestant-kit/2",
+  "submission": "agents/submissions/my_solution.cpp",
+  "unified_submission": "../submissions/minimum_effort.cpp",
+  "files": {
+    "agents/starter.cpp": "5b5728947c2ad3f2afdffa524890fbba7ba80bf559f6ae9674828793ad97e1fe",
+    "agents/submissions/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "config/format.json": "3e23a5dd798cb12ee0e86c2a31a2eba9e241be6fcda34d86ae914b30db99916a",
+    "config/workspace.json": "9cf4ab89de1894470affdf88a76c64adc0bb0f95a07d131fe986f271c8b47963",
+    "data/samples/01.in": "08e3cee11680cc35ecddf5e34ef88f514b1b9ce92814f1e814a262488ae2b990",
+    "data/samples/01.out": "a6d4469196363e2279f1a76ea18dacec5f89b42580a0e717037bece3bf6343f9",
+    "data/samples/02.in": "bf122ce25def117c6526cd77fe6ea2cab86b03f068e420cd2d559892fddd65e3",
+    "data/samples/02.out": "806ed966b29024dcd0b6c125cc9dd50f85cb9b180bed1a909de0f410983ac10e",
+    "data/samples/03.in": "f5bd17f6d9ab60793df2ffbbaf498359903dc846cf3cf4c5abc293d9afd82c2a",
+    "data/samples/03.out": "2a3b40e5845afbb005ed3ace5ab61135774fd0609c4edb1ae77ee96685a45879",
+    "engine/common.py": "09280dcecd5baa4b8d9a3739bd3823a7fa93f3c27fd0628a0b82ee473bb3643c",
+    "engine/policy.py": "64803bc9bebfff8490f8e1d57e0b8332cf9f994e92429ffb08fd054c444b2386",
+    "engine/runner.py": "50aaaf91f10d466a35da3d7611d1c993c7eb6b1496c08fb2b836f8413ca9ccc2",
+    "logs/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "README.md": "29790930b97115703e97221134765cdb8633d12ac4bcccc7195f256dd9b1b38f",
+    "results/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "scripts/spar.py": "0729166326409636f0f2c25b87d9e3ba7234442eab75dd0ca21ebb32b7211358"
+  }
+}

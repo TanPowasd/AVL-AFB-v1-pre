@@ -1,0 +1,438 @@
+{
+  "problem": "minimum_effort",
+  "scoring": "per_test",
+  "memory_limit_mb": 128,
+  "max_score": 100.0,
+  "subtasks": [
+    {
+      "id": 1,
+      "name": "一般组（H <= 2）",
+      "points": 8.0,
+      "input_type": 0,
+      "max_H": 2,
+      "scoring": "per_test"
+    },
+    {
+      "id": 2,
+      "name": "一般组（H <= 5）",
+      "points": 12.0,
+      "input_type": 0,
+      "max_H": 5,
+      "scoring": "per_test"
+    },
+    {
+      "id": 3,
+      "name": "一般组（H <= 10）",
+      "points": 60.0,
+      "input_type": 0,
+      "max_H": 10,
+      "scoring": "per_test"
+    },
+    {
+      "id": 4,
+      "name": "固定形态组（H <= 10000）",
+      "points": 20.0,
+      "input_type": 1,
+      "max_H": 10000,
+      "scoring": "per_test"
+    }
+  ],
+  "cases": [
+    {
+      "name": "case_01",
+      "id": "01",
+      "in": "01.in",
+      "out": "01.out",
+      "subtask": 1,
+      "points": 3.0,
+      "time_limit_ms": 1000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_02",
+      "id": "02",
+      "in": "02.in",
+      "out": "02.out",
+      "subtask": 1,
+      "points": 5.0,
+      "time_limit_ms": 1000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_03",
+      "id": "03",
+      "in": "03.in",
+      "out": "03.out",
+      "subtask": 2,
+      "points": 2.0,
+      "time_limit_ms": 1000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_04",
+      "id": "04",
+      "in": "04.in",
+      "out": "04.out",
+      "subtask": 2,
+      "points": 4.0,
+      "time_limit_ms": 1000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_05",
+      "id": "05",
+      "in": "05.in",
+      "out": "05.out",
+      "subtask": 2,
+      "points": 3.0,
+      "time_limit_ms": 1000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_06",
+      "id": "06",
+      "in": "06.in",
+      "out": "06.out",
+      "subtask": 2,
+      "points": 3.0,
+      "time_limit_ms": 1000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_07",
+      "id": "07",
+      "in": "07.in",
+      "out": "07.out",
+      "subtask": 3,
+      "points": 2.0,
+      "time_limit_ms": 2000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_08",
+      "id": "08",
+      "in": "08.in",
+      "out": "08.out",
+      "subtask": 3,
+      "points": 4.0,
+      "time_limit_ms": 2000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_09",
+      "id": "09",
+      "in": "09.in",
+      "out": "09.out",
+      "subtask": 3,
+      "points": 4.0,
+      "time_limit_ms": 2000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_10",
+      "id": "10",
+      "in": "10.in",
+      "out": "10.out",
+      "subtask": 3,
+      "points": 2.0,
+      "time_limit_ms": 2000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_11",
+      "id": "11",
+      "in": "11.in",
+      "out": "11.out",
+      "subtask": 3,
+      "points": 2.0,
+      "time_limit_ms": 2000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_12",
+      "id": "12",
+      "in": "12.in",
+      "out": "12.out",
+      "subtask": 3,
+      "points": 5.0,
+      "time_limit_ms": 2000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_13",
+      "id": "13",
+      "in": "13.in",
+      "out": "13.out",
+      "subtask": 3,
+      "points": 3.0,
+      "time_limit_ms": 2000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_14",
+      "id": "14",
+      "in": "14.in",
+      "out": "14.out",
+      "subtask": 3,
+      "points": 4.0,
+      "time_limit_ms": 2000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_15",
+      "id": "15",
+      "in": "15.in",
+      "out": "15.out",
+      "subtask": 3,
+      "points": 3.0,
+      "time_limit_ms": 2000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_16",
+      "id": "16",
+      "in": "16.in",
+      "out": "16.out",
+      "subtask": 3,
+      "points": 3.0,
+      "time_limit_ms": 2000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_17",
+      "id": "17",
+      "in": "17.in",
+      "out": "17.out",
+      "subtask": 3,
+      "points": 5.0,
+      "time_limit_ms": 2000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_18",
+      "id": "18",
+      "in": "18.in",
+      "out": "18.out",
+      "subtask": 3,
+      "points": 4.0,
+      "time_limit_ms": 2000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_19",
+      "id": "19",
+      "in": "19.in",
+      "out": "19.out",
+      "subtask": 3,
+      "points": 3.0,
+      "time_limit_ms": 2000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_20",
+      "id": "20",
+      "in": "20.in",
+      "out": "20.out",
+      "subtask": 3,
+      "points": 2.0,
+      "time_limit_ms": 2000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_21",
+      "id": "21",
+      "in": "21.in",
+      "out": "21.out",
+      "subtask": 3,
+      "points": 2.0,
+      "time_limit_ms": 2000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_22",
+      "id": "22",
+      "in": "22.in",
+      "out": "22.out",
+      "subtask": 3,
+      "points": 2.0,
+      "time_limit_ms": 2000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_23",
+      "id": "23",
+      "in": "23.in",
+      "out": "23.out",
+      "subtask": 3,
+      "points": 3.0,
+      "time_limit_ms": 2000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_24",
+      "id": "24",
+      "in": "24.in",
+      "out": "24.out",
+      "subtask": 3,
+      "points": 3.0,
+      "time_limit_ms": 2000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_25",
+      "id": "25",
+      "in": "25.in",
+      "out": "25.out",
+      "subtask": 3,
+      "points": 2.0,
+      "time_limit_ms": 2000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_26",
+      "id": "26",
+      "in": "26.in",
+      "out": "26.out",
+      "subtask": 3,
+      "points": 2.0,
+      "time_limit_ms": 2000,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_27",
+      "id": "27",
+      "in": "27.in",
+      "out": "27.out",
+      "subtask": 4,
+      "points": 1.0,
+      "time_limit_ms": 1500,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_28",
+      "id": "28",
+      "in": "28.in",
+      "out": "28.out",
+      "subtask": 4,
+      "points": 2.0,
+      "time_limit_ms": 1500,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_29",
+      "id": "29",
+      "in": "29.in",
+      "out": "29.out",
+      "subtask": 4,
+      "points": 2.0,
+      "time_limit_ms": 1500,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_30",
+      "id": "30",
+      "in": "30.in",
+      "out": "30.out",
+      "subtask": 4,
+      "points": 2.0,
+      "time_limit_ms": 1500,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_31",
+      "id": "31",
+      "in": "31.in",
+      "out": "31.out",
+      "subtask": 4,
+      "points": 3.0,
+      "time_limit_ms": 1500,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_32",
+      "id": "32",
+      "in": "32.in",
+      "out": "32.out",
+      "subtask": 4,
+      "points": 2.0,
+      "time_limit_ms": 1500,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_33",
+      "id": "33",
+      "in": "33.in",
+      "out": "33.out",
+      "subtask": 4,
+      "points": 2.0,
+      "time_limit_ms": 1500,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_34",
+      "id": "34",
+      "in": "34.in",
+      "out": "34.out",
+      "subtask": 4,
+      "points": 2.0,
+      "time_limit_ms": 1500,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_35",
+      "id": "35",
+      "in": "35.in",
+      "out": "35.out",
+      "subtask": 4,
+      "points": 2.0,
+      "time_limit_ms": 1500,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    },
+    {
+      "name": "case_36",
+      "id": "36",
+      "in": "36.in",
+      "out": "36.out",
+      "subtask": 4,
+      "points": 2.0,
+      "time_limit_ms": 1500,
+      "memory_limit_mb": 128,
+      "is_sample": false
+    }
+  ]
+}

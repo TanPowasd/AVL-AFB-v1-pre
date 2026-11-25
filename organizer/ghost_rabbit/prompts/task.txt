@@ -1,0 +1,26 @@
+任务：《天翼幽灵兔：四重奇点追截战》（The Winged Ghost Rabbit / ghost_rabbit）—— C++20 在线交互几何追截
+
+【交付物】
+提交单文件 C++20 在线交互求解器至 `../submissions/ghost_rabbit.cpp`（由 `g++ -std=gnu++20 -O2 -pipe` 编译，含标准 main，单线程，无网络，单局纯 CPU / 活跃时限 5.0 s，内存上限 512 MiB）。
+
+【核心规则摘要】
+1. 蜂窝图 H_omega = {(a,b) in Z^2 : (a+b) mod 3 in {1, 2}}，兔子初始位于 r_0 = (1, 0)（非素数，3 个邻点）。
+   三维等距嵌入：c(a,b) = ((2a-b+d)/3, (2b-a+d)/3, (-a-b+d)/3)，d = (a+b) mod 3 in {1,2}，精确图距 dist(u,v) = |c1-c1'|+|c2-c2'|+|c3-c3'|。
+2. 艾森斯坦素数洞穴 P_omega：若 a=0 / b=0 / a=b，当且仅当 r=max(|a|,|b|) 为满足 r mod 3 = 2 的素数；否则当且仅当范数 a^2 - ab + b^2 为满足 p mod 3 = 1 的素数。
+   兔子起跳点 r_{t-1} in P_omega 时，可一步移动至 N_1(r_{t-1}) U N_2(r_{t-1}) 中任意未封锁点（无视中间障碍）并触发 flash=1。
+3. 精确有理漏桶：阶段一声明 P Q（1 <= Q <= 10^6, 1 <= P <= 2Q），约分为 P'/Q'，初始 tokens=0，上限 2Q'，每轮先 tokens = min(tokens+P', 2Q')，再放置 k_t in {0,1,2} 枚陷阱（k_t*Q' <= tokens）。
+4. 局部等距无三连共线（Local 3-AP-Free）：在幽灵弹开判定之前，强制校验 F_{<=t-1} U 本轮落子 不含三个不同点 u,v,w 使 u+w=2v 且 dist(u,w)<=6（等价于不存在 v-d, v, v+d 同时在集合中，d in N_2(0,0)）。
+5. 幽灵弹开与声呐：若落子 j 命中 r_{t-1}，则 bounce_idx=j 且该枚不固化（仍耗 Q' 代币）；随后兔子移动至 r_t（若无路可走则回传 1 0 0 0 判 AC），否则回传 0 dist flash bounce_idx，其中 dist = dist(sonar, r_t)。
+6. 硬约束：T <= 5000 轮，累计固化陷阱 |F| <= 4000，全部坐标位于 [-10^5, 10^5]^2。
+
+【评分】
+- 单局原分 RawScore：q >= 2 为 0；1/2 < q < 2 为 100*(4Q'-2P')/(2P'-Q')；q <= 1/2 且捕获记奇点（singularity=true）。
+- 单局百分制 NormScore = 100*r/(r+200) = 100*(2Q'-P')/(P'+Q')（q <= 1/2 封顶 100）。
+- 正式评测在 4 类互补隐藏对手家族 × 8 个全新随机种子（共 32 局）上动态对抗；套题 0-100 分为 32 局 NormScore 等权均值，单题不封顶 RawScore 为全通最劣单局。
+
+【本地自测】
+在 ghost_rabbit/ 目录运行：
+  python scripts/spar.py --list
+  python scripts/spar.py ../submissions/ghost_rabbit.cpp
+  python scripts/record_replay.py ../submissions/ghost_rabbit.cpp --out replays/my_run.json
+详情见 README.md、FORMAT.md、handbook/ 与 viz/player.html。

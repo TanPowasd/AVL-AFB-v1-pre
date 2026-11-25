@@ -1,0 +1,556 @@
+这是裂陆纪元（rift_era）的聊天模式参赛题面。所有核心规则、协议、事实卡与起步模板均已在下方展开，无需读取本地文件路径。
+请直接编写完整的参赛策略代码（Python 3.11+ 标准库唯一），输出完整可运行的 `bot.py`（默认搭配下方 `main.py` 与标准库 `sdk.py`）；不要省略实现、不要留 TODO、不要声称已写入文件或运行本地测试。
+
+# 给 AI 的参赛入口：裂陆纪元（rift_era）
+
+你是参赛模型。读完本文件与下列必读资料后，直接编写策略、跑通本地测试、按数据迭代改进并打包交付。不要停留在方案说明或原封不动的模板。
+
+**文件夹模式（默认）**：直接基于 `agents/template/` 或 `agents/advanced/` 复制并开发 `agents/my_bot/`，用 `scripts/spar.py`、`scripts/local_match.py` 和 `scripts/record_replay.py` 验证，再用 `scripts/make_submission.py` 打包提交。
+**聊天模式**：若无法读写文件，使用 `prompts/task.txt` 中的完整题面，直接输出完整可运行的 `bot.py`（搭配模板 `main.py` 与 `sdk.py`）。
+
+---
+
+## 0. 你的交付物
+
+| 项 | 要求 |
+|---|---|
+| 交付形式 | 一个 `.zip` 压缩包，**根目录必须包含 `main.py`**（连同 `sdk.py` 及你自己的模块） |
+| 交付路径 | 统一交卷：`../submissions/rift_era.zip`；或本目录：`agents/submissions/my_bot.zip` |
+| 启动方式 | 评测机在隔离沙箱内执行 `python3 main.py`，经标准输入输出（JSONL）通信 |
+| 依赖限制 | **仅 Python 3.11+ 标准库**，禁止第三方库，无网络访问 |
+| 体积与资源 | 压缩包 ≤ 512 MiB、解压 ≤ 2 GiB / 4096 文件；内存 1 GiB；可写目录 64 MiB |
+
+---
+
+## 1. 推荐阅读顺序
+
+| 顺序 | 文件 | 作用 |
+|---|---|---|
+| 1 | `GUIDE.md` | 五分钟跑通教程、改进优先级、计分算例 |
+| 2 | `handbook/player-guide.md` | JSONL 协议、`sdk.py` 用法、观测字段、提交与调试清单 |
+| 3 | `handbook/game-facts.md` | 时钟、四纪元、开局禀赋、五支柱、`V` 与 `Phi`、`eta` 与 `Loss_action` 核心数值 |
+| 4 | `COMMANDS.md` | 引擎接受的全部 `kind/op` 命令表面（自动生成，唯一命令参考） |
+| 5 | `agents/template/bot.py` 与 `agents/advanced/bot.py` | 起步模板与公开参考策略源码（可直接作为开发起点） |
+| 深入 | `rules/06_agent_interface.md`、`rules/07_scoring_and_resources.md` | 观测过滤规则、全部五支柱与评分精确公式 |
+| 参考 | `FORMAT.md`（与 `handbook/contest-rules.md` 同源） | 公开赛制、时限与合规边界 |
+
+---
+
+## 2. 一句话规则
+
+8 个大国在一张 **512×512** 大陆地图上实时经营 **28,800 tick**（4 纪元 × 720 周期 × 10 tick，每 5 tick 一个决策窗口），统筹民生、工业、能源、物流、科研、金融、外交与军事；终局按四纪元加权与可持续性系数 `Φ` 算出精确国力 **`V`**，与同地图同席位不公开多风格强评分对手混编影子局的 `V_shadow` 比较：
+
+```text
+vtilde(V) = V + 10            (V >= 0)
+          = 100 / (10 - V)    (V < 0)
+R         = vtilde(V_player) / vtilde(V_shadow)
+score     = 50 + 50 * tanh(0.6 * ln R)
+```
+
+---
+
+## 3. 硬约束（违反 = 托管或判零）
+
+- **标准库唯一**：`make_submission.py` 会静态检查第三方 `import`；`sdk.py` 必须原样复制进提交包。
+- **窗口协议**：开局收到 `init` 后 **15 秒内**调用 `client.ready()`；每个 `obs` 窗口必须回复相同 `window` 编号，每窗口最多 **256 条**命令。
+- **严禁进程崩溃**：策略内部任何异常必须 `try/except` 捕获并返回 `[]`；进程退出即本局剩余窗口全部托管为空命令。
+- **思考时间预算**：每窗口基础 **0.5 秒**，超出部分扣 **450 秒 `time_pool`**；单窗口硬上限 **30 秒**；整局总思考上限 **3600 秒**；超时达 **50 次**或预算耗尽即被托管为空命令。
+- **合法命令拒绝**：非法命令仅返回 `ERR_*` 并被忽略，不影响同窗口其他合法命令，但请勿刷无效指令浪费配额。
+- **公开对手与自建对手自测**：选手包仅提供少量公开练习基线（`none`、`simple`、`template`、`medium`、`advanced`），凑不齐 8 席对局所需的 7 个不同对手；**需要你自行制作多个不同风格或历史迭代版本的对手 bot 进行本地 8 席混编自测与影子对照**（严禁读取他人代码；不得修改 `runtime/`、`rules/`、`config/workspace.json` 与 `manifest.json`；本工作区禁止启用 HTTP 共享服务）。
+
+---
+
+## 4. 本地开发、测试与可视化复盘
+
+```bash
+# 0) 查看公开对手列表
+python3 scripts/spar.py --list
+
+# 1) 复制公开策略作为开发起点
+cp -r agents/advanced agents/my_bot
+
+# 2) 快速冒烟自测（40 tick 快速验收接口与零故障）
+python3 scripts/spar.py agents/my_bot
+
+# 3) 多 seed / 轮换席位练习计分（建议至少测 3 个 seed、400~2000 tick）
+python3 scripts/local_match.py score --bot agents/my_bot --opponent advanced --seat 0 --seed 7 --ticks 400 --legacy-map
+python3 scripts/local_match.py match --seats agents/my_bot,advanced,advanced,advanced,advanced,advanced,advanced,advanced --seed 7 --ticks 400 --legacy-map
+
+# 4) 录制可视化回放，拖进 viz/player.html 查看 512x512 地图、八国实时榜、五支柱与事件流
+python3 scripts/record_replay.py --a agents/my_bot --b advanced --seed 7 --ticks 200 --legacy-map
+
+# 5) 打包提交（统一交卷路径）
+python3 scripts/make_submission.py agents/my_bot --out ../submissions/rift_era.zip
+```
+
+> 提示：`--legacy-map` 跳过正式地图约 100 秒的 150-tick 开局自举验收，适合快速迭代；定型前请去掉 `--legacy-map` 在正式地图上至少跑通一次。另外，由于 8 席对局需要 7 个对手而选手包仅提供少量公开基线，**请自行制作并维护多个不同风格或历史版本的对手 bot**，传入 `local_match.py match --seats ...` 或 `score --opponent <自制对手目录/.zip>` 进行多对手混编自测，避免对单一公开对手过拟合。
+
+---
+
+## 5. 六个高频踩坑点（先看省半天）
+
+1. **首都断粮 / 断水 / 断药**：开局药品缓冲区约 160 周期耗尽，且缺粮断水会同时重创人口支柱与可持续性系数 `Φ`（最低跌至 `0.35`，直接腰斩终局权重）。
+2. **仓库爆满卡死全链**：公共仓容满时制造与民生产出都放不进去；务必用 `industry/set_line` 设合理的 `target_stock_mU`，并用余料适度扩仓（注意空置扩仓不加 `Kinfra`）。
+3. **无脑囤货触发 `eta` 折损**：逐国家逐物品计算库存/20期均耗比 `chi`，`chi > 6` 时有效增加值折损直至归零（且军事消耗/损毁会永久累入只读 `SinkDebt`）。
+4. **盲目盖空壳厂与电站空烧**：已建成但全部产线未装机空置的工厂 `Kinfra` 只按 `0.25` 计；煤电最低出力 40%，富余电站不关（`industry/plant_toggle`）会白烧煤、增污染。
+5. **科研只做理论不做验证 / 单实验室排队**：科技理论进度满后必须发 `research/validate_project` 才会真正解锁；尽早利用富裕工程师多建实验室并行冲刺关键科技。
+6. **无收益的敌对行动**：任何军事射击、行军、封锁、网络/反卫星等敌对消耗都强制按目录值计入 `Loss_action` 严格扣减自身 `V`，只有带来更大独立实益（领土、资源、贸易）时才值得发动。
+
+---
+
+## 6. 工作区目录地图
+
+```text
+AGENTS.md               编码 AI 自动读取的任务入口
+AI_README.md            你在读的完整 AI 参赛指引
+README.md               选手包总览
+GUIDE.md                从零上手教程与计分算例
+FORMAT.md               公开赛制说明（同 handbook/contest-rules.md）
+COMMANDS.md             全量引擎命令表面
+handbook/               contest-rules.md / player-guide.md / game-facts.md
+rules/                  正式规则全文（00–07、10、11）与冻结数据 rules/data/*.json
+sdk.py                  标准库通信客户端（必须原样复制到提交包内）
+agents/
+  template/             最小可运行模板
+  medium/               公开练习对手（广度学者）
+  advanced/             公开练习对手（固定计划 + 实验室突击）
+  submissions/          本地打包输出目录
+runtime/                与评测机一致的引擎（禁止修改）
+scripts/
+  spar.py               统一快速自测入口
+  local_match.py        8 席对局与本地练习计分
+  record_replay.py      录制可视化回放（调用 scripts/replay_viz.py）
+  make_submission.py    打包并静态检查提交 zip
+viz/player.html         完全离线 512x512 地图与宏观仪表盘回放播放器
+prompts/task.txt        无文件工具时的聊天模式完整题面
+results/ replays/ logs/ 本地输出目录
+```
+
+---
+
+## 7. 交付前自检清单
+
+- [ ] 提交 `.zip` 根目录存在 `main.py` 与原样 `sdk.py`，通过 `make_submission.py` 检查
+- [ ] 仅使用 Python 标准库；无网络与外部路径依赖
+- [ ] 所有决策异常均被捕获并返回合法订单列表（≤ 256 条/窗口）
+- [ ] 多 seed / 多席位测试中 `faults == 0`，单窗口思考耗时远低于 0.5 s
+- [ ] 已录制至少一局回放并在 `viz/player.html` 或指标中确认民生、能源、仓容与科研运转正常
+
+============================ 公开赛制（FORMAT.md） ============================
+
+# 裂陆纪元（rift_era）公开赛制说明
+
+本文件仅包含公开赛制与执行约束。完整规则全文见 `rules/`，命令列表见 `COMMANDS.md`。
+
+- **赛题**：裂陆纪元（`rift_era`），8 国实时宏微观经济、科技、金融、外交与军事策略对抗。
+- **地图与时钟**：`512 × 512` 双层地理空间（L1 地块 + L2 分区/枢纽/走廊）；正式局 **28,800 tick**（4 个战略纪元 × 720 周期 × 10 tick），每 **5 tick** 一个同步决策窗口（共 5,760 窗口）。
+- **计分口径（0–100 连续分）**：
+  - 每次正式评测由操作系统安全随机源抽取 **64 个互异随机 seed**。对第 `k` 个 seed，先跑一局由 `N = 3` 位参考对手按确定性 8 席阵容（被替换席位 `seat = k mod 8`，被替换参考对手 `shadow_idx = (k + k // lcm(N, 8)) mod N`，其余 7 席按 `shadow_idx` 循环均布）坐镇的**影子局**，再仅将 `seat` 席替换为你的提交跑**正式局**，以精确有理数与自适应精度区间比较同一席位国力 `V`：
+    - `vtilde(V) = V + 10`（`V >= 0`），否则 `100 / (10 - V)`
+    - `R = vtilde(V_player) / vtilde(V_shadow)`
+    - `score = 50 + 50 * tanh(0.6 * ln R)`
+  - 与被替换参考对手持平得 `50.00` 分；最终正式成绩取全部 **64 局等权均值**并附 95% 种子块 bootstrap 置信区间。国力 `V = 0.08·U_I + 0.14·U_II + 0.24·U_III + 0.29·U_IV + 0.25·U_end_adj`（完整五支柱与可持续性系数公式见 `rules/07_scoring_and_resources.md`）。
+- **提交格式**：单个 `.zip` 文件，根目录必须包含 `main.py`（使用 `sdk.py` 时须原样打入包内）；压缩包 ≤ 512 MiB，解压 ≤ 2 GiB / 4096 文件。统一交卷路径为 `../submissions/rift_era.zip`，本地打包可用 `agents/submissions/my_bot.zip`。
+- **运行时隔离与限制**：
+  - 仅允许 Python 3.11+ 标准库，无网络访问；
+  - 内存上限 1 GiB，可写工作区上限 64 MiB；
+  - 开局握手限时 15 秒；每窗口基础思考 0.5 秒，超额扣 450 秒 `time_pool`，单窗口硬上限 30 秒，整局总计 3,600 秒；
+  - 超时 50 次、`time_pool` 或总时长耗尽、或进程异常退出，本局剩余窗口全部托管为空命令；
+  - 每窗口最多提交 256 条命令；非法命令只被逐条拒绝（返回 `ERR_*`），不影响同窗口其余合法命令。
+- **本地练习与合规边界**：
+  - 选手包提供 `none`、`simple`、`template`、`medium`、`advanced` 作为公开练习对手，因公开对手数量不足以凑齐 8 席对局中的 7 个不同对手，**需要选手自行制作多风格/多版本对手 bot（含自身镜像）并通过 `local_match.py` 的 `--seats` / `--opponent` 进行充分自测**；
+  - `medium` 与 `advanced` 仅用于本地练习，不等于正式评分基准；
+  - 所有本地测试输出、回放与日志应保留在当前工作区的 `results/`、`replays/`、`logs/` 内；选手工作区禁止启动 HTTP 共享服务，也不得修改 `runtime/`、`rules/`、`sdk.py` 或 `config/workspace.json`。
+
+============================ 选手手册（player-guide.md） ============================
+
+# 裂陆纪元（rift_era）选手手册
+
+本手册面向参赛开发者与编程 AI，集中说明通信协议、观测结构、命令写法、策略开发路径与本地验证流程。
+
+## 1. 提交结构与入口契约
+
+提交物是一个 `.zip` 压缩包，根目录必须包含 `main.py`。典型目录结构：
+
+```text
+my_bot/
+  main.py     # 入口：初始化 Client -> 接收 init -> ready() -> 决策循环
+  bot.py      # 你的核心策略类 Bot(init).decide(obs)
+  sdk.py      # 从选手包根目录原样复制的标准库客户端
+```
+
+评测机在隔离环境运行 `python3 main.py`，通过 `stdin`/`stdout` 逐行收发 JSON（`rift_jsonl_v1`）。`sdk.py` 已经封装好大帧分页重组、窗口号绑定与递增命令编号：
+
+```python
+from sdk import Client
+from bot import Bot
+
+client = Client()
+init = client.receive()   # 含 owner, map, catalog, initial_observation, clock, time_budget
+bot = Bot(init)
+client.ready()            # 必须在 15 秒内回复
+while True:
+    msg = client.receive()
+    if msg.get("type") == "end":
+        break
+    try:
+        orders = bot.decide(msg)
+    except Exception:
+        orders = []       # 切勿让异常导致进程退出
+    client.orders(msg["window"], orders[:256])
+```
+
+## 2. 开局帧（`init`）与每窗口观测（`obs`）
+
+- **`init` 帧关键字段**：
+  - `owner`：本国 ID（`"n0"` .. `"n7"`）。
+  - `map`：公开 512×512 地理编码（`width`, `height`, `map_version`, `region_palette`, `region_rle_rows`, `terrain_by_region`, `elevation_by_region`, `fertility_by_region`, `wind_by_region`, `cloud_by_region`, `adjacency`, `hubs`, `routes`, `river_downstream`, `coastal_hubs`）。注意开局不含隐藏矿藏与随机种子。
+  - `catalog`：完整的只读规则目录（`technology`, `industry`, `coupling`, `scoring`, `runtime_rules`, `military`），包含全部科技前置、工业配方、产线定额、影子权重 `w_cat` 与军品参数。
+  - `initial_observation`：第 0 拍的初始观测帧。
+  - `clock` / `time_budget`：总 tick、窗口间隔（5）、周期长度（10）与思考计时预算。
+- **`obs` 帧关键字段**（每 5 tick 下发一次，仅含本国可见信息与传感器过滤情报）：
+  - `window`, `tick`, `cycle`：当前窗口、仿真步与周期编号。
+  - `inventory`：本国库存列表，行格式 `[hub_id, bucket, good, qty_mU]`（`bucket` 如 `available`、`locked_subsistence`、`locked_order` 等；`1 单位 = 1000 mU`）；另附 `inventory_economic_titles_nmU` 与 `food_synthetic_shares_mU`。
+  - `cash_accounts` / `treasury_mU`：`cash_accounts` 为本国各账户列表 `[account_name, currency, balance_mU]`（如 `["treasury", "n0", ...]`、`["household:n0-h0", "n0", ...]`、`["reserves", "RU", ...]` 等）；`treasury_mU` 为国库本币余额快捷值。
+  - `hubs` / `population_mU`：`hubs` 为各可见枢纽对象列表（含 `id`, `region_id`, `population_mU`, `skills_mU` (`general_worker`/`skilled_worker`/`engineer`), `training_population_mU`, `housing_mU`, `warehouse_mU`, `support_mU`, `warning`, `red_streak`, `pollution_mU`, `satisfaction_mU`, `grid_price_ru_mU`, `household_cash_mU`, `public_cash_mU`）；`population_mU` 为全国平民人口总计。
+  - `facilities` / `lines` / `mines` / `storage` / `systems` / `work`：设施、产线（电站同样在 `lines` 列表中，带 `plant` 子对象，无独立 `plants` 键）、采掘点、储能、公共系统与在建工程队列。
+  - `research`：`known`（已解锁科技）、`projects`（理论与验证进度）、`focus`（各实验室绑定目标）、`security`（保密档位）与 `validation`（进行中的验证任务）。
+  - `markets` / `market_fills` / `world_pool` / `export_controls` / `fx_fills`：现货报价与成交记录、世界池挂牌与限额、出口管制及汇兑成交。
+  - `macroeconomy` / `governance` / `utilities` / `power_policy` / `sovereign_finance` / `corporate_finance` / `bond_market` / `stock_market` / `forward_finance` / `external_payables` / `insolvency`：宏观 CPI/汇率/利率/通胀、税率与预算、电力调度政策与主权/公司/债股/远期金融账本。
+  - `diplomacy` / `contracts` / `city_states` / `formations` / `military_contacts` / `military_control` / `strikes` / `orbital` / `orbital_contacts` / `shared_intelligence`：外交关系（`pairs`, `war_spread_bp`）、合同、中立城邦、本国编队、迷雾内可见敌情（含在途运输接触 `strikes.shipment_contacts`）、轨道与共享情报。
+  - `command_receipts`：上一窗口命令的执行回执列表（每项含 `id`, `status` (`"ACCEPTED"`/`"REJECTED"`), `code` (`null` 或 `ERR_*` 错误码)）。
+
+详细字段定义与迷雾边界请以 `rules/06_agent_interface.md` 为准。
+
+## 3. 命令格式与高频指令
+
+每条命令均是含唯一递增字符串 `id`、`kind`、`op` 及操作参数的字典，每窗口最多 **256 条**：
+
+```json
+{"id": "1", "kind": "research", "op": "set_focus", "line_id": "n0/P075/0/line", "tech_id": "I02", "sec_mode": "standard"}
+{"id": "2", "kind": "research", "op": "validate_project", "line_id": "n0/P075/0/line", "tech_id": "I02"}
+{"id": "3", "kind": "industry", "op": "set_line", "line_id": "n0/P028/0/line", "recipe": "P028", "mode": "general", "target_stock_mU": 120000}
+{"id": "4", "kind": "industry", "op": "plant_toggle", "facility_id": "n0/P070/0", "online": false}
+{"id": "5", "kind": "industry", "op": "build_facility", "hub_id": "n0-h0", "facility_type": "实验室", "profile_id": "S1"}
+{"id": "6", "kind": "industry", "op": "warehouse_expand", "hub_id": "n0-h0", "modules": 1}
+{"id": "7", "kind": "governance", "op": "fiscal_policy", "tax_rate_bp": 1000, "welfare_budget_mU": 0, "maint_budget_mU": 50000}
+{"id": "8", "kind": "logistics", "op": "market_bid", "region_market": "n0-h0", "good": "food", "qty_mU": 50000, "limit_price_mU": 60000, "expire_cycles": 1}
+{"id": "9", "kind": "trade", "op": "pool_buy", "hub_id": "n0-h0", "good": "medicine", "qty_mU": 20000}
+```
+
+全部支持的操作与精确参数名见 `COMMANDS.md`（由引擎命令注册表自动生成）。注意：`trade/pool_buy` 从本国 RU 储备账户（`reserves`）扣款，开局若 RU 为 0 需先用 `finance/fx`（`side: "buy_ru"`）购入 RU。
+
+## 4. 策略开发建议路线
+
+1. **稳住底座（零崩盘）**：实时监控首都及人口枢纽的 `food`、`water`、`medicine`、`consumer_goods`、`electricity` 满足度，出现缺口优先从市场或世界池（`trade/pool_buy`）补货，避免触发低 `Φ` 惩罚。
+2. **控库存与仓容**：按“民生消耗 + 下游产线消耗”动态设置产线 `target_stock_mU`，既防止仓库爆满阻塞产出，又防止过度囤货导致 `chi > 6` 触发 `eta` 折损。
+3. **能源与排放优化**：根据实时用电负荷开关冗余煤电（`plant_toggle`），减少燃煤浪费与污染扣分，尽早向高效能源科技过渡。
+4. **科研加速度与技术落地**：尽早扩建实验室、培养工程师、并行解锁高权重科技链；**解锁后必须实际运行对应配方/设施/算力以拉满 `ActiveScale`**（仅解锁无落地只拿 15% 科技分！）。
+5. **多枢纽扩张、贸易与金融**：开发 `h1..h4` 与优质矿脉、打通走廊物流赚取 `NetTransit` 与出口分、稳健管理主权债与城邦结盟。
+6. **算力节流**：将重规划放在每 N 个窗口（如每 2~10 窗口）执行一次，保证平均单窗口耗时 < 50 ms。
+
+## 5. 本地测试、回放与提交自检
+
+> **自测对手提示**：8 国同图对局需要 7 个对手，但选手包仅内置少量公开基线，无法凑成 7 个不同对手。**请自行制作多个不同策略风格或历史快照版本的对手 bot**，直接传入 `local_match.py match --seats ...` 或 `score --opponent <目录/.zip>` 进行多对手混编自测，避免针对单个 `advanced` 过拟合。
+
+```bash
+# 快速冒烟自测
+python3 scripts/spar.py agents/my_bot --opponent advanced --ticks 40
+# 练习计分（对比同席位影子局）
+python3 scripts/local_match.py score --bot agents/my_bot --opponent advanced --seat 0 --seed 7 --ticks 400 --legacy-map
+# 录制可视化回放并在 viz/player.html 中离线查看
+python3 scripts/record_replay.py --a agents/my_bot --b advanced --seed 7 --ticks 200 --legacy-map
+# 打包提交
+python3 scripts/make_submission.py agents/my_bot --out ../submissions/rift_era.zip
+```
+
+交付前务必确认：
+1. `make_submission.py` 打包无任何第三方依赖报错；
+2. 至少 3 个不同 seed、不同 `--seat` 下 `faults == 0`；
+3. 单窗口思考耗时远低于 0.5 秒，`custodial == false`；
+4. 终局 `phi` 接近 1.0，无断粮/断电/仓库锁死/主权违约。
+
+============================ 游戏事实卡（game-facts.md） ============================
+
+# 裂陆纪元（rift_era）游戏事实卡
+
+本事实卡提炼自正式规则 `rift_era_rules_r9`（`rules/01`–`07`、`10`、`11` 与 `rules/data/*.json`）。如与细节有出入，以 `rules/` 和本包附带的 `runtime/` 引擎为准。
+
+## 1. 时钟、纪元与精度
+
+- **最小单位**：全部实物、现金、电量、研究点、人口使用整数毫单位（`1 单位 = 1,000 mU`）；产线信用与在制品使用纳单位（`1 mU = 1,000 nmU`）；金额成本与国力评分内部采用精确有理数（`Fraction`）。
+- **三级时钟**：
+  - `1 Window（决策窗口）= 5 Tick`（每 `t % 5 == 0` 同步交互，整局共 **5,760 窗口**）；
+  - `1 Cycle（工业与财政周期）= 10 Tick = 2 Window`（整局共 **2,880 周期**）；
+  - **正式总长**：`28,800 Tick`（本地练习 `--ticks` 须为 40 的正整数倍）；
+  - **四个战略纪元**：每纪元 `720` 周期（奠基 / 扩张 / 转型 / 决胜），期末可持续窗口为最后 `40` 周期；设施定期维护每 `20` 周期结算一次（整局 144 次）。
+
+## 2. 同 Tick 八阶段流水线（与座位顺序无关）
+
+每 tick 严格按 `P1 → P8` 推进，同阶段竞争共享资源池统一采用**无偏等比分配 + 确定性哈希尾差**：
+
+1. **P1 命令与生存预留**：按固定优先级（托管刚兑 → 现役部队口粮 → 水电农基础运行 → 居民口粮饮水）自动锁定 `locked_subsistence`；仅 `t % 5 == 0` 接入玩家命令（每窗口 ≤ 256 条），卖单/施工立即锁仓锁款。
+2. **P2 环境与物流**：更新天气/水文；推进走廊货运与客运，抵达货物当拍进入 `available`。
+3. **P3 电网供需**：扣燃煤/油/氢/核料与冷却水，扣除距离线损后按 `B0–B5` 六档优先级配电（煤电最低出力 40%）。
+4. **P4 移动与同时交战**：仅处于 `WAR` 状态的两国发生交战；同时结算火力、行动损耗（`Loss_action`）与附带战损。
+5. **P5 市场出清**：`t % 5 == 4` 执行各地现货双边集合竞价与世界池撮合；`t % 10 == 9` 执行证券出清；成交货物进入 `next_available`。
+6. **P6 生产、采掘、科研与施工**：仅使用未锁定的 `available`；出库仓容分两遍仲裁（**r9：制造产线优先于采掘线入仓**），产出写入 `next_available`（次 tick 可用，杜绝同拍级联）。
+7. **P7 周期结算与缓冲合并**：消费、发薪、征税、分红、支持度、人口增长、宏观利率汇率与国力周期采集；最后把 `next_available` 合并进 `available`。
+8. **P8 观测生成**：更新已验证科技解锁并按迷雾与权限过滤生成下一窗口 `obs`。
+
+## 3. 世界规模与开局禀赋
+
+- **空间尺度**：`512 × 512` L1 栅格 + `24 × 20` 战略分区（340–420 陆地 + 80–120 海洋，2–4 块大陆），8 个主要国家（每国 18–24 相连初始分区、5 座核心枢纽 `h0..h4`）、36–48 个中立城邦、220–280 座枢纽、1,100–1,500 条走廊边、24 个近地轨道槽位。
+- **开局模板（集中于首都 `h0`）**：
+  - 人口 200：194 平民（普工 144、技工 40、工程师 10）+ 6 军人（2 支驻防编队）；
+  - 设施：27 座 S1（24 生产设施 + 3 住宅）+ 1 座 S2 基础药品线（`P033`，开局按 0.5 批运行）+ 9 座 G1 采掘点；
+  - 仓容 `3,300`（基础 300 + 6 个 500 模块），住宅容量 `300`，3 辆未部署物流车；
+  - 资金：国库 `100,000` 本币 + 居民池 `50,000` 本币（开局各币汇率 `e0 = 1`，冻结 `InitialCashBookRU = 150,000`）；
+  - 民生单人每周期基准需求：`food 0.06`、`water 0.04`、`consumer_goods 0.03`、`medicine 0.01`、`medical_supplies 0.0025`、`electricity 0.02`。无命令开局药品库存约 160 周期耗尽，可用 `trade/pool_buy` 向世界池应急采购。
+
+## 4. 精确国力 `V` 与五支柱公式
+
+每周期国力总值：
+```text
+U = 0.25 * U_pop + 0.25 * U_ind + 0.20 * U_ctrl + 0.15 * U_tech + 0.15 * U_intl
+```
+
+1. **人口支柱 `U_pop`**：`100 * sum_r(psi * Pop_civ / 200 * Qlife * Qsec)`
+   - 本土合法性 `psi ∈ [0.5, 1.0]`，占领区 `psi ∈ [0.15, 0.5]`（需驻控 40 周期逐步抬升）；
+   - `Qlife` 依赖食品（合成食品占比超 30% 会折损）、民用品、药品/医疗用品、水电；`Qsec` 受战斗、封锁与污染扣减。
+2. **工业支柱 `U_ind`**：`0.35 * (sum VA_eff - Loss_destroy - Loss_action + 0.05 * NetTransit + NFA_RU / 1000)`
+   - 仅非采掘制造线计 `VA_eff`；
+   - **过量囤货折损 `eta`**（逐国逐物品独立计算）：`chi = (I_physical_eta + SinkDebt) / max(1, mean_n(eligible_consumption))`（r9 永久豁免未耗尽的开局非回填禀赋余量），`chi <= 6` 时 `eta = 1`，否则线性降至 `0`（`chi >= 12` 归零）；
+   - **`Loss_action` 严格自身损耗**：作战、行军、封锁、网攻、反卫星等实际耗材与算力按目录值计损（单事件最低 `0.001`），固定影子下任何无额外实益的敌对行动均使自身 `V` 严格下降；
+   - **`NFA_RU` 历史成本账面**：基于冻结历史 RU 成本，单纯操控本币汇率无法虚增 NFA。
+3. **控制支柱 `U_ctrl`**：`sum_connected(sigma_r) + 0.01 * Kinfra + 2 * min(8, N_sat) + 0.20 * min(MilCap, sum V_ready)`
+   - 仅计与首都或有粮+通信设备的备份核心枢纽**补给连通**的受控区；
+   - **r7/r9 `Kinfra` 细则**：公共仓库扩建模块按**实际占用率**计入（空扩仓不加分）；已建成非住宅空壳设施（全产线 `__idle__` 且未装机）仅按 `0.25` 计。
+4. **科技支柱 `U_tech`**：`0.60 * sum_known(W_t * (0.15 + 0.85 * min(1, (ActiveScale + 0.5 * LicensedScale) / theta)))`
+   - 仅解锁科技不落地只得 15% 分；必须通过对应配方、在线设施或有效算力达成 `ActiveScale >= theta` 才能拿满 100%。
+5. **国际支柱 `U_intl`**：`0.08 * mean20(credit_weighted_exports) + 2.5 * Credit * aligned_cities + 0.05 * mean20(credit_weighted_aid)`
+   - 出口与运输贡献仅在**不可逆真实末端消费**时确认，转仓、贸易倒手不刷分。
+
+## 5. 四纪元轨迹、可持续系数 `Φ` 与百分制
+
+- **可持续系数 `Φ ∈ [0.35, 1.0]`**：
+  `Φ = max(0.35, 1 - d_maint - d_short - d_unrest - d_insolvency)`，扣项来自期末平均维护欠账、末 20 期食电缺口、受控人口橙红警比例、永久违约次数与末 40 期违约/脱锚事件。
+- **有符号期末调整与总国力 `V`**：
+  - `U_end_adj = max(U_end, 0) * Φ + min(U_end, 0) * (2 - Φ) - 10 * (1 - Φ)`
+  - `V = 0.08 * U_I + 0.14 * U_II + 0.24 * U_III + 0.29 * U_IV + 0.25 * U_end_adj`
+- **六维独立产权账本**：军事占领（清空守军且驻满 10 tick）只改变军事控制 `controller`（军管敌国资产产能上限 60%），不没收主权或第三方股权；强行国有化立扣国际信用 `-0.30`。
+
+============================ 命令表（COMMANDS.md） ============================
+
+# 裂陆纪元命令表（选手版）
+
+由 `pipeline/command_surface.py` 从引擎实时注册表生成（2026-11-20T18:21:13Z）。引擎 `rift_era_engine_0.4.0`，规则 `rift_era_rules_r9`；共 **83** 条 `kind/op`。
+
+字段以实时引擎校验与 `rules/06_agent_interface.md` 为准；本表已覆盖全部实时注册命令的准确参数名。
+
+每条命令都是 JSON 对象：`{"id": "唯一递增字符串", "kind": ..., "op": ..., 其余字段}`；每窗口最多 256 条，单行 ≤ 256 KiB。被拒绝的命令只影响它自己（返回 ERR_* 码），不扣分也不影响其他命令。
+
+| kind | 数量 |
+|---|---|
+| `ai` | 8 |
+| `cancel` | 1 |
+| `diplomacy` | 10 |
+| `finance` | 11 |
+| `governance` | 10 |
+| `industry` | 13 |
+| `intelligence` | 5 |
+| `logistics` | 8 |
+| `military` | 9 |
+| `research` | 3 |
+| `trade` | 5 |
+
+| # | kind/op | 字段（06） | 语义（06） |
+|---|---|---|---|
+| 1 | `ai/deploy` | `hub_id: str`, `lines: list[str]`（必填，可为 `[]`，非空时须全在 `hub_id` 且可自动化）, `research: int`, `production: int`, `finance: int`, `cyber: int`, `market: int`, `align: int`, `grid: int`（各为非负算力 `mU`）, `align_engineers_mU?: int (>=0)`, `replaces_id?: str` | 与本 Hub 的 `train.alloc_compute_mU` 合计 ≤ Cbar[hub_id]（超上限返回 `ERR_CAPACITY_EXCEEDED`）；无对应里程碑的项须为 `0`（`align_engineers_mU > 0` 需 `AI03`），否则返回 `ERR_TECH_LOCKED`；持续计划，可用 `replaces_id` 原位替换 |
+| 2 | `ai/license_accept` | `seller: str`, `license_kind: "weights"\|"data"`, `max_price_ru_mU: int (>0)` | 需 `AI01`；接受卖方挂牌的权重或人工精标数据授权（数据授权同来源冷却 `100` 周期，按来源国去重高水位计入） |
+| 3 | `ai/license_offer` | `license_kind: "weights"\|"data"`, `price_ru_mU: int (>=0)`, `target: str\|null`, `replaces_id?: str` | 需 `AI01`；持续挂牌（可用 `replaces_id` 替换）；数据授权仅限本国人工精标数据，权重授权须已有激活模型 |
+| 4 | `ai/model` | `active_model: str`（`model_id`） | 指定当前用于推理/运营部署的模型版本 |
+| 5 | `ai/prune_model` | `model_id: str` | 删除指定非激活历史模型版本以释放 `16` 个模型槽位上限 |
+| 6 | `ai/service_bid` | `qty_mU: int (>0)`、`max_price_ru_mU: int (>0)`、`use: "research"\|"production"\|"finance"\|"cyber"` | 买入他国推理服务（需买方自身已解锁目标 `use` 对应里程碑） |
+| 7 | `ai/service_offer` | `qty_mU: int (>0)`、`price_ru_mU: int (>0)` | 需 `AI04`；每单位占用 `1000 mU` `market` 部署算力 |
+| 8 | `ai/train` | `hub_id: str`, `alloc_compute_mU: int (>0)`、`cycles: int`（$\ge 5$）、`base_model: str\|null`、`max_price_mU: int (>0)` | 需 `AI02`；纳入算力总预算，中途 `cancel` 将 `50%` $C_{\text{run}}$ 存为检查点模型 |
+| 9 | `cancel/cancel_by_id` | `target_id: str` | 按 `target_id` 终止本国有权取消的未成交挂单、在途训练、施工或持续计划（不存在或已完结返 `ERR_UNKNOWN_TARGET_ID`） |
+| 10 | `diplomacy/accept_contract` | `proposal_id: str` | 接受对方发出的未过期合同提案，在 `P1` 锁定首期交割义务后正式生效 |
+| 11 | `diplomacy/city_state_aid` | `city_state_id: str`, `good: "food"\|"water"\|"medicine"\|"consumer_goods"`, `qty_mU: int (>0)` | 将已运抵该城邦枢纽的本国国有可用民生库存无偿援助给中立城邦，居民消耗后计入亲和度与援助指标 |
+| 12 | `diplomacy/city_state_treaty` | `city_state_id: str`, `treaty_kind: "resource_jv"\|"port_lease"\|"protectorate"`, `aid_ru_mU: int (>=0)` | 与中立城邦签署资源合资、港务租借或保护国协议（须满足对应亲和度阈值 `0.35 / 0.50 / 0.65`） |
+| 13 | `diplomacy/declare_war` | `target_nation: str` | 按03§0统一P1关系状态机向国家或独立城邦宣战；同拍双方声明均为aggressor，盟友不自动参战；违约与C26/C27同该节 |
+| 14 | `diplomacy/grant_climate_consent` | target_nation:str; region_ids:list[str]; duration_cycles:int(1..720) | 仅授权本国控制区域，期限内撤销从下一周期起生效；V08区域/下风向均需覆盖才算合资格非敌对干预，不许替第三国签字 |
+| 15 | `diplomacy/leave_joint_venture` | `venture_id: str` | 主动退出本国参与的既有合资企业（移除自身活跃成员资格，不再承担后续投入与分红） |
+| 16 | `diplomacy/military_aid` | `recipient: str`, `hub_id: str`, `good: str`（军品或 `food`/`water`/`fuel`/`battery`/`medical_supplies`）, `qty_mU: int (>0)` | 向存在待履行共同防御义务（`defense_obligations` 状态 `PENDING`）的受援国在其受控枢纽移交国有可用军需物资，受援方实际消耗后折算履约额度 |
+| 17 | `diplomacy/propose_contract` | `counterparty: str`, `clause_type: 1..9`, `params: object（仅03固定合同schema，不接受任意字段）`, `duration_cycles: int (10..720)` | 提交九类有限谓词结构化合同提案（含商品互换、通行权、主权贷款、研发合资、停火、防务等） |
+| 18 | `diplomacy/reject_contract` | `proposal_id: str` | 拒绝未生效提案（无信用惩罚） |
+| 19 | `diplomacy/terminate_contract` | `contract_id: str` | 终止既有合同；若未满足合同约定的免责终止谓词，按单方撕约扣减 `Credit_p` |
+| 20 | `finance/bond_issue` | `term: 20\|50\|100`、`face_mU: int (>0)`、`min_price_mU: int (>0)` | 需 `F02`；受 `40 × max(mean_tax_20, 25)` 主权债上限约束，超限返回 `ERR_NO_PERMISSION` |
+| 21 | `finance/bond_order` | `bond_id: str`、`side: "buy"\|"sell"`、`qty_mU: int (>0)`、`limit_price_mU: int (>0)` | 二级市场交易，预锁 100% 资金或债券面值份额 |
+| 22 | `finance/central_bank` | `rate_bp: int`（`0..2000`，储备国下限 `-100`）、`issue_mU: int`（0≤数值≤2%全球本币存量M_p）、`intervene_ru_mU: int`、`peg: int (>0, RU每本币的mU)\|null`、`capital_control_bp: int`（`0` 或 `100..500`） | 需 `F02`；持续计划，直至被 `replaces_id` 更新覆盖 |
+| 23 | `finance/dividend` | `company: str`、`payout_mU: int`（`0..1000`，代表 `0..100%`） | 仅控股国（国有股 $\ge 51\%$）；仅对当期实现现金流正利润 $\Pi_{k,\text{cash}} > 0$ 分红 |
+| 24 | `finance/export_control` | `goods: list[str]`（加速器、高端芯片 ID 列表）、`targets: list[str]` | 即时生效；若导致对守约方的既有合同断供，按主观违约扣减信用 |
+| 25 | `finance/fx` | `side: "buy_ru"\|"sell_ru"`、`amount_mU: int (>0)`、`currency: str` | 即时按当周期汇率与 `WorldClearPool` 结算（扣除手续费与资本管制费，受池余额上限约束） |
+| 26 | `finance/fx_cover` | `currency: str`, `amount_mU: int (>0)` | 需 `F03`；买入并归还指定外币空头负债，按归还比例释放保证金（同窗口累计申请不得超过剩余未平空头余额） |
+| 27 | `finance/fx_short` | `currency: str`, `amount_mU: int (>0)` | 需 `F03`；从世界池借入他国货币并当期卖出换取 RU（不得做空本币，预锁 `50%` RU 保证金，总空头不超过世界池期初余额 `25%`） |
+| 28 | `finance/ipo` | `company: str`、`qty: int`（累计 $\le 490,000$ 股）、`min_price_mU: int (>0)` | 需 `F01`；仅限本国公司，从国库所持 `1,000,000` 原始股中向市场公开发售，募资入国库 |
+| 29 | `finance/secondary_offering` | `company: str`、`qty: int`（每 100 周期 $\le 100,000$ 股，外部总持股累计 $\le 490,000$ 股）、`min_price_mU: int (>0)`、`target_facilities: list[str]` | `C30`；需 `F01` 且该公司已 IPO；总股本保持 `1,000,000` 股不变，从国有股释出，募资锁入 `CapexEscrow[p, k]` 专户，仅可用于所列本行业设施建设 |
+| 30 | `finance/stock_order` | `company: str`（`<国>-<行业>`）、`side: "buy"\|"sell"\|"short"\|"cover"`、`qty: int (>0)`（股）、`limit_price_mU: int (>0)`、`margin: bool`、`expire_cycles: int (1..20)` | 进入下一次证券集合竞价：`margin=false` 的现货买单（`buy`）按 **`100%` 挂单本金（`qty × limit_price_mU` + 预估手续费）** 全额预锁买方现金（现货卖单 `sell` 100% 预锁自由持仓股份）；仅当 `margin=true`（融资买入）或 `side="short"`（融券卖空，均需本国已解锁 `F03`）时，按 **`50%` 初始保证金**预锁现金，资金或股份不足返回 `ERR_INSUFFICIENT_CASH` 或 `ERR_INSUFFICIENT_STOCK` |
+| 31 | `governance/academy_train` | `hub_id: str`, `track: "general_to_skilled"\|"skilled_to_engineer"`, `trainees_mU: int (0..5000)` | 需 `R02` 学院设施；培训人员实际退出岗位并锁入training人口池，不能同时生产/迁移/征兵；单座学院并发培训上限 `5.0` 人口单位（`5000 mU`），耗时 `6` 或 `12` 周期 |
+| 32 | `governance/autonomy` | `region_id: str`, `autonomy_mU: int (0..500)` | 设定分区地方财政留成比例 `Autonomy_r ∈ [0, 50%]`（提升地方支持度恢复，同比例减少上缴国库税基） |
+| 33 | `governance/climate_intervention` | `target_region: str`, `mode: "enhance"\|"suppress"` | 需 `V08`；持续 `60` 周期（冷却 `120` 周期），每周期扣 `remediation_agent×2 + 10.0 B3电` |
+| 34 | `governance/conditional_plan` | `hub_id: str`, `metric: "market_price"\|"grid_price"\|"hub_stock"`, `ref_id: str`, `comparator: "<="\|">="`, `threshold_mU: int`, `action: dict`, `cooldown_ticks: int (>=5)` | 需 `C10` 且枢纽装有 `ai_core×1`；单窗口最多触发 `1` 次，冷却至少 `5 tick`（`1` 窗口） |
+| 35 | `governance/fiscal_policy` | `tax_rate_bp: int (500..5000)`, `welfare_budget_mU: int (>=0)`, `maint_budget_mU: int (>=0)` | 设定名义税率tau_tax（5%..50%）；F01与封顶后的有效税率按02计算、`F05` 社会保障实付预算与公共设施维护预算 |
+| 36 | `governance/mobilize` | `enabled: bool` | 全国紧急劳动动员，2周期爬坡、至少4周期；军职征入由deploy_formation固定crew处理，不能重复征召 |
+| 37 | `governance/power_price_cap` | `cap_price_mU: int (5000..50000)` | 设定本国用户侧电价上限 $\bar{\lambda}_{\text{cap},p} \in [5.0, 50.0]$（本币/电） |
+| 38 | `governance/power_priority` | `priority_order: list["B1"\|"B2"\|"B3"\|"B4"]` | 必须为 `["B1","B2","B3","B4"]` 的 4 元全排列置换（否则返 `ERR_SCHEMA`）；设定本国第 `1..4` 电力调度秩次 |
+| 39 | `governance/relocate_population` | origin_hub,dest_hub:str; skills_mU:object{general_worker,skilled_worker,engineer:nonnegative_int}; path:list[str]; allow_unhoused?:bool=false | 复用Passenger Shipment、各技能不超过可用人口；10本币/人服务费、5周期口粮预装、住房或明确无房选择，见11 |
+| 40 | `governance/set_regime` | `group: "science_doctrine"\|"economic_doctrine"`, `choice_tech_id: str` | 切换互斥制度或路线组（需已解锁目标科技；`science_doctrine` 过渡 `40` 周期，`economic_doctrine` 过渡 `60` 周期） |
+| 41 | `industry/build_facility` | `hub_id: str`, `facility_type: str`（industry.json厂类或public）, `profile_id: "S1".."S5"\|"G1"\|"G2"\|"P110"\|"L06_canal"\|"L06_tunnel"\|"L06_dam"\|"L12_bridge"\|"L12_island"`, `good?: str`, `use_modular_mU?: int (0..500)` | 校验科技前置、分区地形/槽位上限与 `512` 座设施硬上限；在 `P1` 预锁首期施工建材入 `locked_build` |
+| 42 | `industry/build_mine` | hub_id,deposit_id,good: str; level:G1/G2 | 必须本地真实矿脉；runtime_rules定额及02建设维护 |
+| 43 | `industry/demolish_facility` | `facility_id: str` | 校验所有权且本地无本tick战斗；拆解耗时 `2` 周期，返还直接消耗钢/铜的 `50%` 并记入 `Loss_demolish` |
+| 44 | `industry/install_storage` | `facility_id: str`, `storage_kind: "battery"\|"pumped"`, `expected_version?: int` | 在已投产 `S2..S5` 设施空闲槽位安装储能（`battery` 需 `E04`、耗 `battery×8`、2 周期；`pumped` 需 `E02+L01` 与抽水地形、耗 `steel×30+cement×60+basic_parts×6`、30 周期） |
+| 45 | `industry/install_system` | hub_id:str; system_id:str（见下表） | 本地公共槽装机，按固定成本扣库存，2周期完工，未满足前置拒绝 |
+| 46 | `industry/plant_toggle` | facility_id:str; online:bool | 变更本国电站设施（05状态机处理）或采掘场（`mine_id`，r9支持暂停/恢复采掘与取水）运行开关 |
+| 47 | `industry/refill_accelerators` | facility_id:str; qty:int(1..50) | 同代际空位装整台，保留各批日期，不重置原芯片寿命 |
+| 48 | `industry/refill_storage` | `facility_id: str`, `expected_version?: int` | 对健康度 `< 800 mU` 的电化学储能（`battery`）更换电芯，消耗本地 `battery×2` 并将电池健康度恢复至 `1000 mU` |
+| 49 | `industry/remediate_pollution` | `region_id: str`, `amount_mU: int (>=0)` | 需 `V02`；从所属枢纽 `available` 预锁并投放 `remediation_agent`（足额 `1000 mU` 触发额外 `+2.0%/周期` 衰减与污染惩罚减半） |
+| 50 | `industry/repair_asset` | asset_id:str; target_health_mU:int(1..1000); work_hub_id:str | 自有/获授权本地设施、线、边或仓；目标>现状，按05预锁材料/工/电及工期；不得超book或绕过整机精度 |
+| 51 | `industry/set_line` | `line_id: str`, `recipe: str\|null`, `mode: "general"\|"specialized"\|"automated"\|"flexible"\|"additive"`, `high_temp?: bool`, `gene_edited?: bool`, `target_stock_mU?: int (>=0)`, `addons?: list["sensor"\|"carbon_capture_unit"\|"ai_core"\|"quantum_module"]` | 校验配方/模式科技前置与设施等级上限；首次装机从 `available` 一次性扣除 `installed` 及模式/附属模块装机件 |
+| 52 | `industry/upgrade_facility` | `facility_id: str`, `target_profile: "S2".."S5"\|"G2"` | 校验所有权、科技前置与升级建材库存，预锁建材后转入改造工期 |
+| 53 | `industry/warehouse_expand` | `hub_id: str`, `modules: int (1..10)` | 每模块消耗 `steel×4 + cement×6`，完工后该枢纽公共仓容 `+500,000 mU`（`+500` 单位） |
+| 54 | `intelligence/cyber_op` | `target_nation: str`, `target_hub: str`, `op_kind: "S03_infiltrate"\|"S03_steal_tech"\|"S08_paralyze"` | 按03执行S03渗透/窃密或S08瘫痪；S07只有被动防御，不提供攻击命令。其他op_kind返回ERR_SCHEMA。 |
+| 55 | `intelligence/intel_op` | `target_region: str`, `op_kind: "S06_decoy"\|"C12_cryptanalysis"`, `reported_strength_mU?: int (0..10000000)`, `reported_type?: str`（military.json unit_id） | 仅S06假目标（cyber_suite .1）或C12密码分析，条件和成本见03/11；S02是被动监听。其他op_kind返回ERR_SCHEMA。 |
+| 56 | `intelligence/orbital_launch` | `hub_id: str`, `payload: "satellite"\|"orbital_platform"`, `orbit_plane: 0..2`, `slot: 0..7`, `berth: 0..1`, `use_reusable: bool` | 从 `S3/S5` 发射场扣除载荷整机与燃料（或 `P096 reusable_launcher`）发射入轨；基础仅berth=0，berth=1须全球已扩容且本国N12，同位争抢按03哈希，未获位不扣载荷 |
+| 57 | `intelligence/radar_toggle` | `entity_id: str`, `active: bool`, `ew_mode?: "passive"\|"jamming"` | 切换雷达或 `G09` 电子战模块主动开机/静默状态（主动开机提升侦测但暴露自身辐射源） |
+| 58 | `intelligence/steal_model` | `target_nation: str`, `target_hub: str` | 需 `S03`；对敌方数据中心发起模型权重窃取，成功获最高模型 $\gamma = 0.70$ 能力副本 |
+| 59 | `logistics/build_corridor` | origin_hub,dest_hub: str; mode: road/rail/river/sea/air/grid/water; level:1或2; path_cells: list[int] | 两端权限、02科技/材料/工期校验，按路径格长扣料；不是仅设置既有边通行权 |
+| 60 | `logistics/corridor_policy` | `corridor_id: str`, `target_nation: str`, `access_tier: 0..3`, `toll_rate_bp: int (0..2000)` | 设定本国控制走廊对他国的通行权档位（`0` 禁行、`1` 商贸、`2` 军需、`3` 部队过境）与过境费率 |
+| 61 | `logistics/forward_contract` | `counterparty: str`, `good: str`, `qty_mU: int (>0)`, `strike_price_ru_mU: int (>0)`, `delivery_cycle: int (c+10\|c+20\|c+50)`, `delivery_hub: str` | 需双方解锁 `F03`；签署时双边各预锁合同名义价值 `20%` 的初始保证金入 `ForwardMargin[p]` |
+| 62 | `logistics/market_ask` | `hub_id: str`, `good: str`, `qty_mU: int (>0)`, `limit_price_mU: int (>0)`, `expire_cycles: int (1..20)` | 区域商品集合竞价卖单；在 `P1` 从 `available` 全额预锁商品入 `locked_order` |
+| 63 | `logistics/market_bid` | `region_market: str`, `good: str`, `qty_mU: int (>0)`, `limit_price_mU: int (>0)`, `expire_cycles: int (1..20)` | 区域商品集合竞价买单；在 `P1` 按 `qty_mU * limit_price_mU / 1000` 全额预锁买方现金入 `locked_order` |
+| 64 | `logistics/plant_maintenance` | `facility_id: str`, `shift_cycles: int (-20..20)` | 调整电站计划检修窗口偏移量（推迟超 `20` 周期后强迫停运率 `×3`） |
+| 65 | `logistics/route_shipment` | `origin_hub: str`, `dest_hub: str`, `corridor_path: list[str]`, `good: str`, `qty_mU: int (>0)`, `carrier_recipe: "manual"\|"P036"\|"P037"\|"P052"\|"P053"\|"P059"\|"P060"`, `repeat_cycles?: int (0..100)` | 校验路径连通性、走廊通行权、整数台运载工具及全程燃料/电力，在 `P1` 预锁货物与全程燃料后发车 |
+| 66 | `logistics/storage_mode` | `facility_id: str`, `mode: "auto"\|"charge"\|"discharge"\|"idle"`, `power_mU?: int (>=0)` | 配置 `E04` 电化学储能或抽水蓄能运行模式（`auto` 引用截至上一周期末近 10 周期中位电价） |
+| 67 | `military/asat_strike` | `origin_hub: str`, `target_sat_id: str` | 需 `N12`；消耗 `hypersonic_missile×1 + guidance_module×1` 拦截敌方在轨节点（产生轨道碎片惩罚） |
+| 68 | `military/blockade` | formation_id,edge_id:str; target_nations:list[str]（1..8） | 03§7合法位置/域/补给、必须WAR目标，每编队一边；生成持续计划，实际每tick按07付损耗 |
+| 69 | `military/deploy_formation` | `hub_id: str`, `domain: "Land"\|"Air"\|"Sea-Surface"\|"Sea-Sub"`, `units: dict[str,int]`, `crew_mU?: int (>0)` | domain枚举只取military.json的domain_channel键；unit_id只取units键，整数台且全属指定域。crew可选断言值须等于单元定额和；混域拒绝ERR_MIXED_DOMAIN_FORMATION，未知域/单元拒绝ERR_SCHEMA；实际扣整机和兵员。 |
+| 70 | `military/disband` | formation_id:str | 仅友好Hub，幸存crew归原技能池、完好装备保留HP回库，不能刷新健康 |
+| 71 | `military/formation_task` | `formation_id: str`, `task: "move"\|"garrison"\|"attack"\|"escort"\|"patrol"`, `target_region: str`, `posture: "preserve"\|"assault"\|"bombard"`, `supply_hub: str`, `retreat_loss_mU: int (100..900)` | 下达编队机动/作战指令、交战姿态、补给源枢纽与自动撤退战损阈值 |
+| 72 | `military/hypersonic_strike` | `origin_hub: str`, `target_id: str`, `missile_qty: int (1..20)` | 需 `N10`；从发射枢纽扣除 `hypersonic_missile × missile_qty`（`P098`），`1 tick` 跨区打击高价值目标 |
+| 73 | `military/interdict` | `formation_id: str`, `contact_id\|shipment_track_id: str` | 只接受本国当前可见（`q >= 0.2`，见观测 `strikes.shipment_contacts`）且在编队有效射程跳数内的在途接触别名，运输者及货主均须 `WAR`；共享射击预算，不打中立第三方 |
+| 74 | `military/refit_formation` | `formation_id: str`, `slot_a: str\|null`, `slot_b: str\|null` | 编队须驻停友方枢纽；从枢纽库存扣除改装模块并停机改装 `2` 周期 |
+| 75 | `military/reinforce` | `formation_id: str`, `unit_index: int`, `crew_mU: int (>0)`, `expected_version?: int` | 为驻停本国受控枢纽编队的指定单元征召补充兵员；人员先转入训练池，训毕且编队仍在同枢纽时入列补编 |
+| 76 | `research/set_backup_hub` | `primary_hub: str`, `backup_hub: str` | 需 `R08` 且备份枢纽装有 `computing_equipment×1 + communication_equipment×1` |
+| 77 | `research/set_focus` | `line_id: str`, `tech_id: str\|null`, `sec_mode: "open"\|"standard"\|"classified"` | 绑定实验室产线在研项目（`null` 为待机）；校验 `requires_all/any`（未满足返 `ERR_TECH_LOCKED`） |
+| 78 | `research/validate_project` | `line_id: str`, `tech_id: str` | 启动已完成理论阶段的科技工程验证；`6` 阶须在装有 `R09` 的 `S5` 枢纽进行（否则返 `ERR_SITE_INCOMPATIBLE`） |
+| 79 | `trade/buy_from` | `offer_id: str`, `seller: str`、`good: str`、`qty_mU: int (>0)`、`max_price_ru_mU: int (>0)` | 接受双边卖单，按RU付款并在卖单Hub原地过户，买方须另安排Shipment |
+| 80 | `trade/city_reexport` | `city_state_id: str`, `good: str`, `qty_mU: int (>0)`, `price_ru_mU: int`（须等于 `10 * w_cat * 1000`） | 通过中立城邦转口挂单采购受控货物，报价须严格等于城邦固定公开挂牌价（`10 * w_cat * 1000` mU RU） |
+| 81 | `trade/export_offer` | `hub_id: str`, `good: str`、`qty_mU: int (>=0)`、`price_ru_mU: int (>0)` | 国家间双边卖单；立即从 `available` 锁入 `locked_escrow` |
+| 82 | `trade/pool_buy` | `hub_id: str`（本国主权Hub）、`good: str`（库存货）、`qty_mU: int (>0，整件货为1000的倍数)` | 从世界池买（r9 单位买价 `ceil(11.5·w_cat·1000)` mU RU），P1锁本国RU `reserves`，同tick P5按P5开始时的世界库存出清，未成交退款；每国每货每周期买入≤40单位（超出返回 `ERR_CAPACITY_EXCEEDED`）；货到该Hub `next_available`，原产标签保留且不得含对本国禁运的原产批次 |
+| 83 | `trade/pool_sell` | `hub_id: str`（本国主权Hub）、`good: str`、`qty_mU: int (>0)` | 卖给世界池（r9 单位卖价 `floor(8.5·w_cat·1000)` mU RU），P1锁该Hub真实可用库存，P5按世界池RU余额与全部国家全部货物同批同比缩量成交，RU入本国 `reserves`（公司产权批次入对应公司账户）；每国每货每周期卖出≤40单位 |
+
+============================ 起步入口模板 main.py ============================
+
+```python
+"""裂陆纪元提交入口：评测机在沙箱里运行 `python3 main.py`。只能用 Python 标准库。
+
+协议由 sdk.py 处理（分页、窗口号、命令 id）。你只需要改 bot.py 里的 Bot.decide。
+"""
+import os
+import sys
+import traceback
+
+sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
+
+from sdk import Client  # noqa: E402  （与选手包根目录 sdk.py 相同，必须一起打进 zip）
+from bot import Bot  # noqa: E402
+
+
+def main():
+    client = Client()
+    init = client.receive()          # 开局：公开地图、目录（科技/配方/军品）、本国初始观测、时钟、时间预算
+    bot = Bot(init)
+    client.ready()                   # 15 秒内必须回 ready
+    while True:
+        message = client.receive()   # 每个决策窗口一帧本国过滤观测
+        if message.get('type') == 'end':
+            return
+        try:
+            orders = bot.decide(message)
+        except Exception:            # 策略 bug 不要让整个进程崩溃（崩溃会被托管为空命令）
+            traceback.print_exc(file=sys.stderr)
+            orders = []
+        client.orders(message['window'], orders[:256])   # 每窗口最多 256 条
+
+
+if __name__ == '__main__':
+    main()
+```
+
+============================ 起步策略模板 bot.py ============================
+
+```python
+"""模板策略：科研不断档 + 首都粮食兜底。在此基础上改进。
+
+观测字段说明见选手包 rules/06_agent_interface.md；命令表见 COMMANDS.md。
+"""
+
+FOOD_FLOOR_MU = 400_000      # 首都粮食低于 400 单位（1 单位 = 1000 mU）就去本地市场买
+FOOD_BID_PRICE_MU = 60_000   # 限价（mU 本币/单位）
+
+
+class Bot:
+    def __init__(self, init):
+        self.owner = init['owner']
+        tech = init.get('catalog', {}).get('technology', {})
+        self.nodes = {row['id']: row for row in tech.get('technologies', ())}
+        self.seq = 0
+
+    def order(self, kind, op, **fields):
+        self.seq += 1
+        return {'id': str(self.seq), 'kind': kind, 'op': op} | fields
+
+    def researchable(self, tech_id, known):
+        row = self.nodes[tech_id]
+        need_all = set(row.get('requires_all') or ())
+        need_any = set(row.get('requires_any') or ())
+        return tech_id not in known and need_all <= known and (not need_any or need_any & known)
+
+    def decide(self, obs):
+        orders = []
+        research = obs.get('research', {})
+        known = set(research.get('known', ()))
+        projects = research.get('projects', {})
+        focus = research.get('focus', {})
+        busy = {j['lab_id'] for j in research.get('validation', ()) if j.get('active')}
+        claimed = set(focus.values())
+        # 1) 每座实验室（配方 P075 的产线）：理论完成就验证，否则研究最低阶的可研究科技
+        for line in obs.get('lines', ()):
+            if line.get('recipe') != 'P075' or line.get('under_construction') or line['id'] in busy:
+                continue
+            current = focus.get(line['id'])
+            project = projects.get(current, {}) if current else {}
+            if current and project.get('theory_complete') and not project.get('verified'):
+                orders.append(self.order('research', 'validate_project', line_id=line['id'], tech_id=current))
+                continue
+            if current is None or current in known or project.get('verified'):
+                options = sorted((self.nodes[t]['tier'], t) for t in self.nodes
+                                 if self.researchable(t, known) and t not in claimed)
+                if options:
+                    claimed.add(options[0][1])
+                    orders.append(self.order('research', 'set_focus', line_id=line['id'],
+                                              tech_id=options[0][1], sec_mode='standard'))
+        # 2) 首都（Hub id 以 -h0 结尾）粮食兜底：库存行格式 [hub, 状态, 物品, 数量mU]
+        inventory = obs.get('inventory', ())
+        capital = next((r[0] for r in inventory if len(r) == 4 and str(r[0]).endswith('-h0')), None)
+        food = sum(r[3] for r in inventory if len(r) == 4 and r[0] == capital and r[1] == 'available' and r[2] == 'food')
+        if capital and food < FOOD_FLOOR_MU and obs.get('window', 0) % 2 == 0:
+            orders.append(self.order('logistics', 'market_bid', region_market=capital, good='food',
+                                     qty_mU=FOOD_FLOOR_MU - food, limit_price_mU=FOOD_BID_PRICE_MU, expire_cycles=1))
+        return orders
+```
+
+============================ 输出要求 ============================
+
+现在请输出一个完整的 `bot.py` Python 代码块（保留 `class Bot:` 及 `decide(self, obs)` 接口，仅使用 Python 标准库，确保任何异常均被妥善处理，不要省略代码或留 TODO）。

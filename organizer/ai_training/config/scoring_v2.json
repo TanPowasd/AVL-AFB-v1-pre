@@ -1,0 +1,61 @@
+{
+  "version": "scoring_v2",
+  "problem": "ai_training",
+  "opponents": [
+    {
+      "id": "scaling_hegemon",
+      "path": "agents/reference/scaling_hegemon.py"
+    },
+    {
+      "id": "capital_arbitrageur",
+      "path": "agents/reference/capital_arbitrageur.py"
+    },
+    {
+      "id": "adaptive_tactician",
+      "path": "agents/reference/adaptive_tactician.py"
+    },
+    {
+      "id": "frontier_control",
+      "path": "agents/reference/frontier_control.zip"
+    }
+  ],
+  "component_weights": {
+    "solo": 0.5,
+    "adv": 0.5
+  },
+  "game_timeout_s": 7200,
+  "frozen_files": {
+    "agents/baselines/merchant.py": "6e478f5978ac3dfa6022e19bffe7441ace50b5b4254e180de58e7ceaf0fed1d7",
+    "agents/baselines/scaling.py": "3dc79b9f15b08cad7e95b3c65dc67fa1d88b730ac18938aa2b509cae8cc304d7",
+    "agents/reference/adaptive_tactician.py": "37d853c4dcb18e964ce06a717ab90038497babffcc1689d09b857cd1d9699bdb",
+    "agents/reference/capital_arbitrageur.py": "3a813a118ec1e08aec78f094627f3f03ac797991d2e571e86abcd0e4b8838314",
+    "agents/reference/frontier_control.zip": "48cffbad70e7e82fd80633939234a7d23e41da3edc97e56784200b51022233c9",
+    "agents/reference/scaling_hegemon.py": "7260f1a639da0e78bf01ee204b7df7f2f9155713419d6c3b277e0a880e0f827e",
+    "config/format.json": "38816700bce92d54d247fcd6ac0cbe554b08f42dc2d3fe409fddef65aa3c7a91",
+    "engine/archive.py": "9ea7bdafa0b6edafde2d3a8f83d743344d247c481e79a464efaa1abbdcb755f7",
+    "engine/engine.py": "cc23ebfcd380e0b3690406d5ae7d50a12f662332743f0dbc882c8060fea80c47",
+    "engine/pkg_entry.py": "ad26e3c8f6bb1e687e7e8bd4266fb052f7d5c38c460eb4d1b22b3cdf28ed6e84",
+    "engine/policy.py": "e55f7129f3c9f2805f9aaf5e5d6fa5f8c4a81614439151dfcf27e219da6ce49c",
+    "engine/solo_npc.py": "8c151af24754910712fc0456a45406c750249a7a196e211bfcd98a7859cda3c5",
+    "engine/world.py": "41914a1cadacf11b0143b9155f4963f5c9944a1bdbdca694f9493dcfb73403e6"
+  },
+  "ticks": 26280,
+  "margin_scale": 12710.23,
+  "calibration": {
+    "method": "median(abs(nonzero full-match gap)) / atanh(0.6), rounded to 2 decimals",
+    "evidence": "config/calibration_v2.json",
+    "evidence_sha256": "f81e5b3c8709ebff5e646f1f69d5b771bf1253cb30b03f013cbc600fcd43083b"
+  },
+  "world_salt": "a80d6058933d6751973affeca246efa4",
+  "seed_count": 64,
+  "scenario_sampling": "per_run_random",
+  "calibration_seeds": [
+    101,
+    102,
+    103,
+    104
+  ],
+  "seed_source": "os_csprng",
+  "profile_revision": "2026-11-21-ai-training-4style-v5",
+  "submission_ext": ".zip"
+}

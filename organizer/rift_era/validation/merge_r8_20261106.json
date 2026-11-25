@@ -1,0 +1,208 @@
+{
+ "date": "2026-11-06",
+ "commit_validated": "52624db89c7e59a883e22cb4762e879b2ebe19e9",
+ "branch": "rift-core",
+ "merged": {
+  "rift-gaps": "8311a46",
+  "rift-war": "321f7b0",
+  "rift-pipeline": "490327e",
+  "base_r8": "735bce9"
+ },
+ "note": "rift-core 合并三分支后统一验证。rc=0 即 finalize_match 末尾 state.audit() 通过。cpu_seconds 为子进程 user+sys（含地图生成/接受检查等启动），两局并发于 2 vCPU；练习时钟故 full_rules_accepted=false。",
+ "hash_equal_across_PYTHONHASHSEED": {
+  "legacy_none": true,
+  "legacy_simple": true,
+  "formal_none": true
+ },
+ "runs": {
+  "legacy_none_0": {
+   "name": "legacy_none_0",
+   "PYTHONHASHSEED": "0",
+   "command": "python3 -m organizer.rift_era match --ticks 400 --legacy-map --bot none",
+   "rc": 0,
+   "wall_seconds": 272.3,
+   "cpu_seconds": 267.8,
+   "state_hash": "adec49771933860e48eb5713a9f57605e91b925deb04ad6bc05cd4b398d5b79a",
+   "engine_hash": "987fcb550607edd18868648c732dbed96b4adae2e9a4a58639cbc09b4f18bbfa",
+   "ticks": 400,
+   "seed": 1000,
+   "map_version": "rift_spatial_stratified_v1",
+   "pending_rule_inputs": [],
+   "full_rules_accepted": false,
+   "cpu_s_per_tick_incl_startup": 0.669
+  },
+  "legacy_simple_0": {
+   "name": "legacy_simple_0",
+   "PYTHONHASHSEED": "0",
+   "command": "python3 -m organizer.rift_era match --ticks 400 --legacy-map --bot simple",
+   "rc": 0,
+   "wall_seconds": 282.9,
+   "cpu_seconds": 277.2,
+   "state_hash": "1d47e1b06d567d74a4320c26846f3106fffa20ff91065bd290706b3103043b2d",
+   "engine_hash": "987fcb550607edd18868648c732dbed96b4adae2e9a4a58639cbc09b4f18bbfa",
+   "ticks": 400,
+   "seed": 1000,
+   "map_version": "rift_spatial_stratified_v1",
+   "pending_rule_inputs": [],
+   "full_rules_accepted": false,
+   "cpu_s_per_tick_incl_startup": 0.693
+  },
+  "formal_none_0": {
+   "name": "formal_none_0",
+   "PYTHONHASHSEED": "0",
+   "command": "python3 -m organizer.rift_era match --ticks 200 --bot none",
+   "rc": 0,
+   "wall_seconds": 244.5,
+   "cpu_seconds": 240.3,
+   "state_hash": "ea358e7802dbeddcc82df3234169967c1d89e6aa85a93ae82424138a5388284e",
+   "engine_hash": "987fcb550607edd18868648c732dbed96b4adae2e9a4a58639cbc09b4f18bbfa",
+   "ticks": 200,
+   "seed": 1000,
+   "map_version": "rift_world_atlas_v1",
+   "pending_rule_inputs": [],
+   "full_rules_accepted": false,
+   "cpu_s_per_tick_incl_startup": 1.202
+  },
+  "legacy_none_12345": {
+   "name": "legacy_none_12345",
+   "PYTHONHASHSEED": "12345",
+   "command": "python3 -m organizer.rift_era match --ticks 400 --legacy-map --bot none",
+   "rc": 0,
+   "wall_seconds": 270.2,
+   "cpu_seconds": 266.2,
+   "state_hash": "adec49771933860e48eb5713a9f57605e91b925deb04ad6bc05cd4b398d5b79a",
+   "engine_hash": "987fcb550607edd18868648c732dbed96b4adae2e9a4a58639cbc09b4f18bbfa",
+   "ticks": 400,
+   "seed": 1000,
+   "map_version": "rift_spatial_stratified_v1",
+   "pending_rule_inputs": [],
+   "full_rules_accepted": false,
+   "cpu_s_per_tick_incl_startup": 0.665
+  },
+  "legacy_simple_12345": {
+   "name": "legacy_simple_12345",
+   "PYTHONHASHSEED": "12345",
+   "command": "python3 -m organizer.rift_era match --ticks 400 --legacy-map --bot simple",
+   "rc": 0,
+   "wall_seconds": 280.6,
+   "cpu_seconds": 275.5,
+   "state_hash": "1d47e1b06d567d74a4320c26846f3106fffa20ff91065bd290706b3103043b2d",
+   "engine_hash": "987fcb550607edd18868648c732dbed96b4adae2e9a4a58639cbc09b4f18bbfa",
+   "ticks": 400,
+   "seed": 1000,
+   "map_version": "rift_spatial_stratified_v1",
+   "pending_rule_inputs": [],
+   "full_rules_accepted": false,
+   "cpu_s_per_tick_incl_startup": 0.689
+  },
+  "formal_none_12345": {
+   "name": "formal_none_12345",
+   "PYTHONHASHSEED": "12345",
+   "command": "python3 -m organizer.rift_era match --ticks 200 --bot none",
+   "rc": 0,
+   "wall_seconds": 248.6,
+   "cpu_seconds": 244.6,
+   "state_hash": "ea358e7802dbeddcc82df3234169967c1d89e6aa85a93ae82424138a5388284e",
+   "engine_hash": "987fcb550607edd18868648c732dbed96b4adae2e9a4a58639cbc09b4f18bbfa",
+   "ticks": 200,
+   "seed": 1000,
+   "map_version": "rift_world_atlas_v1",
+   "pending_rule_inputs": [],
+   "full_rules_accepted": false,
+   "cpu_s_per_tick_incl_startup": 1.223
+  },
+  "pipeline_score": {
+   "name": "pipeline_score",
+   "PYTHONHASHSEED": "0",
+   "command": "python3 organizer/rift_era/scripts/score.py --bots /workspace/projects/de19f287-08b8-478d-b013-66f8d423679b/work/merge_r8/medium.zip --seed-count 2 --ticks 200",
+   "rc": 0,
+   "wall_seconds": 1442.3,
+   "cpu_seconds": 1433.3,
+   "stdout_tail": "rift_era: scoring_v2, PRACTICE, profile=80412805b627\n  2 seeds; source=os_csprng; seeds=[2059353914, 147119855]\n  CPU logical=2, available=2; reserved=1; concurrent games=1 (auto, requested=None)\n  medium: 1/2 games\n  medium: 2/2 games\n  medium: 47.72/100, components={'adv': 47.71993822836506}, CI95=[47.67900185694248, 47.76087459978764]\nResults: /workspace/work/repos/rift-core/organizer/rift_era/results/practice_v2.json",
+   "stderr_tail": ""
+  }
+ },
+ "pipeline_e2e": {
+  "candidate": "medium（origin/rift-bots 公开 Medium，make_submission 打包）",
+  "score": 47.71993822836506,
+  "ci95": [
+   47.67900185694248,
+   47.76087459978764
+  ],
+  "profile_id": "80412805b627cf9db59ccd1c5b2c063b61e1bc6890c24791471f4160f380a308",
+  "profile_revision": "2026-11-06-r8",
+  "official": false,
+  "ticks": 200,
+  "seeds": [
+   2059353914,
+   147119855
+  ],
+  "fault_games": 0,
+  "games": [
+   {
+    "seed": 2059353914,
+    "score": 47.76087459978764,
+    "V": 36.392057498857284,
+    "V_shadow": 39.98963770035993,
+    "state_hash": "c40b6e985230d9d975f9b9435ad9e0a0b174d35eab45c7cf21ff14c9b4e221b7",
+    "shadow_state_hash": "cc2d4443f13af82be84f7e77164341344fa22d92396f57df7922a6c2a962107c",
+    "engine_hash": "987fcb550607edd18868648c732dbed96b4adae2e9a4a58639cbc09b4f18bbfa",
+    "rules_version": "rift_era_rules_r8",
+    "map_version": "rift_world_atlas_v1",
+    "sandbox": "none",
+    "faults": 0,
+    "wall_seconds": 333.0,
+    "shadow_wall_seconds": 326.5
+   },
+   {
+    "seed": 147119855,
+    "score": 47.67900185694248,
+    "V": 36.326202545212766,
+    "V_shadow": 40.05537925605012,
+    "state_hash": "62de5a35a1a74ced4f8b84a64c9e4a3d76dce160d28c9fed618ca7f7fa8ea9eb",
+    "shadow_state_hash": "360203979951b5cb081d6d8ed36f6cc0c006e513028ecdcdb82d82039854ec76",
+    "engine_hash": "987fcb550607edd18868648c732dbed96b4adae2e9a4a58639cbc09b4f18bbfa",
+    "rules_version": "rift_era_rules_r8",
+    "map_version": "rift_world_atlas_v1",
+    "sandbox": "none",
+    "faults": 0,
+    "wall_seconds": 421.8,
+    "shadow_wall_seconds": 354.2
+   }
+  ]
+ },
+ "conflicts": {
+  "rift-gaps": [
+   "engine/consumption.py Consumption.eta：保留 gaps 的 physical= 复用参数，分子仍走 r8 eta_physical（禀赋 phase-in）",
+   "engine/industry_activity.py：改调 consumption.eta(..., physical=)，因此同样走 eta_physical",
+   "IMPLEMENTATION_CONTRACT.md / REMAINING_WORK.md：两边并存，规则版本写 r8"
+  ],
+  "rift-war": [
+   "IMPLEMENTATION_CONTRACT.md：两边节并存"
+  ],
+  "rift-pipeline": [
+   "无文本冲突；重新冻结 scoring_v2（engine/rules 指纹、2026-11-06-r8）、重生成命令注册面（83 条）、重新导出选手包、ENGINE_VERSION 同步"
+  ]
+ },
+ "post_merge_fix": "MilitaryGovernance.audit（rift-gaps）断言事件为 dict，而 advance_control 产出 (region, 旧, 新) 元组，rift-war 占领用例因此审计失败；改为校验 3 元组并补单测",
+ "unit_tests_all_ok": [
+  "test_r8_balance",
+  "test_r7_balance",
+  "test_subsystem_audits",
+  "test_couplings",
+  "test_wired_functions",
+  "test_war_settlement",
+  "test_war_match",
+  "test_peace_contracts",
+  "test_field_supply_v07",
+  "test_grid_dispatch",
+  "test_megaproject_effects (1 skip: 无沿海 n0 枢纽)",
+  "test_power_contracts",
+  "test_pipeline_scoring",
+  "test_pipeline_pack",
+  "test_pipeline_match",
+  "test_pipeline_batch",
+  "test_pipeline_hosting",
+  "organizer.tests.test_strategy_scoring"
+ ]
+}

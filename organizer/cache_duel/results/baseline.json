@@ -1,0 +1,1893 @@
+{
+ "configs": [
+  {
+   "cache_size": 8,
+   "universe": 64,
+   "length": 3000
+  },
+  {
+   "cache_size": 32,
+   "universe": 256,
+   "length": 5000
+  },
+  {
+   "cache_size": 64,
+   "universe": 4096,
+   "length": 5000
+  }
+ ],
+ "seeds": [
+  1,
+  2
+ ],
+ "table": [
+  {
+   "bot": "lru",
+   "total": 0.6117262767106606,
+   "defense": 0.5541244957384763,
+   "attack": 0.6693280576828449
+  },
+  {
+   "bot": "rand",
+   "total": 0.5776059640243802,
+   "defense": 0.611095528605981,
+   "attack": 0.5441163994427795
+  },
+  {
+   "bot": "marking",
+   "total": 0.4903175499011543,
+   "defense": 0.5228898963326665,
+   "attack": 0.45774520346964215
+  },
+  {
+   "bot": "fifo",
+   "total": 0.32035020936380476,
+   "defense": 0.3946033755173824,
+   "attack": 0.2460970432102271
+  }
+ ],
+ "matrix": {
+  "fifo|fifo": 0.5882839999555038,
+  "fifo|lru": 0.8875329865781146,
+  "fifo|marking": 0.7827489762378028,
+  "fifo|rand": 0.5914269075534012,
+  "lru|fifo": 0.06444444444444444,
+  "lru|lru": 0.06444444444444444,
+  "lru|marking": 0.3300792095817084,
+  "lru|rand": 0.5974921729253125,
+  "marking|fifo": 0.6646703718036263,
+  "marking|lru": 0.3177265124482176,
+  "marking|marking": 0.3279731828301898,
+  "marking|rand": 0.6443675053392296,
+  "rand|fifo": 0.45469531030407645,
+  "rand|lru": 0.4571139881890969,
+  "rand|marking": 0.4558415031784882,
+  "rand|rand": 0.4580231216839272
+ },
+ "matches": [
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 1
+   },
+   "def_misses": 963,
+   "opt_misses": 566,
+   "def_score": 0.5877466251298027,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 2
+   },
+   "def_misses": 1004,
+   "opt_misses": 594,
+   "def_score": 0.5916334661354582,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 1677,
+   "opt_misses": 953,
+   "def_score": 0.5682766845557543,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 1714,
+   "opt_misses": 972,
+   "def_score": 0.5670945157526255,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 1699,
+   "opt_misses": 1029,
+   "def_score": 0.6056503825779871,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 1720,
+   "opt_misses": 1048,
+   "def_score": 0.6093023255813953,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 1
+   },
+   "def_misses": 657,
+   "opt_misses": 566,
+   "def_score": 0.8614916286149162,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 2
+   },
+   "def_misses": 693,
+   "opt_misses": 594,
+   "def_score": 0.8571428571428571,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 1097,
+   "opt_misses": 953,
+   "def_score": 0.8687329079307201,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 1123,
+   "opt_misses": 972,
+   "def_score": 0.8655387355298308,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 1090,
+   "opt_misses": 1029,
+   "def_score": 0.9440366972477064,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 1129,
+   "opt_misses": 1048,
+   "def_score": 0.9282550930026572,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 1
+   },
+   "def_misses": 772,
+   "opt_misses": 566,
+   "def_score": 0.7331606217616581,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 2
+   },
+   "def_misses": 808,
+   "opt_misses": 594,
+   "def_score": 0.7351485148514851,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 1239,
+   "opt_misses": 953,
+   "def_score": 0.7691686844229217,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 1253,
+   "opt_misses": 972,
+   "def_score": 0.7757382282521947,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 1216,
+   "opt_misses": 1029,
+   "def_score": 0.8462171052631579,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 1252,
+   "opt_misses": 1048,
+   "def_score": 0.8370607028753994,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 1
+   },
+   "def_misses": 974,
+   "opt_misses": 566,
+   "def_score": 0.5811088295687885,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 2
+   },
+   "def_misses": 1001,
+   "opt_misses": 594,
+   "def_score": 0.5934065934065934,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 1690,
+   "opt_misses": 953,
+   "def_score": 0.563905325443787,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 1700,
+   "opt_misses": 972,
+   "def_score": 0.571764705882353,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 1646,
+   "opt_misses": 1029,
+   "def_score": 0.6251518833535844,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/fifo.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 1709,
+   "opt_misses": 1048,
+   "def_score": 0.6132241076653013,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 1
+   },
+   "def_misses": 3000,
+   "opt_misses": 382,
+   "def_score": 0.12733333333333333,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 2
+   },
+   "def_misses": 3000,
+   "opt_misses": 382,
+   "def_score": 0.12733333333333333,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 5000,
+   "opt_misses": 188,
+   "def_score": 0.0376,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 5000,
+   "opt_misses": 188,
+   "def_score": 0.0376,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 5000,
+   "opt_misses": 142,
+   "def_score": 0.0284,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 5000,
+   "opt_misses": 142,
+   "def_score": 0.0284,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 1
+   },
+   "def_misses": 3000,
+   "opt_misses": 382,
+   "def_score": 0.12733333333333333,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 2
+   },
+   "def_misses": 3000,
+   "opt_misses": 382,
+   "def_score": 0.12733333333333333,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 5000,
+   "opt_misses": 188,
+   "def_score": 0.0376,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 5000,
+   "opt_misses": 188,
+   "def_score": 0.0376,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 5000,
+   "opt_misses": 142,
+   "def_score": 0.0284,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 5000,
+   "opt_misses": 142,
+   "def_score": 0.0284,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 1
+   },
+   "def_misses": 1074,
+   "opt_misses": 382,
+   "def_score": 0.35567970204841715,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 2
+   },
+   "def_misses": 1006,
+   "opt_misses": 382,
+   "def_score": 0.3797216699801193,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 685,
+   "opt_misses": 188,
+   "def_score": 0.27445255474452557,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 674,
+   "opt_misses": 188,
+   "def_score": 0.2789317507418398,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 424,
+   "opt_misses": 142,
+   "def_score": 0.33490566037735847,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 398,
+   "opt_misses": 142,
+   "def_score": 0.35678391959798994,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 1
+   },
+   "def_misses": 691,
+   "opt_misses": 382,
+   "def_score": 0.552821997105644,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 2
+   },
+   "def_misses": 672,
+   "opt_misses": 382,
+   "def_score": 0.5684523809523809,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 338,
+   "opt_misses": 188,
+   "def_score": 0.5562130177514792,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 324,
+   "opt_misses": 188,
+   "def_score": 0.5802469135802469,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 212,
+   "opt_misses": 142,
+   "def_score": 0.6698113207547169,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/lru.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 216,
+   "opt_misses": 142,
+   "def_score": 0.6574074074074074,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 1
+   },
+   "def_misses": 590,
+   "opt_misses": 341,
+   "def_score": 0.5779661016949152,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 2
+   },
+   "def_misses": 585,
+   "opt_misses": 341,
+   "def_score": 0.582905982905983,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 272,
+   "opt_misses": 183,
+   "def_score": 0.6727941176470589,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 282,
+   "opt_misses": 183,
+   "def_score": 0.648936170212766,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 185,
+   "opt_misses": 140,
+   "def_score": 0.7567567567567568,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 187,
+   "opt_misses": 140,
+   "def_score": 0.7486631016042781,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 1
+   },
+   "def_misses": 958,
+   "opt_misses": 341,
+   "def_score": 0.3559498956158664,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 2
+   },
+   "def_misses": 976,
+   "opt_misses": 341,
+   "def_score": 0.34938524590163933,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 621,
+   "opt_misses": 183,
+   "def_score": 0.2946859903381642,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 689,
+   "opt_misses": 183,
+   "def_score": 0.2656023222060958,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 436,
+   "opt_misses": 140,
+   "def_score": 0.3211009174311927,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 438,
+   "opt_misses": 140,
+   "def_score": 0.319634703196347,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 1
+   },
+   "def_misses": 923,
+   "opt_misses": 341,
+   "def_score": 0.3694474539544962,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 2
+   },
+   "def_misses": 918,
+   "opt_misses": 341,
+   "def_score": 0.37145969498910675,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 640,
+   "opt_misses": 183,
+   "def_score": 0.2859375,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 656,
+   "opt_misses": 183,
+   "def_score": 0.27896341463414637,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 428,
+   "opt_misses": 140,
+   "def_score": 0.32710280373831774,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 418,
+   "opt_misses": 140,
+   "def_score": 0.3349282296650718,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 1
+   },
+   "def_misses": 563,
+   "opt_misses": 341,
+   "def_score": 0.605683836589698,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 2
+   },
+   "def_misses": 578,
+   "opt_misses": 341,
+   "def_score": 0.5899653979238755,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 299,
+   "opt_misses": 183,
+   "def_score": 0.6120401337792643,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 303,
+   "opt_misses": 183,
+   "def_score": 0.6039603960396039,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 192,
+   "opt_misses": 140,
+   "def_score": 0.7291666666666666,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/marking.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 193,
+   "opt_misses": 140,
+   "def_score": 0.7253886010362695,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 1
+   },
+   "def_misses": 1504,
+   "opt_misses": 767,
+   "def_score": 0.5099734042553191,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 2
+   },
+   "def_misses": 1506,
+   "opt_misses": 738,
+   "def_score": 0.4900398406374502,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 2493,
+   "opt_misses": 1099,
+   "def_score": 0.4408343361411953,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 2520,
+   "opt_misses": 1095,
+   "def_score": 0.43452380952380953,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 2510,
+   "opt_misses": 1075,
+   "def_score": 0.42828685258964144,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/fifo.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 2570,
+   "opt_misses": 1091,
+   "def_score": 0.4245136186770428,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 1
+   },
+   "def_misses": 1492,
+   "opt_misses": 767,
+   "def_score": 0.5140750670241286,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 2
+   },
+   "def_misses": 1488,
+   "opt_misses": 738,
+   "def_score": 0.4959677419354839,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 2504,
+   "opt_misses": 1099,
+   "def_score": 0.43889776357827476,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 2508,
+   "opt_misses": 1095,
+   "def_score": 0.4366028708133971,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 2526,
+   "opt_misses": 1075,
+   "def_score": 0.4255740300870942,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/lru.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 2528,
+   "opt_misses": 1091,
+   "def_score": 0.43156645569620256,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 1
+   },
+   "def_misses": 1472,
+   "opt_misses": 767,
+   "def_score": 0.5210597826086957,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 2
+   },
+   "def_misses": 1491,
+   "opt_misses": 738,
+   "def_score": 0.4949698189134809,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 2560,
+   "opt_misses": 1099,
+   "def_score": 0.429296875,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 2507,
+   "opt_misses": 1095,
+   "def_score": 0.43677702433187077,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 2546,
+   "opt_misses": 1075,
+   "def_score": 0.4222309505106049,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/marking.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 2533,
+   "opt_misses": 1091,
+   "def_score": 0.43071456770627714,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 1
+   },
+   "def_misses": 1507,
+   "opt_misses": 767,
+   "def_score": 0.508958195089582,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 8,
+    "universe": 64,
+    "length": 3000,
+    "seed": 2
+   },
+   "def_misses": 1498,
+   "opt_misses": 738,
+   "def_score": 0.49265687583444595,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 2533,
+   "opt_misses": 1099,
+   "def_score": 0.43387287801026453,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 32,
+    "universe": 256,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 2491,
+   "opt_misses": 1095,
+   "def_score": 0.43958249698916096,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 1
+   },
+   "def_misses": 2454,
+   "opt_misses": 1075,
+   "def_score": 0.4380603096984515,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  },
+  {
+   "attacker": "../../testset/cache_duel/bots/rand.py",
+   "defender": "../../testset/cache_duel/bots/rand.py",
+   "config": {
+    "cache_size": 64,
+    "universe": 4096,
+    "length": 5000,
+    "seed": 2
+   },
+   "def_misses": 2508,
+   "opt_misses": 1091,
+   "def_score": 0.4350079744816587,
+   "faults": {
+    "attacker": 0,
+    "defender": 0,
+    "attacker_dead": false,
+    "defender_dead": false
+   }
+  }
+ ]
+}

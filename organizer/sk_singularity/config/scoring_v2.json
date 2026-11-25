@@ -1,0 +1,42 @@
+{
+  "version": "sk_singularity_v2",
+  "profile_revision": "2026-11-24-sk-8fam-512-dyn-v5",
+  "problem": "sk_singularity",
+  "submission_ext": ".cpp",
+  "evaluation_protocol": "blind_combinator_synthesis_exact_dag_dynamic_512",
+  "seed_source": "os_csprng_512_distinct_64bit",
+  "isomorphism_guard": "per_case_50pct_sk_swap",
+  "official_cases": 512,
+  "official_families": 8,
+  "cases_per_family": 64,
+  "official_budgets": [
+    14,
+    18,
+    21,
+    24
+  ],
+  "anchor_calibration": {
+    "ref_solver": "agents/reference/algebra_synth.cpp",
+    "ref_tl_ms": 600,
+    "anchor_scale": 1.4,
+    "min_lref": 12.0,
+    "max_lref": 600.0
+  },
+  "max_dag_nodes": 10000000,
+  "max_stack": 40000000,
+  "solver_time_limit_ms": 5000,
+  "solver_memory_limit_mb": 1024,
+  "score_power": 0.85,
+  "singularity_log2_threshold": 64.0,
+  "frozen_files": {
+    "config/format.json": "12d482b09f7cf26f69549b58ef8f1b8d368f52e9d124ea13cb89d8842081c523",
+    "config/practice_suite.json": "e103f018aa14ff2d1e4aee259672955c47515c29fdeaeead46430394364af56e",
+    "engine/sk_core.hpp": "375c0bef1013022f955761ce7bd47b0ab794e40dc48a4c253dfdc300f6868308",
+    "engine/judge_cli.cpp": "cef6bc174a99f43aaa0907fae34d6f33e5a30c5b183e076679d03a583a588148",
+    "engine/common.py": "54fa0b6e076f843632956249bdf7bb96ae78a8b27b52073646dcc2d468c1b56e",
+    "engine/runner.py": "a5d4754ef9a7ecdf0643b1ab0353b302e9f2aae5aafea544c07b5e344061b8ba",
+    "hidden/official_suite.json": "2c78d35976956a7fd170b41497cefcbc3b1f39a159bb528d9958ea9ec643e289",
+    "hidden/schedule.py": "1dc93bcca295ced7c57587d565fee9e37a0efbe599b5837f716edd334cdcee5c",
+    "agents/reference/algebra_synth.cpp": "2d0ab0403f736374c828793a2d2736cba3074336eb5953281540df90ad55b038"
+  }
+}

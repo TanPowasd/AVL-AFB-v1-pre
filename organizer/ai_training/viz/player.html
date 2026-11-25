@@ -1,0 +1,1113 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>前沿实验室 · 回放播放器</title>
+<style>
+  :root{
+    --bg:#f5f7f8; --panel:#ffffff; --panel2:#eef2f4; --border:#d8e0e5; --text:#18272d;
+    --muted:#617781; --a:#078cab; --b:#b96530; --a-soft:#078cab33; --b-soft:#b9653033;
+    --n1:#7c8f99; --n2:#a6927d; --open:#2f9468; --grid:#dfe7ea; --marker:#18272d99;
+    --danger:#d15752; --danger-bg:#d157521a; --ok:#238866; --warn:#b87d14;
+  }
+  :root[data-theme="dark"]{
+    --bg:#111719; --panel:#1a2327; --panel2:#243036; --border:#34434b; --text:#e3edf1;
+    --muted:#96aab4; --a:#42c6d8; --b:#edb572; --a-soft:#42c6d833; --b-soft:#edb57233;
+    --n1:#667b87; --n2:#8d7b67; --open:#47b884; --grid:#2e3c43; --marker:#e3edf199;
+    --danger:#ef6f6c; --danger-bg:#ef6f6c22; --ok:#44c08a; --warn:#e3ad42;
+  }
+  *{box-sizing:border-box;letter-spacing:0}
+  [hidden]{display:none!important}
+  body{margin:0;background:var(--bg);color:var(--text);font:14px/1.5 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+  a{color:var(--a)}
+  button,input,select{font:inherit}
+  button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+  #wrap{max-width:1640px;margin:0 auto;padding:18px 22px 136px}
+  header#top{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:16px}
+  h1{font-size:19px;margin:0;overflow-wrap:anywhere}
+  .tag{font-size:11px;color:var(--muted);padding:2px 6px;border-radius:3px;background:var(--panel2);font-family:ui-monospace,Consolas,monospace}
+  .nm{font-weight:700;overflow-wrap:anywhere}
+  .nmA{color:var(--a)} .nmB{color:var(--b)}
+  #openFile{margin-left:auto}
+  #drop{border:2px dashed var(--border);border-radius:6px;padding:48px 20px;text-align:center;color:var(--muted);background:var(--panel)}
+  #drop.hot, body.dragover #drop{border-color:var(--a);color:var(--text)}
+  #loadbox{margin:8px 0 0;font-size:12px;color:var(--muted)}
+  #err{color:var(--danger);white-space:pre-wrap;font-size:12px;margin-top:8px}
+  main{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,370px);gap:18px;align-items:start}
+  .left-col{display:flex;flex-direction:column;gap:16px;min-width:0}
+  .kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .card{min-width:0;border:1px solid var(--border);border-radius:6px;padding:12px 14px;background:var(--panel)}
+  #cardA{border-top:3px solid var(--a)}
+  #cardB{border-top:3px solid var(--b)}
+  .card-hd{display:flex;flex-wrap:wrap;gap:6px 10px;align-items:baseline;justify-content:space-between;margin-bottom:10px}
+  .card-hd h2{font-size:14px;margin:0;display:flex;align-items:center;gap:6px;flex-wrap:wrap}
+  .val-big{font-variant-numeric:tabular-nums;font-family:ui-monospace,Consolas,monospace;font-size:17px;font-weight:700;white-space:nowrap}
+  .badge{font-size:10px;padding:1px 6px;border-radius:3px;font-weight:700;line-height:1.4}
+  .badge-seat{background:var(--panel2);color:var(--muted)}
+  .badge-bk{background:var(--danger-bg);color:var(--danger);border:1px solid var(--danger)}
+  .kpi-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px}
+  .kpi{background:var(--panel2);border-radius:4px;padding:6px 8px;min-width:0}
+  .kpi .k{font-size:11px;color:var(--muted);display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .kpi .v{font-size:13px;font-weight:700;font-variant-numeric:tabular-nums;font-family:ui-monospace,Consolas,monospace;display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .kpi .v.neg{color:var(--danger)}
+  .kpi .v.warn{color:var(--warn)}
+  .kpi .v.good{color:var(--ok)}
+  .kpi-foot{margin-top:8px;padding-top:7px;border-top:1px dashed var(--border);display:flex;flex-wrap:wrap;gap:6px 12px;font-size:11px;color:var(--muted);font-family:ui-monospace,Consolas,monospace}
+  .charts{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:14px}
+  .chart-card{padding:11px 12px 8px}
+  .chart-hd{display:flex;flex-wrap:wrap;gap:4px 10px;justify-content:space-between;align-items:baseline;margin-bottom:6px}
+  .chart-hd h3{font-size:13px;margin:0}
+  .chart-readout{font-size:11px;color:var(--muted);font-variant-numeric:tabular-nums;font-family:ui-monospace,Consolas,monospace}
+  .legend{display:flex;flex-wrap:wrap;gap:4px 10px;font-size:11px;color:var(--muted);margin-bottom:4px}
+  .legend span{display:inline-flex;align-items:center;gap:4px}
+  .legend i{display:inline-block;width:10px;height:3px;border-radius:1px}
+  .legend i.dash{height:0;border-top:2px dashed currentColor;background:transparent!important}
+  .legend i.sq{width:9px;height:9px;border-radius:2px}
+  canvas.plot{width:100%;height:190px;display:block;cursor:crosshair;touch-action:none}
+  aside{display:flex;flex-direction:column;gap:14px;min-width:0}
+  .ev-filters{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:8px;align-items:center}
+  .ev-filters select{font-size:12px;min-height:28px;padding:3px 6px}
+  .ev-filters label{font-size:12px;color:var(--muted);display:inline-flex;align-items:center;gap:4px;cursor:pointer;user-select:none}
+  #evCount{margin-left:auto;font-size:11px;color:var(--muted);font-family:ui-monospace,Consolas,monospace}
+  #evList{max-height:420px;overflow:auto;display:flex;flex-direction:column;gap:5px;padding-right:2px}
+  .ev-item{border:1px solid var(--border);border-left:3px solid var(--muted);border-radius:4px;padding:6px 8px;font-size:12px;background:var(--panel);cursor:pointer;transition:background .1s}
+  .ev-item:hover{background:var(--panel2)}
+  .ev-item.near{background:var(--panel2)}
+  .ev-item.now{border-color:var(--a);box-shadow:inset 0 0 0 1px var(--a)}
+  .ev-item.t-release{border-left-color:var(--a)}
+  .ev-item.t-open_source{border-left-color:var(--open)}
+  .ev-item.t-raise{border-left-color:var(--ok)}
+  .ev-item.t-curtail,.ev-item.t-export_ctrl{border-left-color:var(--warn)}
+  .ev-item.t-audit_fail,.ev-item.t-bankrupt,.ev-item.t-lawsuit{border-left-color:var(--danger)}
+  .ev-top{display:flex;gap:6px;align-items:center;margin-bottom:2px;font-size:11px;color:var(--muted);font-family:ui-monospace,Consolas,monospace}
+  .ev-pill{font-size:10px;padding:0 5px;border-radius:3px;background:var(--panel2);color:var(--text);font-family:sans-serif}
+  .ev-desc{color:var(--text);overflow-wrap:anywhere}
+  table.bd{width:100%;border-collapse:collapse;font-size:12px}
+  table.bd th,table.bd td{padding:4px 4px;border-bottom:1px solid var(--border)}
+  table.bd th{text-align:left;color:var(--muted);font-weight:600}
+  table.bd th.n,table.bd td.n{text-align:right;font-variant-numeric:tabular-nums;font-family:ui-monospace,Consolas,monospace}
+  #controls{position:fixed;bottom:0;left:0;right:0;z-index:20;border-top:1px solid var(--border);background:var(--bg);padding:12px 22px calc(12px + env(safe-area-inset-bottom))}
+  #controls .row{max-width:1596px;margin:0 auto}
+  .row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+  button,select{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:5px 10px;min-height:34px;cursor:pointer;font-size:13px}
+  button:hover{border-color:var(--a)}
+  #play,#b30,#b1,#f1,#f30,#end{min-width:36px;padding:4px 8px;font-size:14px}
+  #play{color:var(--a);font-size:16px}
+  input[type=range]{flex:1;width:100%;min-width:0;accent-color:var(--a);height:22px}
+  .hint{color:var(--muted);font-size:12px;font-variant-numeric:tabular-nums;font-family:ui-monospace,Consolas,monospace}
+  #clock{margin-left:auto;overflow-wrap:anywhere}
+  @media(max-width:1200px){main{grid-template-columns:1fr}.charts{grid-template-columns:repeat(2,minmax(0,1fr))}}
+  @media(max-width:780px){
+    #wrap{padding:12px 12px 180px}
+    .kpis,.charts{grid-template-columns:1fr}
+    .kpi-grid{grid-template-columns:repeat(2,minmax(0,1fr))}
+    #openFile{margin-left:0}
+    #clock{width:100%;margin-left:0}
+    button,select{min-height:38px}
+  }
+</style>
+</head>
+<body>
+<div id="wrap">
+  <header id="top">
+    <h1>前沿实验室 · 回放</h1>
+    <span class="tag" id="tSeed">seed –</span>
+    <span class="tag" id="tDay">day –</span>
+    <span id="tPlayers"></span>
+    <span class="tag" id="tWinner">–</span>
+    <span class="tag" id="tEngine">–</span>
+    <button id="openFile" type="button">打开回放</button>
+    <select id="theme" aria-label="主题">
+      <option value="light">亮色</option>
+      <option value="dark">暗色</option>
+      <option value="system">跟随系统</option>
+    </select>
+  </header>
+
+  <div id="drop">
+    把回放 JSON（<code>afb-ai-training-replay/1</code>）拖到这里，或
+    <label style="cursor:pointer;text-decoration:underline;color:var(--a)">
+      选择文件<input id="file" type="file" accept=".json,application/json" hidden>
+    </label>
+    <div style="margin-top:8px;font-size:12px">快捷键：Space 播放/暂停 · ←/→ ±1天 · Shift+←/→ ±30天 · 点击/拖动图表跳转日期</div>
+    <div id="loadbox" role="status"></div>
+    <div id="err"></div>
+  </div>
+
+  <main id="main" hidden>
+    <div class="left-col">
+      <section class="kpis">
+        <div class="card" id="cardA">
+          <div class="card-hd">
+            <h2><span class="badge badge-seat">Lab A</span><span class="nm nmA" id="nameA">A</span><span class="badge badge-bk" id="bkA" hidden>破产</span></h2>
+            <span class="val-big nmA" id="valA">–</span>
+          </div>
+          <div class="kpi-grid" id="kpiA"></div>
+          <div class="kpi-foot" id="footA"></div>
+        </div>
+        <div class="card" id="cardB">
+          <div class="card-hd">
+            <h2><span class="badge badge-seat">Lab B</span><span class="nm nmB" id="nameB">B</span><span class="badge badge-bk" id="bkB" hidden>破产</span></h2>
+            <span class="val-big nmB" id="valB">–</span>
+          </div>
+          <div class="kpi-grid" id="kpiB"></div>
+          <div class="kpi-foot" id="footB"></div>
+        </div>
+      </section>
+
+      <section class="charts">
+        <div class="card chart-card">
+          <div class="chart-hd">
+            <h3>估值 V 与现金轨迹 (M)</h3>
+            <span class="chart-readout" id="roVal">–</span>
+          </div>
+          <div class="legend">
+            <span><i style="background:var(--a)"></i>A 估值</span>
+            <span><i style="background:var(--b)"></i>B 估值</span>
+            <span style="color:var(--a)"><i class="dash"></i>A 现金</span>
+            <span style="color:var(--b)"><i class="dash"></i>B 现金</span>
+          </div>
+          <canvas class="plot" id="cvVal" width="640" height="220"></canvas>
+        </div>
+
+        <div class="card chart-card">
+          <div class="chart-hd">
+            <h3>前沿模型真实能力 C</h3>
+            <span class="chart-readout" id="roCap">–</span>
+          </div>
+          <div class="legend">
+            <span><i style="background:var(--a)"></i>Lab A 最高 C</span>
+            <span><i style="background:var(--b)"></i>Lab B 最高 C</span>
+            <span><i class="sq" style="background:var(--muted)"></i>NPC/开源发布</span>
+          </div>
+          <canvas class="plot" id="cvCap" width="640" height="220"></canvas>
+        </div>
+
+        <div class="card chart-card">
+          <div class="chart-hd">
+            <h3>总可用算力规模 (G1·h)</h3>
+            <span class="chart-readout" id="roComp">–</span>
+          </div>
+          <div class="legend">
+            <span><i style="background:var(--a)"></i>Lab A 算力</span>
+            <span><i style="background:var(--b)"></i>Lab B 算力</span>
+          </div>
+          <canvas class="plot" id="cvComp" width="640" height="220"></canvas>
+        </div>
+
+        <div class="card chart-card">
+          <div class="chart-hd">
+            <h3>API 市场份额分布 (%)</h3>
+            <span class="chart-readout" id="roShare">–</span>
+          </div>
+          <div class="legend">
+            <span><i class="sq" style="background:var(--a)"></i>A</span>
+            <span><i class="sq" style="background:var(--b)"></i>B</span>
+            <span><i class="sq" style="background:var(--n1)"></i>N1</span>
+            <span><i class="sq" style="background:var(--n2)"></i>N2</span>
+            <span><i class="sq" style="background:var(--open)"></i>OPEN</span>
+          </div>
+          <canvas class="plot" id="cvShare" width="640" height="220"></canvas>
+        </div>
+      </section>
+    </div>
+
+    <aside>
+      <div class="card">
+        <div class="card-hd" style="margin-bottom:6px">
+          <h2>事件日志</h2>
+          <span id="evCount">0 条</span>
+        </div>
+        <div class="ev-filters">
+          <select id="evFilter" aria-label="事件类型筛选">
+            <option value="all">全部事件</option>
+            <option value="release">模型发布</option>
+            <option value="open_source">开源事件</option>
+            <option value="raise">季度融资</option>
+            <option value="audit_fail">污染复测</option>
+            <option value="infra">限电 / 管制</option>
+            <option value="risk">破产清算</option>
+            <option value="other">其他</option>
+          </select>
+          <label><input type="checkbox" id="evWindow"> 仅看当前 ±30 天</label>
+        </div>
+        <div id="evList"></div>
+      </div>
+
+      <div class="card">
+        <div class="card-hd" style="margin-bottom:6px">
+          <h2>终局估值拆解 (M)</h2>
+          <span class="hint" id="bdMode">–</span>
+        </div>
+        <table class="bd" id="bdTable"></table>
+      </div>
+    </aside>
+  </main>
+
+  <div id="controls" hidden>
+    <div class="row" style="margin-bottom:6px">
+      <button id="play" title="播放/暂停 (Space)" aria-label="播放">▶</button>
+      <select id="spd" aria-label="播放速度">
+        <option value="1">1× (6d/s)</option>
+        <option value="4" selected>4× (24d/s)</option>
+        <option value="16">16× (96d/s)</option>
+        <option value="64">64× (384d/s)</option>
+      </select>
+      <button id="b30" title="前 30 天 (Shift+←)" aria-label="前30天">↤</button>
+      <button id="b1" title="前 1 天 (←)" aria-label="前1天">←</button>
+      <button id="f1" title="后 1 天 (→)" aria-label="后1天">→</button>
+      <button id="f30" title="后 30 天 (Shift+→)" aria-label="后30天">↦</button>
+      <button id="end" title="跳到终局 (End)" aria-label="跳到终局">⇥</button>
+      <span class="hint" id="clock">–</span>
+    </div>
+    <div class="row">
+      <input id="seek" aria-label="回放进度" type="range" min="0" max="0" value="0" step="1">
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+var S = {
+  rep: null,
+  days: [],
+  events: [],
+  idx: 0,
+  renderedIdx: -1,
+  playing: false,
+  speed: 4,
+  last: 0,
+  acc: 0,
+  raf: 0,
+  src: "",
+  charts: {},
+  loadSeq: 0,
+  evRenderedFilter: "",
+  evRenderedWindow: false
+};
+
+var EV_LABEL = {
+  release: "模型发布",
+  open_source: "开源发布",
+  raise: "季度融资",
+  audit_fail: "污染复测",
+  curtail: "地区限电",
+  export_ctrl: "出口管制",
+  bankrupt: "破产清算"
+};
+
+function esc(v){
+  return String(v === null || v === undefined ? "" : v).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+
+function fmtM(v){
+  if (v === null || v === undefined || !isFinite(Number(v))) return "–";
+  var n = Number(v);
+  return n.toLocaleString("en-US", {minimumFractionDigits:1, maximumFractionDigits:1}) + " M";
+}
+
+function fmtNum(v, d){
+  if (v === null || v === undefined || !isFinite(Number(v))) return "–";
+  return Number(v).toLocaleString("en-US", {minimumFractionDigits:d||0, maximumFractionDigits:d||0});
+}
+
+function fmtPct(v, d){
+  if (v === null || v === undefined || !isFinite(Number(v))) return "–";
+  return (Number(v) * 100).toFixed(d === undefined ? 1 : d) + "%";
+}
+
+function fmtAxis(v){
+  var a = Math.abs(v);
+  if (a >= 1e6) return (v / 1e6).toFixed(1) + "M";
+  if (a >= 1e4) return (v / 1e3).toFixed(0) + "k";
+  if (a >= 1e3) return (v / 1e3).toFixed(1) + "k";
+  if (a >= 10) return v.toFixed(0);
+  if (a >= 1) return v.toFixed(1);
+  return v.toFixed(2);
+}
+
+function indexAtDay(day, forward){
+  var days = S.days, lo = 0, hi = days.length;
+  while (lo < hi){
+    var mid = (lo + hi) >>> 1;
+    if (days[mid].day < day) lo = mid + 1;
+    else hi = mid;
+  }
+  if (!days.length) return 0;
+  if (forward || (lo < days.length && days[lo].day === day)) return Math.min(lo, days.length - 1);
+  return Math.max(0, lo - 1);
+}
+
+/* ---------------- 归一化载入（兼容标准回放与原始 engine.play 输出） ---------------- */
+function normalizeReplay(raw){
+  if (!raw || typeof raw !== "object") throw new Error("JSON 顶层必须是对象");
+  if (String(raw.format || "").indexOf("afb-ai-training-replay") === 0){
+    if (!Array.isArray(raw.days) || !raw.days.length) throw new Error("回放缺少有效 days 数据");
+    return raw;
+  }
+  // 兼容 run_match.py --out 保存的原始 engine.play() 结果
+  if (raw.replay && Array.isArray(raw.replay.days) && raw.replay.days.length){
+    var evs = (raw.replay.events || []).map(function(e){
+      var t = Number(e.t || 0), det = {};
+      for (var k in e) if (k !== "t" && k !== "day" && k !== "type") det[k] = e[k];
+      return {t:t, day:Math.floor(t / 24), type:String(e.type || "unknown"), details:det};
+    });
+    var bkDay = [null, null];
+    evs.forEach(function(e){
+      if (e.type === "bankrupt"){
+        if (e.details.lab === "A" && bkDay[0] === null) bkDay[0] = e.day;
+        if (e.details.lab === "B" && bkDay[1] === null) bkDay[1] = e.day;
+      }
+    });
+    var days = raw.replay.days.map(function(d){
+      var a = Object.assign({bk: bkDay[0] !== null && d.day >= bkDay[0]}, d.A || {});
+      var b = Object.assign({bk: bkDay[1] !== null && d.day >= bkDay[1]}, d.B || {});
+      return {day: d.day, shares: d.shares || {}, A: a, B: b};
+    });
+    var vals = raw.value || [0, 0], cs = raw.C || [0, 0];
+    var winner = Math.abs(vals[0] - vals[1]) < 1e-6 ? "draw" : (vals[0] > vals[1] ? "A" : "B");
+    return {
+      format: "afb-ai-training-replay/1",
+      meta: {
+        format: "afb-ai-training-replay/1",
+        problem: "ai_training",
+        mode: raw.B === "solo_npc.py" ? "solo" : "adv",
+        seed: raw.seed,
+        ticks: raw.ticks || (days[days.length - 1].day + 1) * 24,
+        sample_every: 1,
+        value_scale: 334.4,
+        engine_sha: "",
+        labels: [raw.A || "A", raw.B || "B"],
+        seats: [{seat:0, label:raw.A || "A"}, {seat:1, label:raw.B || "B"}],
+        winner: raw.B === "solo_npc.py" ? "solo" : winner,
+        final_value: vals,
+        final_C: cs,
+        bankrupt: [bkDay[0] !== null, bkDay[1] !== null],
+        faults: raw.faults || [],
+        value_detail: raw.value_detail || [],
+        models: raw.models || [[], []],
+        tech: raw.tech || [[], []],
+        totals: raw.totals || [{}, {}]
+      },
+      days: days,
+      events: evs
+    };
+  }
+  throw new Error("格式不匹配：" + (raw.format || "未知格式") + "（需要 afb-ai-training-replay/1）");
+}
+
+/* ---------------- KPI 卡片与终局表 ---------------- */
+function renderKPIs(d){
+  var sh = d.shares || {};
+  [["A", 0], ["B", 1]].forEach(function(pair){
+    var lab = pair[0], side = d[lab] || {};
+    var bk = Boolean(side.bk);
+    document.getElementById("bk" + lab).hidden = !bk;
+    document.getElementById("val" + lab).textContent = fmtM(side.value);
+    var cashCls = side.cash < 0 ? "neg" : "";
+    var repCls = side.rep < -0.2 ? "warn" : "";
+    var cCls = side.C >= 0.7 ? "good" : "";
+    var items = [
+      ["现金 Cash", fmtM(side.cash), cashCls],
+      ["股权 Equity", fmtPct(side.eq, 1), ""],
+      ["最高能力 C", Number(side.C || 0).toFixed(4), cCls],
+      ["算力 G1·h", fmtNum(side.compute, 0), ""],
+      ["研究员 Staff", fmtNum(side.staff, 0) + " 人", ""],
+      ["在跑任务 Runs", fmtNum(side.runs, 0), ""],
+      ["声誉 Rep", Number(side.rep || 0).toFixed(3), repCls],
+      ["API 份额", fmtPct(sh[lab] || 0, 1), ""]
+    ];
+    var html = "";
+    for (var i = 0; i < items.length; i++){
+      html += '<div class="kpi"><span class="k">' + items[i][0] + '</span><span class="v ' + items[i][2] + '">' + esc(items[i][1]) + "</span></div>";
+    }
+    document.getElementById("kpi" + lab).innerHTML = html;
+  });
+}
+
+function renderStaticMeta(meta){
+  var labels = meta.labels || ["A", "B"];
+  var models = meta.models || [[], []];
+  var tech = meta.tech || [[], []];
+  var faults = meta.faults || [{}, {}];
+  var bankrupt = meta.bankrupt || [false, false];
+  [["A", 0], ["B", 1]].forEach(function(pair){
+    var lab = pair[0], i = pair[1], fl = faults[i] || {};
+    var mCount = (models[i] || []).length;
+    var tCount = (tech[i] || []).length;
+    var to = fl.timeouts || 0, ill = fl.illegal || 0, bj = fl.bad_json || 0, dead = Boolean(fl.dead);
+    var footEl = document.getElementById("foot" + lab);
+    var txt = "终局统计：已发布模型 " + mCount + " · 科技 " + tCount + " · 超时 " + to + " · 非法动作 " + ill + (bj ? (" · 坏JSON " + bj) : "");
+    footEl.innerHTML = esc(txt) + (dead ? ' <span class="badge badge-bk">进程崩溃 dead</span>' : "");
+  });
+
+  // 终局估值拆解表
+  var vd = meta.value_detail || [];
+  var tb = document.getElementById("bdTable");
+  document.getElementById("bdMode").textContent = meta.mode === "solo" ? "单人赛" : "对抗赛";
+  if (vd.length < 2){
+    tb.innerHTML = '<tr><td style="color:var(--muted)">无拆解数据</td></tr>';
+    return;
+  }
+  var a = vd[0] || {}, b = vd[1] || {};
+  var bkA = Boolean(bankrupt[0]), bkB = Boolean(bankrupt[1]);
+  var rows = [
+    ["现金 (Cash)", a.cash, b.cash, "m"],
+    ["硬件折旧账面 (HW)", a.hw, b.hw, "m"],
+    ["机房折旧账面 (Site)", a.site, b.site, "m"],
+    ["待收卖卡款 (Recv)", a.recv, b.recv, "m"],
+    ["末季毛利×24 (GM)", bkA ? 0 : (a.gm || 0) * 24, bkB ? 0 : (b.gm || 0) * 24, "m"],
+    ["能力估值 C×300", bkA ? 0 : (a.C || 0) * 300, bkB ? 0 : (b.C || 0) * 300, "m"],
+    ["公司总估值 V", a.V, b.V, "m"],
+    ["创始人股权", a.equity, b.equity, "p"],
+    ["股权估值 (eq×V)", a.value, b.value, "m"],
+    ["最高有效能力 C", a.C, b.C, "c"]
+  ];
+  var h = '<thead><tr><th>项目</th><th class="n nmA">' + esc(labels[0]) + '</th><th class="n nmB">' + esc(labels[1]) + "</th></tr></thead><tbody>";
+  rows.forEach(function(r){
+    function f(v, k){
+      if (v === undefined || v === null) return "–";
+      if (k === "p") return fmtPct(v, 1);
+      if (k === "c") return Number(v).toFixed(4);
+      return Number(v).toFixed(1);
+    }
+    var bold = r[0].indexOf("股权估值") === 0 || r[0].indexOf("最高有效能力") === 0 ? ' style="font-weight:700"' : "";
+    h += "<tr" + bold + "><td>" + r[0] + '</td><td class="n">' + f(r[1], r[3]) + '</td><td class="n">' + f(r[2], r[3]) + "</td></tr>";
+  });
+  h += "</tbody>";
+  tb.innerHTML = h;
+}
+
+/* ---------------- 事件日志 ---------------- */
+function eventGroup(type){
+  if (type === "release" || type === "open_source" || type === "raise" || type === "audit_fail") return type;
+  if (type === "curtail" || type === "export_ctrl") return "infra";
+  if (type === "bankrupt") return "risk";
+  return "other";
+}
+
+function formatEventDesc(ev){
+  var t = ev.type, d = ev.details || {};
+  if (t === "release"){
+    var m = d.model || {};
+    var nTxt = m.N !== null && m.N !== undefined ? (", N=" + m.N + "B") : "";
+    return (m.owner || "?") + " 发布模型 " + (m.id || "?") + "（pub=" + Number(m.pub || 0).toFixed(3) + ", 价格 " + m.price + nTxt + "）";
+  }
+  if (t === "open_source"){
+    var om = d.model || {};
+    return "开源事件：" + (om.id || "OPEN-1") + " 发布（来自 " + (d.from || "NPC") + ", pub=" + Number(om.pub || 0).toFixed(3) + ", 价格 " + om.price + "）";
+  }
+  if (t === "raise"){
+    return "Lab " + (d.lab || "?") + " 融资 " + fmtM(d.amount) + "（投前估值 " + fmtM(d.valuation) + "）";
+  }
+  if (t === "audit_fail"){
+    return "Lab " + (d.lab || "?") + " 模型 " + (d.model || "?") + " 污染复测处罚（pub 修正为 " + Number(d.pub || 0).toFixed(4) + "）";
+  }
+  if (t === "curtail"){
+    var wks = d.end && d.start ? Math.round((d.end - d.start) / 168) : "?";
+    return "地区 " + d.region + " 电网限电（上限 ×" + (d.cap_mult || 0.7) + "，持续 " + wks + " 周）";
+  }
+  if (t === "export_ctrl"){
+    return "出口管制预告：" + (d.model || "G3") + " 第 Q" + d.quarter + " 季度供给 ×" + (d.supply_mult || 0.5);
+  }
+  if (t === "bankrupt"){
+    return "Lab " + (d.lab || "?") + " 连续 30 天现金为负，触发破产清算";
+  }
+  var pairs = [];
+  for (var k in d) pairs.push(k + "=" + (typeof d[k] === "object" ? JSON.stringify(d[k]) : d[k]));
+  return t + (pairs.length ? "：" + pairs.join(", ") : "");
+}
+
+function renderEventList(curDay, forceRebuild){
+  var flt = document.getElementById("evFilter").value;
+  var winOnly = document.getElementById("evWindow").checked;
+  var list = document.getElementById("evList");
+  var total = S.events.length;
+
+  var filtered = [];
+  for (var i = 0; i < total; i++){
+    var ev = S.events[i];
+    if (flt !== "all" && eventGroup(ev.type) !== flt) continue;
+    if (winOnly && Math.abs(ev.day - curDay) > 30) continue;
+    filtered.push(ev);
+  }
+  document.getElementById("evCount").textContent = filtered.length + " / " + total + " 条";
+
+  if (forceRebuild || winOnly || S.evRenderedFilter !== flt || S.evRenderedWindow !== winOnly){
+    S.evRenderedFilter = flt;
+    S.evRenderedWindow = winOnly;
+    if (!filtered.length){
+      list.innerHTML = '<div class="hint" style="padding:12px 4px">当前筛选条件下无事件</div>';
+      return;
+    }
+    var html = "";
+    for (var j = 0; j < filtered.length; j++){
+      var e = filtered[j];
+      var lbl = EV_LABEL[e.type] || e.type;
+      html += '<div class="ev-item t-' + esc(e.type) + '" data-day="' + e.day + '">' +
+              '<div class="ev-top"><span>第 ' + e.day + ' 天</span><span>t=' + e.t + '</span><span class="ev-pill">' + esc(lbl) + '</span></div>' +
+              '<div class="ev-desc">' + esc(formatEventDesc(e)) + '</div></div>';
+    }
+    list.innerHTML = html;
+  }
+
+  var nodes = list.querySelectorAll(".ev-item");
+  var targetNode = null;
+  for (var k = 0; k < nodes.length; k++){
+    var nd = nodes[k], dVal = Number(nd.getAttribute("data-day"));
+    var diff = dVal - curDay;
+    nd.classList.toggle("now", diff === 0);
+    nd.classList.toggle("near", diff !== 0 && Math.abs(diff) <= 15);
+    if (diff <= 0) targetNode = nd;
+  }
+  if (targetNode && !S.playing){
+    var top = targetNode.offsetTop - list.offsetTop;
+    if (top < list.scrollTop || top > list.scrollTop + list.clientHeight - 60){
+      list.scrollTop = Math.max(0, top - 80);
+    }
+  }
+}
+
+/* ---------------- 四个交互式 Canvas 图表 ---------------- */
+function getThemeColors(){
+  var css = getComputedStyle(document.documentElement);
+  function v(k){ return css.getPropertyValue(k).trim(); }
+  return {
+    panel: v("--panel"), grid: v("--grid"), muted: v("--muted"), text: v("--text"),
+    marker: v("--marker"), a: v("--a"), b: v("--b"), aSoft: v("--a-soft"), bSoft: v("--b-soft"),
+    n1: v("--n1"), n2: v("--n2"), open: v("--open"), border: v("--border")
+  };
+}
+
+function initCharts(){
+  var ids = ["cvVal", "cvCap", "cvComp", "cvShare"];
+  S.charts = {};
+  var days = S.days;
+  var firstDay = days[0].day, lastDay = days[days.length - 1].day;
+  var span = Math.max(1, lastDay - firstDay);
+
+  ids.forEach(function(id){
+    var cv = document.getElementById(id);
+    S.charts[id] = {
+      id: id, cv: cv, base: document.createElement("canvas"),
+      first: firstDay, last: lastDay, span: span,
+      left: 48, right: 200, top: 12, bottom: 160, ratio: 1
+    };
+  });
+  rebuildAllChartBases();
+}
+
+function setupCanvasBox(ch){
+  var cv = ch.cv, ratio = window.devicePixelRatio || 1;
+  var W = Math.max(240, Math.round((cv.clientWidth || 480) * ratio));
+  var H = Math.max(140, Math.round((cv.clientHeight || 190) * ratio));
+  cv.width = W; cv.height = H;
+  ch.base.width = W; ch.base.height = H;
+  ch.width = W; ch.height = H; ch.ratio = ratio;
+  ch.left = 48 * ratio; ch.right = W - 10 * ratio;
+  ch.top = 12 * ratio; ch.bottom = H - 24 * ratio;
+  var ctx = ch.base.getContext("2d");
+  var col = getThemeColors();
+  ctx.fillStyle = col.panel;
+  ctx.fillRect(0, 0, W, H);
+  return {ctx: ctx, col: col, r: ratio};
+}
+
+function drawGridAndX(ctx, ch, col, yMin, yMax, ticksY, yFmt){
+  var r = ch.ratio;
+  ctx.strokeStyle = col.grid;
+  ctx.lineWidth = r;
+  ctx.fillStyle = col.muted;
+  ctx.font = (10 * r) + "px ui-monospace,Consolas,monospace";
+  ctx.textBaseline = "middle";
+  ctx.textAlign = "right";
+  for (var i = 0; i <= ticksY; i++){
+    var frac = i / ticksY;
+    var y = ch.bottom - (ch.bottom - ch.top) * frac;
+    var val = yMin + (yMax - yMin) * frac;
+    ctx.beginPath(); ctx.moveTo(ch.left, y); ctx.lineTo(ch.right, y); ctx.stroke();
+    ctx.fillText(yFmt ? yFmt(val) : fmtAxis(val), ch.left - 5 * r, y);
+  }
+  // 零线强调
+  if (yMin < 0 && yMax > 0){
+    var y0 = ch.bottom - (ch.bottom - ch.top) * (0 - yMin) / (yMax - yMin);
+    ctx.strokeStyle = col.muted;
+    ctx.setLineDash([4 * r, 3 * r]);
+    ctx.beginPath(); ctx.moveTo(ch.left, y0); ctx.lineTo(ch.right, y0); ctx.stroke();
+    ctx.setLineDash([]);
+  }
+  // X 轴季度/日期刻度
+  ctx.textAlign = "center";
+  ctx.textBaseline = "top";
+  ctx.fillStyle = col.muted;
+  var nTicks = 5;
+  for (var j = 0; j <= nTicks; j++){
+    var dVal = Math.round(ch.first + ch.span * j / nTicks);
+    var x = ch.left + (ch.right - ch.left) * j / nTicks;
+    ctx.fillText("d" + dVal, x, ch.bottom + 6 * r);
+  }
+}
+
+function xOfDay(ch, day){
+  if (S.days.length <= 1) return (ch.left + ch.right) / 2;
+  return ch.left + (ch.right - ch.left) * (day - ch.first) / ch.span;
+}
+
+function yOfVal(ch, val, yMin, yMax){
+  return ch.bottom - (ch.bottom - ch.top) * (val - yMin) / Math.max(1e-9, yMax - yMin);
+}
+
+function drawLine(ctx, ch, getter, yMin, yMax, color, width, dash){
+  var days = S.days, r = ch.ratio;
+  if (!days.length) return;
+  ctx.save();
+  ctx.beginPath(); ctx.rect(ch.left, ch.top, ch.right - ch.left, ch.bottom - ch.top); ctx.clip();
+  ctx.strokeStyle = color;
+  ctx.lineWidth = width * r;
+  if (dash) ctx.setLineDash(dash.map(function(v){ return v * r; }));
+  ctx.beginPath();
+  if (days.length === 1){
+    var y0 = yOfVal(ch, getter(days[0]), yMin, yMax);
+    ctx.moveTo(ch.left, y0);
+    ctx.lineTo(ch.right, y0);
+  } else {
+    for (var i = 0; i < days.length; i++){
+      var x = xOfDay(ch, days[i].day);
+      var y = yOfVal(ch, getter(days[i]), yMin, yMax);
+      if (!i) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+    }
+  }
+  ctx.stroke();
+  ctx.restore();
+}
+
+function drawArea(ctx, ch, getter, yMin, yMax, fillColor){
+  var days = S.days;
+  if (!days.length) return;
+  ctx.save();
+  ctx.beginPath(); ctx.rect(ch.left, ch.top, ch.right - ch.left, ch.bottom - ch.top); ctx.clip();
+  ctx.fillStyle = fillColor;
+  if (days.length === 1){
+    var y0 = yOfVal(ch, getter(days[0]), yMin, yMax);
+    ctx.fillRect(ch.left, y0, ch.right - ch.left, ch.bottom - y0);
+  } else {
+    ctx.beginPath();
+    ctx.moveTo(xOfDay(ch, days[0].day), ch.bottom);
+    for (var i = 0; i < days.length; i++){
+      ctx.lineTo(xOfDay(ch, days[i].day), yOfVal(ch, getter(days[i]), yMin, yMax));
+    }
+    ctx.lineTo(xOfDay(ch, days[days.length - 1].day), ch.bottom);
+    ctx.closePath();
+    ctx.fill();
+  }
+  ctx.restore();
+}
+
+function rebuildAllChartBases(){
+  if (!S.days.length) return;
+  var days = S.days;
+
+  // (a) Valuation V & Cash
+  var chV = S.charts.cvVal;
+  if (chV){
+    var bV = setupCanvasBox(chV), mn = 0, mx = 100;
+    for (var i = 0; i < days.length; i++){
+      var da = days[i].A, db = days[i].B;
+      mn = Math.min(mn, da.value, db.value, da.cash, db.cash);
+      mx = Math.max(mx, da.value, db.value, da.cash, db.cash);
+    }
+    var pad = Math.max(20, (mx - mn) * 0.08);
+    chV.yMin = mn < 0 ? mn - pad : 0; chV.yMax = mx + pad;
+    drawGridAndX(bV.ctx, chV, bV.col, chV.yMin, chV.yMax, 4);
+    drawLine(bV.ctx, chV, function(d){ return d.A.cash; }, chV.yMin, chV.yMax, bV.col.a, 1.3, [4, 3]);
+    drawLine(bV.ctx, chV, function(d){ return d.B.cash; }, chV.yMin, chV.yMax, bV.col.b, 1.3, [4, 3]);
+    drawLine(bV.ctx, chV, function(d){ return d.A.value; }, chV.yMin, chV.yMax, bV.col.a, 2.2);
+    drawLine(bV.ctx, chV, function(d){ return d.B.value; }, chV.yMin, chV.yMax, bV.col.b, 2.2);
+  }
+
+  // (b) Capability C (0..1)
+  var chC = S.charts.cvCap;
+  if (chC){
+    var bC = setupCanvasBox(chC);
+    chC.yMin = 0; chC.yMax = 1.0;
+    drawGridAndX(bC.ctx, chC, bC.col, 0, 1.0, 4, function(v){ return v.toFixed(2); });
+    // NPC / OPEN release markers
+    bC.ctx.fillStyle = bC.col.muted;
+    for (var e = 0; e < S.events.length; e++){
+      var ev = S.events[e];
+      if ((ev.type === "release" && ev.details.model && ev.details.model.owner !== "A" && ev.details.model.owner !== "B") || ev.type === "open_source"){
+        var ex = xOfDay(chC, ev.day), r = chC.ratio;
+        if (ex >= chC.left && ex <= chC.right){
+          bC.ctx.beginPath();
+          bC.ctx.moveTo(ex, chC.top + 6 * r);
+          bC.ctx.lineTo(ex - 3 * r, chC.top);
+          bC.ctx.lineTo(ex + 3 * r, chC.top);
+          bC.ctx.closePath();
+          bC.ctx.fill();
+        }
+      }
+    }
+    drawLine(bC.ctx, chC, function(d){ return d.A.C; }, 0, 1.0, bC.col.a, 2.2);
+    drawLine(bC.ctx, chC, function(d){ return d.B.C; }, 0, 1.0, bC.col.b, 2.2);
+  }
+
+  // (c) Compute Ramp
+  var chP = S.charts.cvComp;
+  if (chP){
+    var bP = setupCanvasBox(chP), mxP = 512;
+    for (var k = 0; k < days.length; k++){
+      mxP = Math.max(mxP, days[k].A.compute, days[k].B.compute);
+    }
+    chP.yMin = 0; chP.yMax = mxP * 1.1;
+    drawGridAndX(bP.ctx, chP, bP.col, 0, chP.yMax, 4);
+    drawArea(bP.ctx, chP, function(d){ return d.A.compute; }, 0, chP.yMax, bP.col.aSoft);
+    drawArea(bP.ctx, chP, function(d){ return d.B.compute; }, 0, chP.yMax, bP.col.bSoft);
+    drawLine(bP.ctx, chP, function(d){ return d.A.compute; }, 0, chP.yMax, bP.col.a, 2.0);
+    drawLine(bP.ctx, chP, function(d){ return d.B.compute; }, 0, chP.yMax, bP.col.b, 2.0);
+  }
+
+  // (d) Stacked API Market Share (A, B, N1, N2, OPEN)
+  var chS = S.charts.cvShare;
+  if (chS){
+    var bS = setupCanvasBox(chS);
+    chS.yMin = 0; chS.yMax = 1.0;
+    drawGridAndX(bS.ctx, chS, bS.col, 0, 1.0, 4, function(v){ return Math.round(v * 100) + "%"; });
+    var keys = ["A", "B", "N1", "N2", "OPEN"];
+    var fills = [bS.col.a, bS.col.b, bS.col.n1, bS.col.n2, bS.col.open];
+    var cumPrev = new Array(days.length).fill(0);
+    bS.ctx.save();
+    bS.ctx.beginPath(); bS.ctx.rect(chS.left, chS.top, chS.right - chS.left, chS.bottom - chS.top); bS.ctx.clip();
+    for (var s = 0; s < keys.length; s++){
+      var key = keys[s], cumNext = new Array(days.length);
+      for (var n = 0; n < days.length; n++){
+        var val = Number((days[n].shares || {})[key] || 0);
+        cumNext[n] = Math.min(1.0, cumPrev[n] + Math.max(0, val));
+      }
+      bS.ctx.fillStyle = fills[s];
+      bS.ctx.globalAlpha = 0.85;
+      if (days.length === 1){
+        var yTop = yOfVal(chS, cumNext[0], 0, 1.0);
+        var yBot = yOfVal(chS, cumPrev[0], 0, 1.0);
+        bS.ctx.fillRect(chS.left, yTop, chS.right - chS.left, Math.max(0, yBot - yTop));
+      } else {
+        bS.ctx.beginPath();
+        for (var m = 0; m < days.length; m++){
+          var xm = xOfDay(chS, days[m].day), ym = yOfVal(chS, cumNext[m], 0, 1.0);
+          if (!m) bS.ctx.moveTo(xm, ym); else bS.ctx.lineTo(xm, ym);
+        }
+        for (var m2 = days.length - 1; m2 >= 0; m2--){
+          bS.ctx.lineTo(xOfDay(chS, days[m2].day), yOfVal(chS, cumPrev[m2], 0, 1.0));
+        }
+        bS.ctx.closePath();
+        bS.ctx.fill();
+      }
+      cumPrev = cumNext;
+    }
+    bS.ctx.restore();
+  }
+}
+
+function paintAllCharts(d){
+  var col = getThemeColors();
+  function drawCursor(ch, dots){
+    if (!ch || !ch.cv) return;
+    var ctx = ch.cv.getContext("2d"), r = ch.ratio;
+    ctx.clearRect(0, 0, ch.width, ch.height);
+    ctx.drawImage(ch.base, 0, 0);
+    var x = xOfDay(ch, d.day);
+    ctx.strokeStyle = col.marker;
+    ctx.lineWidth = 1.5 * r;
+    ctx.beginPath(); ctx.moveTo(x, ch.top); ctx.lineTo(x, ch.bottom); ctx.stroke();
+    (dots || []).forEach(function(pt){
+      var y = yOfVal(ch, pt[0], ch.yMin, ch.yMax);
+      if (y >= ch.top - 4 * r && y <= ch.bottom + 4 * r){
+        ctx.fillStyle = pt[1];
+        ctx.beginPath(); ctx.arc(x, y, 3.5 * r, 0, Math.PI * 2); ctx.fill();
+      }
+    });
+  }
+
+  drawCursor(S.charts.cvVal, [[d.A.value, col.a], [d.B.value, col.b]]);
+  drawCursor(S.charts.cvCap, [[d.A.C, col.a], [d.B.C, col.b]]);
+  drawCursor(S.charts.cvComp, [[d.A.compute, col.a], [d.B.compute, col.b]]);
+  drawCursor(S.charts.cvShare, []);
+
+  document.getElementById("roVal").textContent = "A " + d.A.value.toFixed(1) + " / B " + d.B.value.toFixed(1) + " M";
+  document.getElementById("roCap").textContent = "A " + d.A.C.toFixed(4) + " / B " + d.B.C.toFixed(4);
+  document.getElementById("roComp").textContent = "A " + fmtNum(d.A.compute, 0) + " / B " + fmtNum(d.B.compute, 0);
+  var sh = d.shares || {};
+  var shParts = ["A", "B", "N1", "N2"].map(function(k){ return k + " " + Math.round((sh[k] || 0) * 100) + "%"; });
+  if (sh.OPEN) shParts.push("OPEN " + Math.round(sh.OPEN * 100) + "%");
+  document.getElementById("roShare").textContent = shParts.join(" · ");
+}
+
+function bindChartScrub(){
+  ["cvVal", "cvCap", "cvComp", "cvShare"].forEach(function(id){
+    var cv = document.getElementById(id), dragging = false;
+    function jump(ev){
+      var ch = S.charts[id];
+      if (!ch || !S.days.length) return;
+      var rect = cv.getBoundingClientRect();
+      var px = (ev.clientX - rect.left) * ch.ratio;
+      var frac = Math.max(0, Math.min(1, (px - ch.left) / Math.max(1, ch.right - ch.left)));
+      var targetDay = Math.round(ch.first + frac * ch.span);
+      setPlaying(false);
+      S.idx = indexAtDay(targetDay, false);
+      render();
+    }
+    cv.addEventListener("pointerdown", function(ev){
+      dragging = true;
+      try { cv.setPointerCapture(ev.pointerId); } catch(_e){}
+      jump(ev);
+    });
+    cv.addEventListener("pointermove", function(ev){ if (dragging) jump(ev); });
+    cv.addEventListener("pointerup", function(){ dragging = false; });
+    cv.addEventListener("pointercancel", function(){ dragging = false; });
+  });
+}
+
+/* ---------------- 主渲染与播放循环 ---------------- */
+function render(force){
+  if (!S.days.length) return;
+  S.idx = Math.max(0, Math.min(S.idx, S.days.length - 1));
+  if (!force && S.renderedIdx === S.idx) return;
+  S.renderedIdx = S.idx;
+  var d = S.days[S.idx];
+  var yr = Math.floor(d.day / 365) + 1;
+  var mo = Math.floor((d.day % 365) / 30.416) + 1;
+  var maxTick = S.rep && S.rep.meta && Number(S.rep.meta.ticks) > 0 ? (Number(S.rep.meta.ticks) - 1) : (d.day * 24 + 23);
+  var tickEnd = Math.min(d.day * 24 + 23, maxTick);
+  document.getElementById("tDay").textContent = "第 " + d.day + " 天 (Y" + yr + "M" + mo + ") / tick " + tickEnd;
+  document.getElementById("clock").textContent =
+    "第 " + d.day + " 天 (Y" + yr + "M" + mo + ") · 估值 " + d.A.value.toFixed(1) + " vs " + d.B.value.toFixed(1) +
+    " M · 能力 C " + d.A.C.toFixed(3) + " vs " + d.B.C.toFixed(3);
+  document.getElementById("seek").value = String(S.idx);
+
+  renderKPIs(d);
+  paintAllCharts(d);
+  renderEventList(d.day, Boolean(force));
+
+  var params = new URLSearchParams(location.hash.slice(1));
+  if (S.src) params.set("src", S.src); else params.delete("src");
+  params.set("t", String(d.day * 24));
+  var hash = "#" + params.toString();
+  if (history.replaceState && hash !== location.hash){
+    try { history.replaceState(null, "", hash); } catch(_e){}
+  }
+}
+
+function tick(ts){
+  if (!S.playing) return;
+  if (!S.last) S.last = ts;
+  var dt = Math.min(0.25, (ts - S.last) / 1000);
+  S.last = ts;
+  S.acc += dt * S.speed * 6;
+  var before = S.idx;
+  while (S.idx < S.days.length - 1){
+    var interval = Math.max(1, S.days[S.idx + 1].day - S.days[S.idx].day);
+    if (S.acc < interval) break;
+    S.acc -= interval;
+    S.idx++;
+  }
+  if (before !== S.idx) render();
+  if (S.idx >= S.days.length - 1) setPlaying(false);
+  if (S.playing) S.raf = requestAnimationFrame(tick);
+}
+
+function setPlaying(on){
+  if (on && !S.days.length) return;
+  if (S.playing === on) return;
+  S.playing = on; S.last = 0; S.acc = 0;
+  cancelAnimationFrame(S.raf);
+  var btn = document.getElementById("play"), lbl = on ? "暂停" : "播放";
+  btn.textContent = on ? "⏸" : "▶";
+  btn.title = lbl + " (Space)";
+  btn.setAttribute("aria-label", lbl);
+  if (on){
+    if (S.idx >= S.days.length - 1) S.idx = 0;
+    S.raf = requestAnimationFrame(tick);
+  }
+}
+
+/* ---------------- 载入入口 ---------------- */
+function loadReplay(raw, options){
+  options = options || {};
+  var rep = normalizeReplay(raw);
+  var days = rep.days, events = rep.events || [];
+  for (var i = 1; i < days.length; i++){
+    if (days[i].day < days[i - 1].day) throw new Error("回放日期顺序无效");
+  }
+  setPlaying(false);
+  S.rep = rep; S.days = days; S.events = events;
+  S.idx = 0; S.renderedIdx = -1; S.src = options.src || "";
+  if (options.t !== null && options.t !== undefined){
+    S.idx = indexAtDay(Math.floor(options.t / 24), false);
+  }
+  var meta = rep.meta || {}, labels = meta.labels || ["A", "B"];
+  document.getElementById("nameA").textContent = labels[0] || "A";
+  document.getElementById("nameB").textContent = labels[1] || "B";
+  document.getElementById("tSeed").textContent = "seed " + meta.seed + " · " + (meta.ticks || "?") + " ticks";
+  document.getElementById("tPlayers").innerHTML =
+    '<span class="nm nmA">' + esc(labels[0] || "A") + '</span> vs <span class="nm nmB">' + esc(labels[1] || "B") + "</span>";
+  var fv = meta.final_value || [0, 0], fc = meta.final_C || [0, 0];
+  var winTxt;
+  if (meta.mode === "solo"){
+    winTxt = "单人赛 · 最高 C=" + Number(fc[0] || 0).toFixed(4) + "（" + (Number(fc[0] || 0) * 100).toFixed(1) + "/100）";
+  } else {
+    var wName = meta.winner === "draw" ? "平局" : (meta.winner === "A" ? (labels[0] + " 胜") : (labels[1] + " 胜"));
+    var adv = meta.adv_score ? (" · 得分 " + meta.adv_score[0] + ":" + meta.adv_score[1]) : "";
+    winTxt = "对抗赛 " + wName + " · 终局 " + Number(fv[0] || 0).toFixed(1) + " vs " + Number(fv[1] || 0).toFixed(1) + " M" + adv;
+  }
+  document.getElementById("tWinner").textContent = winTxt;
+  var sha = String(meta.engine_sha || "").slice(0, 8) || "local";
+  document.getElementById("tEngine").textContent = "引擎 " + sha + " · 每 " + (meta.sample_every || 1) + " 天 · " + days.length + " 帧";
+
+  renderStaticMeta(meta);
+  document.getElementById("main").hidden = false;
+  document.getElementById("controls").hidden = false;
+  document.getElementById("drop").style.display = "none";
+  document.getElementById("err").textContent = "";
+  var seek = document.getElementById("seek");
+  seek.max = String(days.length - 1);
+  seek.value = String(S.idx);
+  initCharts();
+  render(true);
+}
+
+function fail(e){
+  document.getElementById("drop").style.display = "block";
+  document.getElementById("loadbox").textContent = "";
+  document.getElementById("err").textContent = "载入失败：" + (e && e.message ? e.message : e);
+}
+
+function applyTheme(mode){
+  var dark = mode === "dark" || (mode === "system" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+  try { localStorage.setItem("afb.ai_training.theme", mode); } catch(_e){}
+  if (S.days.length){
+    rebuildAllChartBases();
+    paintAllCharts(S.days[S.idx]);
+  }
+}
+
+function boot(){
+  var theme = document.getElementById("theme"), saved;
+  try { saved = localStorage.getItem("afb.ai_training.theme"); } catch(_e){}
+  theme.value = ["light", "dark", "system"].indexOf(saved) >= 0 ? saved : "light";
+  applyTheme(theme.value);
+  theme.addEventListener("change", function(){ applyTheme(theme.value); });
+  if (window.matchMedia){
+    var mq = window.matchMedia("(prefers-color-scheme: dark)");
+    if (mq.addEventListener) mq.addEventListener("change", function(){ if (theme.value === "system") applyTheme("system"); });
+  }
+
+  function readFile(file){
+    if (!file) return;
+    var localLoad = ++S.loadSeq;
+    setPlaying(false);
+    var fr = new FileReader();
+    fr.onload = function(){
+      if (localLoad !== S.loadSeq) return;
+      try { loadReplay(JSON.parse(fr.result), {src: ""}); }
+      catch(e){ fail(e); }
+    };
+    fr.onerror = function(){ if (localLoad === S.loadSeq) fail(new Error("无法读取文件")); };
+    fr.readAsText(file);
+  }
+
+  document.getElementById("openFile").addEventListener("click", function(){ document.getElementById("file").click(); });
+  document.getElementById("file").addEventListener("change", function(ev){ readFile(ev.target.files[0]); ev.target.value = ""; });
+
+  ["dragenter", "dragover"].forEach(function(type){
+    window.addEventListener(type, function(e){ e.preventDefault(); document.body.classList.add("dragover"); });
+  });
+  ["dragleave", "drop"].forEach(function(type){
+    window.addEventListener(type, function(e){ e.preventDefault(); document.body.classList.remove("dragover"); });
+  });
+  window.addEventListener("drop", function(e){
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length) readFile(e.dataTransfer.files[0]);
+  });
+
+  document.getElementById("play").addEventListener("click", function(){ setPlaying(!S.playing); });
+  document.getElementById("spd").addEventListener("change", function(ev){ S.speed = Number(ev.target.value) || 4; });
+  function stepDay(delta){
+    setPlaying(false);
+    if (!S.days.length) return;
+    if (Math.abs(delta) === 1){
+      S.idx = Math.max(0, Math.min(S.days.length - 1, S.idx + delta));
+    } else {
+      S.idx = indexAtDay(S.days[S.idx].day + delta, delta > 0);
+    }
+    render();
+  }
+  document.getElementById("b30").addEventListener("click", function(){ stepDay(-30); });
+  document.getElementById("b1").addEventListener("click", function(){ stepDay(-1); });
+  document.getElementById("f1").addEventListener("click", function(){ stepDay(1); });
+  document.getElementById("f30").addEventListener("click", function(){ stepDay(30); });
+  document.getElementById("end").addEventListener("click", function(){ setPlaying(false); S.idx = S.days.length - 1; render(); });
+  document.getElementById("seek").addEventListener("input", function(ev){ setPlaying(false); S.idx = Number(ev.target.value) || 0; render(); });
+
+  document.getElementById("evFilter").addEventListener("change", function(){
+    if (S.days.length) renderEventList(S.days[S.idx].day, true);
+  });
+  document.getElementById("evWindow").addEventListener("change", function(){
+    if (S.days.length) renderEventList(S.days[S.idx].day, true);
+  });
+  document.getElementById("evList").addEventListener("click", function(ev){
+    var item = ev.target.closest(".ev-item");
+    if (!item || !S.days.length) return;
+    var day = Number(item.getAttribute("data-day"));
+    setPlaying(false);
+    S.idx = indexAtDay(day, false);
+    render();
+  });
+
+  window.addEventListener("keydown", function(e){
+    if (/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName) || e.target.isContentEditable) return;
+    if (e.key === " "){ e.preventDefault(); setPlaying(!S.playing); }
+    else if (e.key === "ArrowRight"){ e.preventDefault(); stepDay(e.shiftKey ? 30 : 1); }
+    else if (e.key === "ArrowLeft"){ e.preventDefault(); stepDay(e.shiftKey ? -30 : -1); }
+    else if (e.key === "Home"){ e.preventDefault(); setPlaying(false); S.idx = 0; render(); }
+    else if (e.key === "End"){ e.preventDefault(); setPlaying(false); S.idx = S.days.length - 1; render(); }
+  });
+
+  document.addEventListener("visibilitychange", function(){ S.last = 0; });
+  bindChartScrub();
+
+  var resizeTimer = 0;
+  function onResize(){
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(function(){
+      if (S.days.length){
+        rebuildAllChartBases();
+        paintAllCharts(S.days[S.idx]);
+      }
+    }, 60);
+  }
+  if (window.ResizeObserver){
+    var ro = new ResizeObserver(onResize);
+    ro.observe(document.getElementById("cvVal"));
+  } else {
+    window.addEventListener("resize", onResize);
+  }
+
+  var params = new URLSearchParams(location.hash.slice(1)), src = params.get("src"), t = params.get("t");
+  var wantT = t !== null && /^\d+$/.test(t) ? Number(t) : null;
+  if (src){
+    var remoteLoad = ++S.loadSeq;
+    document.getElementById("loadbox").textContent = "加载回放…";
+    fetch(src)
+      .then(function(r){ if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+      .then(function(rep){ if (remoteLoad === S.loadSeq) loadReplay(rep, {src: src, t: wantT}); })
+      .catch(function(err){ if (remoteLoad === S.loadSeq) fail(err); });
+  }
+}
+
+boot();
+</script>
+</body>
+</html>

@@ -1,0 +1,218 @@
+{
+  "scoring": "per_test",
+  "memory_limit_mib": 128,
+  "subtasks": [
+    {
+      "id": 1,
+      "score": 8,
+      "input_type": 0,
+      "max_H": 2,
+      "cases": [
+        {
+          "id": "01",
+          "score": 3,
+          "time_limit_ms": 1000
+        },
+        {
+          "id": "02",
+          "score": 5,
+          "time_limit_ms": 1000
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "score": 12,
+      "input_type": 0,
+      "max_H": 5,
+      "cases": [
+        {
+          "id": "03",
+          "score": 2,
+          "time_limit_ms": 1000
+        },
+        {
+          "id": "04",
+          "score": 4,
+          "time_limit_ms": 1000
+        },
+        {
+          "id": "05",
+          "score": 3,
+          "time_limit_ms": 1000
+        },
+        {
+          "id": "06",
+          "score": 3,
+          "time_limit_ms": 1000
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "score": 60,
+      "input_type": 0,
+      "max_H": 10,
+      "cases": [
+        {
+          "id": "07",
+          "score": 2,
+          "time_limit_ms": 2000
+        },
+        {
+          "id": "08",
+          "score": 4,
+          "time_limit_ms": 2000
+        },
+        {
+          "id": "09",
+          "score": 4,
+          "time_limit_ms": 2000
+        },
+        {
+          "id": "10",
+          "score": 2,
+          "time_limit_ms": 2000
+        },
+        {
+          "id": "11",
+          "score": 2,
+          "time_limit_ms": 2000
+        },
+        {
+          "id": "12",
+          "score": 5,
+          "time_limit_ms": 2000
+        },
+        {
+          "id": "13",
+          "score": 3,
+          "time_limit_ms": 2000
+        },
+        {
+          "id": "14",
+          "score": 4,
+          "time_limit_ms": 2000
+        },
+        {
+          "id": "15",
+          "score": 3,
+          "time_limit_ms": 2000
+        },
+        {
+          "id": "16",
+          "score": 3,
+          "time_limit_ms": 2000
+        },
+        {
+          "id": "17",
+          "score": 5,
+          "time_limit_ms": 2000
+        },
+        {
+          "id": "18",
+          "score": 4,
+          "time_limit_ms": 2000
+        },
+        {
+          "id": "19",
+          "score": 3,
+          "time_limit_ms": 2000
+        },
+        {
+          "id": "20",
+          "score": 2,
+          "time_limit_ms": 2000
+        },
+        {
+          "id": "21",
+          "score": 2,
+          "time_limit_ms": 2000
+        },
+        {
+          "id": "22",
+          "score": 2,
+          "time_limit_ms": 2000
+        },
+        {
+          "id": "23",
+          "score": 3,
+          "time_limit_ms": 2000
+        },
+        {
+          "id": "24",
+          "score": 3,
+          "time_limit_ms": 2000
+        },
+        {
+          "id": "25",
+          "score": 2,
+          "time_limit_ms": 2000
+        },
+        {
+          "id": "26",
+          "score": 2,
+          "time_limit_ms": 2000
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "score": 20,
+      "input_type": 1,
+      "max_H": 10000,
+      "cases": [
+        {
+          "id": "27",
+          "score": 1,
+          "time_limit_ms": 1500
+        },
+        {
+          "id": "28",
+          "score": 2,
+          "time_limit_ms": 1500
+        },
+        {
+          "id": "29",
+          "score": 2,
+          "time_limit_ms": 1500
+        },
+        {
+          "id": "30",
+          "score": 2,
+          "time_limit_ms": 1500
+        },
+        {
+          "id": "31",
+          "score": 3,
+          "time_limit_ms": 1500
+        },
+        {
+          "id": "32",
+          "score": 2,
+          "time_limit_ms": 1500
+        },
+        {
+          "id": "33",
+          "score": 2,
+          "time_limit_ms": 1500
+        },
+        {
+          "id": "34",
+          "score": 2,
+          "time_limit_ms": 1500
+        },
+        {
+          "id": "35",
+          "score": 2,
+          "time_limit_ms": 1500
+        },
+        {
+          "id": "36",
+          "score": 2,
+          "time_limit_ms": 1500
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,26 @@
+{
+  "_说明": "可选的自动出题/收卷接口模板。key 一律用环境变量注入（如 MODEL_A_KEY），不要写进本文件。",
+  "models": [
+    {
+      "name": "modelA",
+      "base_url": "https://api.openai.com/v1",
+      "api_key_env": "MODEL_A_KEY",
+      "model": "gpt-5.1",
+      "temperature": 0.2,
+      "max_tokens": 16000,
+      "prompt_file": "prompts/task.txt",
+      "save_to": "agents/submissions/modelA.py"
+    },
+    {
+      "name": "modelB",
+      "base_url": "https://api.openai.com/v1",
+      "api_key_env": "MODEL_B_KEY",
+      "model": "claude-sonnet-4-5",
+      "temperature": 0.2,
+      "max_tokens": 16000,
+      "prompt_file": "prompts/task.txt",
+      "save_to": "agents/submissions/modelB.py"
+    }
+  ],
+  "extract_code_block": true
+}

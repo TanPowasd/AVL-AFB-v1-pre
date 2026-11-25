@@ -1,0 +1,35 @@
+{
+  "problem": "compression_singularity",
+  "title": "压缩奇点（The Compression Singularity）",
+  "language": "C++20",
+  "submission_ext": ".cpp",
+  "compiler_flags": [
+    "-std=gnu++20",
+    "-O2",
+    "-pipe"
+  ],
+  "evaluation_protocol": "two_stage_blind_generalization",
+  "solver_time_limit_ms": 60000,
+  "solver_memory_limit_mb": 1024,
+  "vm": {
+    "alphabet": "><+.[]",
+    "step_limit": 3000000000000,
+    "tape_bound": 10000000,
+    "max_program_len_formula": "2 * L + 100",
+    "cpu_limit_s": 600
+  },
+  "b_ref": {
+    "packing": "MSB-first ceil(L/8) bytes, zero-padded at LSB",
+    "compressor": "liblzma FORMAT_RAW FILTER_LZMA2 preset=9",
+    "unit": "len(payload) * 8 bits"
+  },
+  "scoring": {
+    "raw_formula": "100 * B_ref / (|P| * log2(6))",
+    "norm_formula": "100 * (raw ** 0.75) / ((raw ** 0.75) + (1000 ** 0.75))",
+    "max_score": 100,
+    "anonymous_specimens": 8,
+    "official_dynamic_cases": 512,
+    "official_scales": [100000, 1000000],
+    "cases_per_family": {"100000": 32, "1000000": 32}
+  }
+}

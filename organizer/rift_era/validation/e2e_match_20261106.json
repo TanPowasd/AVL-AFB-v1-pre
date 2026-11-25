@@ -1,0 +1,941 @@
+{
+ "scope": "e2e_match_validation",
+ "date": "2026-11-06",
+ "engine_commit": "4a6c1ec7475fe47f126d038d320a1a21d9e1b7bd",
+ "branch": "rift-core",
+ "machine_note": "sandbox, 2 cores; two matches ran concurrently, so per-tick speed is under contention",
+ "audit_note": "run_match uses debug=False: per-tick audits are off; finalize_match runs state.audit() once at the end and passed (any failure raises).",
+ "runs": {
+  "legacy_none": {
+   "command": "python3 -m organizer.rift_era match --ticks 400 --legacy-map",
+   "env": "PYTHONHASHSEED=0",
+   "exit": "rc=0",
+   "ticks": 400,
+   "seed": 1000,
+   "wall_seconds_total": 254.643,
+   "world_acceptance_seconds": 0,
+   "seconds_per_tick_simulation": 0.6366,
+   "progress": [
+    {
+     "tick": 50,
+     "wall_seconds": 31.6
+    },
+    {
+     "tick": 100,
+     "wall_seconds": 63.2
+    },
+    {
+     "tick": 150,
+     "wall_seconds": 94.8
+    },
+    {
+     "tick": 200,
+     "wall_seconds": 126.2
+    },
+    {
+     "tick": 250,
+     "wall_seconds": 158.0
+    },
+    {
+     "tick": 300,
+     "wall_seconds": 190.1
+    },
+    {
+     "tick": 350,
+     "wall_seconds": 222.3
+    },
+    {
+     "tick": 400,
+     "wall_seconds": 253.6
+    }
+   ],
+   "map_version": "rift_spatial_stratified_v1",
+   "world_attempt": 0,
+   "world_acceptance": [],
+   "state_hash": "2a0a2d53a07f33fe8759be0311b9553110a4cdd64361b4c4bcd1818a662db4fb",
+   "engine_hash": "24eaa8e54fcf4e5a4bb502306663058eecb9465026fde3bb2fe13a7fad791f9a",
+   "finalizer": {
+    "scope": "rift_full_match_v1",
+    "full_rules_accepted": false,
+    "official_clock": false,
+    "pending_rule_inputs": [
+     "active_automated_routes",
+     "completed_megaprojects",
+     "flowing_intercontinental_cables",
+     "ready_combined_arms_formations",
+     "ready_joint_command_formations",
+     "restored_closed_mines",
+     "supplied_field_depots"
+    ],
+    "outstanding_debt_unchanged": {
+     "n0": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     },
+     "n1": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     },
+     "n2": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     },
+     "n3": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     },
+     "n4": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     },
+     "n5": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     },
+     "n6": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     },
+     "n7": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     }
+    }
+   },
+   "nations": {
+    "n0": {
+     "V": 14.334081,
+     "phi": 1.0,
+     "end_mean": 13.021466,
+     "era_means": [
+      19.59587,
+      16.75179,
+      14.123205,
+      13.021466
+     ],
+     "pillars_last_cycle": {
+      "control": 51.892973,
+      "cycle": 39,
+      "industry": -57.704056,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -160.320313,
+      "population": 67.081553,
+      "technology": 0.0,
+      "total": 12.722969,
+      "va": -164.708412
+     }
+    },
+    "n1": {
+     "V": 14.642595,
+     "phi": 0.99993,
+     "end_mean": 13.486329,
+     "era_means": [
+      19.597046,
+      16.839802,
+      14.31273,
+      13.486329
+     ],
+     "pillars_last_cycle": {
+      "control": 51.899693,
+      "cycle": 39,
+      "industry": -57.517242,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -201.824434,
+      "population": 67.15497,
+      "technology": 0.0,
+      "total": 12.789371,
+      "va": -164.133151
+     }
+    },
+    "n2": {
+     "V": 15.040614,
+     "phi": 1.0,
+     "end_mean": 13.780694,
+     "era_means": [
+      19.630172,
+      17.733019,
+      14.775013,
+      13.780694
+     ],
+     "pillars_last_cycle": {
+      "control": 51.911903,
+      "cycle": 39,
+      "industry": -53.816949,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -101.617108,
+      "population": 67.290585,
+      "technology": 0.0,
+      "total": 13.75079,
+      "va": -153.661094
+     }
+    },
+    "n3": {
+     "V": 14.406418,
+     "phi": 1.0,
+     "end_mean": 13.143872,
+     "era_means": [
+      19.590634,
+      17.262833,
+      13.852835,
+      13.143872
+     ],
+     "pillars_last_cycle": {
+      "control": 51.869603,
+      "cycle": 39,
+      "industry": -57.508321,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -214.336529,
+      "population": 66.855551,
+      "technology": 0.0,
+      "total": 12.710728,
+      "va": -164.095153
+     }
+    },
+    "n4": {
+     "V": 14.8453,
+     "phi": 0.999737,
+     "end_mean": 13.937924,
+     "era_means": [
+      19.612052,
+      16.585611,
+      14.289365,
+      13.937924
+     ],
+     "pillars_last_cycle": {
+      "control": 51.902573,
+      "cycle": 39,
+      "industry": -53.144074,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -251.794445,
+      "population": 67.192152,
+      "technology": 0.0,
+      "total": 13.892534,
+      "va": -151.588418
+     }
+    },
+    "n5": {
+     "V": 14.572352,
+     "phi": 1.0,
+     "end_mean": 13.365789,
+     "era_means": [
+      19.590451,
+      17.146505,
+      14.112829,
+      13.365789
+     ],
+     "pillars_last_cycle": {
+      "control": 51.911423,
+      "cycle": 39,
+      "industry": -57.125541,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -55.196962,
+      "population": 67.286066,
+      "technology": 0.0,
+      "total": 12.922416,
+      "va": -163.160634
+     }
+    },
+    "n6": {
+     "V": 13.205546,
+     "phi": 1.0,
+     "end_mean": 11.691759,
+     "era_means": [
+      19.594328,
+      16.249948,
+      12.706071,
+      11.691759
+     ],
+     "pillars_last_cycle": {
+      "control": 51.893663,
+      "cycle": 39,
+      "industry": -62.041268,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -225.623862,
+      "population": 67.085753,
+      "technology": 0.0,
+      "total": 11.639854,
+      "va": -177.035141
+     }
+    },
+    "n7": {
+     "V": 13.641395,
+     "phi": 1.0,
+     "end_mean": 12.120856,
+     "era_means": [
+      19.596343,
+      16.383425,
+      13.478106,
+      12.120856
+     ],
+     "pillars_last_cycle": {
+      "control": 51.884933,
+      "cycle": 39,
+      "industry": -60.711462,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -278.814765,
+      "population": 66.987628,
+      "technology": 0.0,
+      "total": 11.946028,
+      "va": -173.182505
+     }
+    }
+   },
+   "exceptions": null,
+   "audit_failures": null
+  },
+  "legacy_simple": {
+   "command": "python3 -m organizer.rift_era match --ticks 400 --legacy-map --bot simple",
+   "env": "PYTHONHASHSEED=0",
+   "exit": "rc=0",
+   "ticks": 400,
+   "seed": 1000,
+   "wall_seconds_total": 265.919,
+   "world_acceptance_seconds": 0,
+   "seconds_per_tick_simulation": 0.6648,
+   "progress": [
+    {
+     "tick": 50,
+     "wall_seconds": 32.4
+    },
+    {
+     "tick": 100,
+     "wall_seconds": 65.6
+    },
+    {
+     "tick": 150,
+     "wall_seconds": 98.5
+    },
+    {
+     "tick": 200,
+     "wall_seconds": 131.3
+    },
+    {
+     "tick": 250,
+     "wall_seconds": 165.9
+    },
+    {
+     "tick": 300,
+     "wall_seconds": 199.2
+    },
+    {
+     "tick": 350,
+     "wall_seconds": 232.4
+    },
+    {
+     "tick": 400,
+     "wall_seconds": 265.2
+    }
+   ],
+   "map_version": "rift_spatial_stratified_v1",
+   "world_attempt": 0,
+   "world_acceptance": [],
+   "state_hash": "156b88259323f42e90ed7314b46e5fc019bbe5eadd94428bb80d36a04526989f",
+   "engine_hash": "24eaa8e54fcf4e5a4bb502306663058eecb9465026fde3bb2fe13a7fad791f9a",
+   "finalizer": {
+    "scope": "rift_full_match_v1",
+    "full_rules_accepted": false,
+    "official_clock": false,
+    "pending_rule_inputs": [
+     "active_automated_routes",
+     "completed_megaprojects",
+     "flowing_intercontinental_cables",
+     "ready_combined_arms_formations",
+     "ready_joint_command_formations",
+     "restored_closed_mines",
+     "supplied_field_depots"
+    ],
+    "outstanding_debt_unchanged": {
+     "n0": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     },
+     "n1": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     },
+     "n2": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     },
+     "n3": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     },
+     "n4": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     },
+     "n5": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     },
+     "n6": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     },
+     "n7": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     }
+    }
+   },
+   "nations": {
+    "n0": {
+     "V": 14.334081,
+     "phi": 1.0,
+     "end_mean": 13.021466,
+     "era_means": [
+      19.59587,
+      16.751791,
+      14.123205,
+      13.021466
+     ],
+     "pillars_last_cycle": {
+      "control": 51.892973,
+      "cycle": 39,
+      "industry": -57.704057,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -160.323551,
+      "population": 67.081553,
+      "technology": 0.0,
+      "total": 12.722968,
+      "va": -164.708412
+     }
+    },
+    "n1": {
+     "V": 14.642595,
+     "phi": 0.99993,
+     "end_mean": 13.486329,
+     "era_means": [
+      19.597045,
+      16.839802,
+      14.31273,
+      13.486329
+     ],
+     "pillars_last_cycle": {
+      "control": 51.899693,
+      "cycle": 39,
+      "industry": -57.517241,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -201.823844,
+      "population": 67.15497,
+      "technology": 0.0,
+      "total": 12.789371,
+      "va": -164.133151
+     }
+    },
+    "n2": {
+     "V": 15.040614,
+     "phi": 1.0,
+     "end_mean": 13.780693,
+     "era_means": [
+      19.630172,
+      17.733019,
+      14.775012,
+      13.780693
+     ],
+     "pillars_last_cycle": {
+      "control": 51.911903,
+      "cycle": 39,
+      "industry": -53.816952,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -101.626273,
+      "population": 67.290585,
+      "technology": 0.0,
+      "total": 13.750789,
+      "va": -153.661094
+     }
+    },
+    "n3": {
+     "V": 14.406419,
+     "phi": 1.0,
+     "end_mean": 13.143872,
+     "era_means": [
+      19.590634,
+      17.262834,
+      13.852835,
+      13.143872
+     ],
+     "pillars_last_cycle": {
+      "control": 51.869603,
+      "cycle": 39,
+      "industry": -57.508319,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -214.329745,
+      "population": 66.855551,
+      "technology": 0.0,
+      "total": 12.710729,
+      "va": -164.095153
+     }
+    },
+    "n4": {
+     "V": 14.845301,
+     "phi": 0.999737,
+     "end_mean": 13.937925,
+     "era_means": [
+      19.612052,
+      16.585612,
+      14.289366,
+      13.937925
+     ],
+     "pillars_last_cycle": {
+      "control": 51.902573,
+      "cycle": 39,
+      "industry": -53.144071,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -251.78535,
+      "population": 67.192152,
+      "technology": 0.0,
+      "total": 13.892535,
+      "va": -151.588418
+     }
+    },
+    "n5": {
+     "V": 14.57235,
+     "phi": 1.0,
+     "end_mean": 13.365788,
+     "era_means": [
+      19.590451,
+      17.146504,
+      14.112827,
+      13.365788
+     ],
+     "pillars_last_cycle": {
+      "control": 51.911423,
+      "cycle": 39,
+      "industry": -57.125548,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -55.217649,
+      "population": 67.286066,
+      "technology": 0.0,
+      "total": 12.922414,
+      "va": -163.160634
+     }
+    },
+    "n6": {
+     "V": 13.205547,
+     "phi": 1.0,
+     "end_mean": 11.69176,
+     "era_means": [
+      19.594328,
+      16.24995,
+      12.706073,
+      11.69176
+     ],
+     "pillars_last_cycle": {
+      "control": 51.893663,
+      "cycle": 39,
+      "industry": -62.041263,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -225.609523,
+      "population": 67.085753,
+      "technology": 0.0,
+      "total": 11.639855,
+      "va": -177.035141
+     }
+    },
+    "n7": {
+     "V": 13.641395,
+     "phi": 1.0,
+     "end_mean": 12.120857,
+     "era_means": [
+      19.596342,
+      16.383426,
+      13.478107,
+      12.120857
+     ],
+     "pillars_last_cycle": {
+      "control": 51.884933,
+      "cycle": 39,
+      "industry": -60.711458,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -278.804134,
+      "population": 66.987628,
+      "technology": 0.0,
+      "total": 11.946029,
+      "va": -173.182505
+     }
+    }
+   },
+   "exceptions": null,
+   "audit_failures": null
+  },
+  "formal_none": {
+   "command": "python3 -m organizer.rift_era match --ticks 200",
+   "env": "PYTHONHASHSEED=0",
+   "exit": "rc=0",
+   "ticks": 200,
+   "seed": 1000,
+   "wall_seconds_total": 231.436,
+   "world_acceptance_seconds": 96.085,
+   "seconds_per_tick_simulation": 0.6768,
+   "progress": [
+    {
+     "tick": 50,
+     "wall_seconds": 129.2
+    },
+    {
+     "tick": 100,
+     "wall_seconds": 162.5
+    },
+    {
+     "tick": 150,
+     "wall_seconds": 196.9
+    },
+    {
+     "tick": 200,
+     "wall_seconds": 230.8
+    }
+   ],
+   "map_version": "rift_world_atlas_v1",
+   "world_attempt": 0,
+   "world_acceptance": [
+    {
+     "accepted": true,
+     "attempt": 0,
+     "failures": [],
+     "ticks_executed": 150,
+     "wall_seconds": 96.085
+    }
+   ],
+   "state_hash": "18a0c3e3d7c66c9f00820efc8ae947b718c44d24b03bb832597b2e6e7516aef2",
+   "engine_hash": "24eaa8e54fcf4e5a4bb502306663058eecb9465026fde3bb2fe13a7fad791f9a",
+   "finalizer": {
+    "scope": "rift_full_match_v1",
+    "full_rules_accepted": false,
+    "official_clock": false,
+    "pending_rule_inputs": [
+     "active_automated_routes",
+     "completed_megaprojects",
+     "flowing_intercontinental_cables",
+     "ready_combined_arms_formations",
+     "ready_joint_command_formations",
+     "restored_closed_mines",
+     "supplied_field_depots"
+    ],
+    "outstanding_debt_unchanged": {
+     "n0": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     },
+     "n1": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     },
+     "n2": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     },
+     "n3": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     },
+     "n4": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     },
+     "n5": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     },
+     "n6": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     },
+     "n7": {
+      "loan_debt_book_ru_mU": 0.0,
+      "payables_book_ru_mU": 0.0,
+      "sovereign_debt_book_ru_mU": 0.0
+     }
+    }
+   },
+   "nations": {
+    "n0": {
+     "V": 17.024588,
+     "phi": 1.0,
+     "end_mean": 15.342129,
+     "era_means": [
+      20.297797,
+      18.89444,
+      18.628306,
+      15.342129
+     ],
+     "pillars_last_cycle": {
+      "control": 51.820673,
+      "cycle": 19,
+      "industry": -55.353152,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -86.125346,
+      "population": 73.126364,
+      "technology": 0.0,
+      "total": 14.807438,
+      "va": -158.065736
+     }
+    },
+    "n1": {
+     "V": 15.964625,
+     "phi": 1.0,
+     "end_mean": 13.594391,
+     "era_means": [
+      20.298247,
+      18.896914,
+      18.142611,
+      13.594391
+     ],
+     "pillars_last_cycle": {
+      "control": 51.815513,
+      "cycle": 19,
+      "industry": -63.266368,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -90.702973,
+      "population": 73.056775,
+      "technology": 0.0,
+      "total": 12.810704,
+      "va": -180.670348
+     }
+    },
+    "n2": {
+     "V": 16.838926,
+     "phi": 1.0,
+     "end_mean": 15.118632,
+     "era_means": [
+      20.297676,
+      18.893225,
+      18.358329,
+      15.118632
+     ],
+     "pillars_last_cycle": {
+      "control": 51.820223,
+      "cycle": 19,
+      "industry": -55.161927,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -94.333942,
+      "population": 73.121808,
+      "technology": 0.0,
+      "total": 14.854015,
+      "va": -157.511172
+     }
+    },
+    "n3": {
+     "V": 16.721963,
+     "phi": 1.0,
+     "end_mean": 14.920047,
+     "era_means": [
+      20.297213,
+      18.892682,
+      18.318271,
+      14.920047
+     ],
+     "pillars_last_cycle": {
+      "control": 51.816443,
+      "cycle": 19,
+      "industry": -56.285196,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -144.891665,
+      "population": 73.075192,
+      "technology": 0.0,
+      "total": 14.560788,
+      "va": -160.669953
+     }
+    },
+    "n4": {
+     "V": 16.449811,
+     "phi": 0.999789,
+     "end_mean": 14.455224,
+     "era_means": [
+      20.29785,
+      18.926234,
+      18.215745,
+      14.455224
+     ],
+     "pillars_last_cycle": {
+      "control": 51.820463,
+      "cycle": 19,
+      "industry": -58.574099,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -93.268877,
+      "population": 73.129241,
+      "technology": 0.0,
+      "total": 14.002878,
+      "va": -167.261301
+     }
+    },
+    "n5": {
+     "V": 16.079314,
+     "phi": 1.0,
+     "end_mean": 13.806745,
+     "era_means": [
+      20.298114,
+      18.896314,
+      18.143078,
+      13.806745
+     ],
+     "pillars_last_cycle": {
+      "control": 51.815153,
+      "cycle": 19,
+      "industry": -61.027307,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -16.527791,
+      "population": 73.059284,
+      "technology": 0.0,
+      "total": 13.371025,
+      "va": -174.347205
+     }
+    },
+    "n6": {
+     "V": 16.332265,
+     "phi": 1.0,
+     "end_mean": 14.265807,
+     "era_means": [
+      20.296771,
+      18.892044,
+      18.167091,
+      14.265807
+     ],
+     "pillars_last_cycle": {
+      "control": 51.820373,
+      "cycle": 19,
+      "industry": -59.549472,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -174.890719,
+      "population": 73.12254,
+      "technology": 0.0,
+      "total": 13.757342,
+      "va": -169.966458
+     }
+    },
+    "n7": {
+     "V": 17.466261,
+     "phi": 1.0,
+     "end_mean": 15.814321,
+     "era_means": [
+      20.298038,
+      18.894358,
+      19.406141,
+      15.814321
+     ],
+     "pillars_last_cycle": {
+      "control": 51.817583,
+      "cycle": 19,
+      "industry": -55.823285,
+      "international": 0.0,
+      "loss_action": 0.0,
+      "loss_destroy": 0.0,
+      "net_transit": 0.0,
+      "nfa_ru": -181.264692,
+      "population": 73.089251,
+      "technology": 0.0,
+      "total": 14.680008,
+      "va": -159.313837
+     }
+    }
+   },
+   "exceptions": null,
+   "audit_failures": null
+  }
+ },
+ "determinism": {
+  "run": "legacy_simple",
+  "PYTHONHASHSEED_0": "156b88259323f42e90ed7314b46e5fc019bbe5eadd94428bb80d36a04526989f",
+  "PYTHONHASHSEED_12345": "156b88259323f42e90ed7314b46e5fc019bbe5eadd94428bb80d36a04526989f",
+  "identical": true,
+  "wall_seconds_12345": 269.157
+ },
+ "observations": [
+  "simple bot and no-command runs end within 1e-5 of each other on V: the reference bot issues few effective commands within 400 ticks",
+  "technology, international, loss_action, loss_destroy, net_transit are 0 for every nation in all three runs; industry/va negative",
+  "full_rules_accepted=false as expected: practice clock + 7 pending ActiveScale inputs"
+ ]
+}

@@ -1,0 +1,48 @@
+{
+  "problem": "sk_singularity",
+  "title": "双符奇点（The SK Singularity）",
+  "language": "C++20",
+  "submission_ext": ".cpp",
+  "compiler_flags": [
+    "-std=gnu++20",
+    "-O2",
+    "-pipe"
+  ],
+  "evaluation_protocol": "blind_combinator_synthesis_exact_dag",
+  "solver_time_limit_ms": 5000,
+  "solver_memory_limit_mb": 1024,
+  "limits": {
+    "min_N": 8,
+    "max_N": 24,
+    "min_arity": 1,
+    "max_arity": 4,
+    "max_expr_bytes": 4096,
+    "max_dag_nodes": 10000000,
+    "max_stack": 40000000
+  },
+  "protocol": {
+    "input_lines": [
+      "N a_S a_K V_max TL_ms",
+      "RHS_S",
+      "RHS_K",
+      "E_req (or '-')"
+    ],
+    "output_line": "Single valid SK full-binary expression E using S, K, (, ), optional spaces"
+  },
+  "scoring": {
+    "raw_metric": "L = log2(T(E) + 1) where T(E) is exact normal-order halting steps (0 if invalid/divergent/NL)",
+    "norm_formula": "100 * (L ** 0.85) / ((L ** 0.85) + (L_ref ** 0.85))",
+    "score_power": 0.85,
+    "singularity_threshold_log2": 64.0,
+    "suite_aggregation": "mean of per-case norm_score across 512 dynamically generated official cases",
+    "raw_aggregation": "mean and max of log2(T(E)+1) plus singularity_count (T >= 2^64 - 1)",
+    "max_score": 100,
+    "official_cases": 512,
+    "official_families": 8,
+    "cases_per_family": 64,
+    "official_budgets": [14, 18, 21, 24],
+    "dynamic_generation": "512 distinct OS CSPRNG 64-bit seeds across 8 orthogonal blind-rule/remnant families with live per-case L_ref anchor calibration",
+    "isomorphism_guard": "per-case CSPRNG 50% exact S<->K symbol swap",
+    "practice_cases": 14
+  }
+}

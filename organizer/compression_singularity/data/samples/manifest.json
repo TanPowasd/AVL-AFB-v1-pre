@@ -1,0 +1,78 @@
+{
+  "format": "compression_singularity_samples/1",
+  "cases": [
+    {
+      "name": "00_example",
+      "in": "00_example.in",
+      "out": "00_example.out",
+      "family": "example",
+      "length": 20,
+      "b_ref_bits": 56,
+      "is_sample": true
+    },
+    {
+      "name": "specimen_1",
+      "in": "specimen_1.in",
+      "family": "anonymous",
+      "length": 100000,
+      "b_ref_bits": 99728,
+      "is_sample": true
+    },
+    {
+      "name": "specimen_2",
+      "in": "specimen_2.in",
+      "family": "anonymous",
+      "length": 100000,
+      "b_ref_bits": 10896,
+      "is_sample": true
+    },
+    {
+      "name": "specimen_3",
+      "in": "specimen_3.in",
+      "family": "anonymous",
+      "length": 100000,
+      "b_ref_bits": 6480,
+      "is_sample": true
+    },
+    {
+      "name": "specimen_4",
+      "in": "specimen_4.in",
+      "family": "anonymous",
+      "length": 100000,
+      "b_ref_bits": 100032,
+      "is_sample": true
+    },
+    {
+      "name": "specimen_5",
+      "in": "specimen_5.in",
+      "family": "anonymous",
+      "length": 100000,
+      "b_ref_bits": 86728,
+      "is_sample": true
+    },
+    {
+      "name": "specimen_6",
+      "in": "specimen_6.in",
+      "family": "anonymous",
+      "length": 100000,
+      "b_ref_bits": 71112,
+      "is_sample": true
+    },
+    {
+      "name": "specimen_7",
+      "in": "specimen_7.in",
+      "family": "anonymous",
+      "length": 100000,
+      "b_ref_bits": 100032,
+      "is_sample": true
+    },
+    {
+      "name": "specimen_8",
+      "in": "specimen_8.in",
+      "family": "anonymous",
+      "length": 100000,
+      "b_ref_bits": 100032,
+      "is_sample": true
+    }
+  ]
+}

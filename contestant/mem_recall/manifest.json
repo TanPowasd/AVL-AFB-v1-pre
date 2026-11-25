@@ -1,0 +1,20 @@
+{
+  "format": "afb-contestant-kit/2",
+  "submission": "agents/submissions/my_agent.py",
+  "unified_submission": "../submissions/mem_recall.py",
+  "files": {
+    "agents/baselines/bm25.py": "1f3bd82b514ff44f846ad0c0d88ae19ce8db33bdd611cceb695e32ce04544341",
+    "agents/baselines/charoverlap.py": "59343daf72b4b0ed421ae43a35fbd73df758f06c6043380b6ac97fa5a8b5c2fc",
+    "agents/starter.py": "3af1100b0c6b16779db2a1b5350e216ac1d881a76c7f4112d787ccc8d69af28d",
+    "agents/submissions/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "config/format.json": "8dbe0cdd675492ccec6d2300105bd863213fd1d11cc1d11e39d6ee6b24b30de0",
+    "config/workspace.json": "9cf4ab89de1894470affdf88a76c64adc0bb0f95a07d131fe986f271c8b47963",
+    "data/SHA256SUMS.json": "85387f29cd41bdb91d5d8b231d63f389c781f40956d332be2dc861e74b4475fe",
+    "engine/policy.py": "318af2d54812d7965a1bd835128c02670a793f81e3fcc66a4ee9dc7f4bf4613b",
+    "engine/runner.py": "8df6ad7d4b1a1cf394f6172159d53f25fe19ec6eb862e3205fe5a4d59df61719",
+    "logs/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "README.md": "29d180873e34b3ef71411034d7bf2486e37b5f67e8a7d14f5dc2346e43f4b23c",
+    "results/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "scripts/spar.py": "a6632abca3b138e4fe70ea79fcf411161bb208aa067fbc31a27b63adaa084764"
+  }
+}

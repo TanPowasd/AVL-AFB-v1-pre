@@ -1,0 +1,72 @@
+{
+ "date": "2026-11-06",
+ "commit": "84842f1bcd6ba944a015ccbe25f0c066f0a4c13a",
+ "branch": "rift-war",
+ "note": "rift-war 收尾验证：400 tick 旧地图（seed 1000），PYTHONHASHSEED 0/12345 各跑一次；finalize_match 末尾 state.audit() 通过（rc=0）。练习时钟故 full_rules_accepted=false。四局与其他代理任务同机并发（2 vCPU，load≈14），wall 不代表单机速度，s/tick 以子进程 CPU 秒计。",
+ "runs": {
+  "none": {
+   "command": "python3 -m organizer.rift_era match --ticks 400 --legacy-map",
+   "state_hash_equal": true,
+   "by_hashseed": {
+    "PYTHONHASHSEED=0": {
+     "rc": 0,
+     "state_hash": "479f43d2b1749aaf06776bd8ca3aaf9f0698c3d362486b32f24a56932eb798af",
+     "engine_hash": "76392bd1af70a31bd641325692cf135dbc87c87c2e1bccdf7afc11769e38aef5",
+     "pending_rule_inputs": [],
+     "full_rules_accepted": false,
+     "ticks": 400,
+     "seed": 1000,
+     "map_version": "rift_spatial_stratified_v1",
+     "wall_seconds": 1766.472,
+     "cpu_seconds": 319.5,
+     "cpu_s_per_tick": 0.799
+    },
+    "PYTHONHASHSEED=12345": {
+     "rc": 0,
+     "state_hash": "479f43d2b1749aaf06776bd8ca3aaf9f0698c3d362486b32f24a56932eb798af",
+     "engine_hash": "76392bd1af70a31bd641325692cf135dbc87c87c2e1bccdf7afc11769e38aef5",
+     "pending_rule_inputs": [],
+     "full_rules_accepted": false,
+     "ticks": 400,
+     "seed": 1000,
+     "map_version": "rift_spatial_stratified_v1",
+     "wall_seconds": 1751.694,
+     "cpu_seconds": 317.8,
+     "cpu_s_per_tick": 0.794
+    }
+   }
+  },
+  "simple": {
+   "command": "python3 -m organizer.rift_era match --ticks 400 --legacy-map --bot simple",
+   "state_hash_equal": true,
+   "by_hashseed": {
+    "PYTHONHASHSEED=0": {
+     "rc": 0,
+     "state_hash": "90b8c7413932911498e3d7c6b5a9ef88cdf899031f693fefa26bd6428d987d2e",
+     "engine_hash": "76392bd1af70a31bd641325692cf135dbc87c87c2e1bccdf7afc11769e38aef5",
+     "pending_rule_inputs": [],
+     "full_rules_accepted": false,
+     "ticks": 400,
+     "seed": 1000,
+     "map_version": "rift_spatial_stratified_v1",
+     "wall_seconds": 1841.178,
+     "cpu_seconds": 332.1,
+     "cpu_s_per_tick": 0.83
+    },
+    "PYTHONHASHSEED=12345": {
+     "rc": 0,
+     "state_hash": "90b8c7413932911498e3d7c6b5a9ef88cdf899031f693fefa26bd6428d987d2e",
+     "engine_hash": "76392bd1af70a31bd641325692cf135dbc87c87c2e1bccdf7afc11769e38aef5",
+     "pending_rule_inputs": [],
+     "full_rules_accepted": false,
+     "ticks": 400,
+     "seed": 1000,
+     "map_version": "rift_spatial_stratified_v1",
+     "wall_seconds": 1846.112,
+     "cpu_seconds": 333.8,
+     "cpu_s_per_tick": 0.834
+    }
+   }
+  }
+ }
+}

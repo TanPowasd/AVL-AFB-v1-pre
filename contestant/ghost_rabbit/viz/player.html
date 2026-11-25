@@ -1,0 +1,921 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>天翼幽灵兔 · 艾森斯坦蜂窝交互回放器</title>
+<style>
+  :root {
+    --bg: #0b1020;
+    --panel: #131b31;
+    --panel-2: #192340;
+    --border: #263459;
+    --text: #e6edf7;
+    --muted: #8ea0c2;
+    --accent: #38bdf8;
+    --good: #34d399;
+    --warn: #fbbf24;
+    --bad: #f87171;
+    --purple: #a78bfa;
+    --pink: #f472b6;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.45;
+  }
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 12px 20px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 { margin: 0; font-size: 17px; letter-spacing: 0.4px; }
+  header .sub { color: var(--muted); font-size: 12px; }
+  .controls { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+  button, label.btn, select {
+    background: var(--panel-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 11px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  button:hover, label.btn:hover, select:hover { border-color: var(--accent); }
+  button.primary { background: #1d4ed8; border-color: #2563eb; }
+  input[type="file"] { display: none; }
+  main { max-width: 1460px; margin: 0 auto; padding: 14px 18px 30px; }
+  .dropzone {
+    border: 1.5px dashed var(--border);
+    border-radius: 10px;
+    padding: 16px;
+    text-align: center;
+    color: var(--muted);
+    background: rgba(19, 27, 49, 0.55);
+    margin-bottom: 14px;
+    font-size: 13px;
+  }
+  .dropzone.drag { border-color: var(--accent); color: var(--text); background: rgba(56, 189, 248, 0.08); }
+  .workspace {
+    display: grid;
+    grid-template-columns: 1fr 360px;
+    gap: 14px;
+    align-items: start;
+  }
+  @media (max-width: 1080px) { .workspace { grid-template-columns: 1fr; } }
+  .box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+    margin-bottom: 14px;
+  }
+  .box h2 { margin: 0 0 8px; font-size: 14px; color: var(--accent); display: flex; justify-content: space-between; align-items: center; }
+  .canvas-wrap {
+    position: relative;
+    width: 100%;
+    height: 620px;
+    background: #070b16;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  canvas { display: block; width: 100%; height: 100%; cursor: grab; }
+  canvas:active { cursor: grabbing; }
+  .overlay-legend {
+    position: absolute;
+    left: 10px;
+    bottom: 10px;
+    background: rgba(11, 16, 32, 0.86);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 10px;
+    font-size: 11px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    pointer-events: none;
+  }
+  .lg-item { display: inline-flex; align-items: center; gap: 5px; color: var(--muted); }
+  .dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; }
+  .hud-coords {
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    background: rgba(11, 16, 32, 0.84);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 5px 9px;
+    font-size: 11px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    color: var(--muted);
+    pointer-events: none;
+  }
+  .playback-bar {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 8px;
+    margin-top: 10px;
+  }
+  .scrubber { flex: 1 1 220px; accent-color: var(--accent); }
+  .kv-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+  .kv {
+    background: var(--panel-2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 7px 9px;
+  }
+  .kv .k { font-size: 11px; color: var(--muted); }
+  .kv .v { font-size: 15px; font-weight: 700; font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; margin-top: 1px; }
+  .bucket-bar {
+    height: 8px;
+    background: #0d1428;
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 5px;
+    border: 1px solid var(--border);
+  }
+  .bucket-fill { height: 100%; background: linear-gradient(90deg, #38bdf8, #34d399); transition: width 0.12s; }
+  .checks { display: flex; flex-wrap: wrap; gap: 10px; font-size: 12px; color: var(--muted); margin-top: 8px; }
+  .checks label { display: inline-flex; align-items: center; gap: 4px; cursor: pointer; }
+  table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  th, td { padding: 6px 6px; border-bottom: 1px solid var(--border); text-align: right; }
+  th:first-child, td:first-child { text-align: left; }
+  tr.sel { cursor: pointer; }
+  tr.sel:hover { background: rgba(56, 189, 248, 0.08); }
+  tr.active { background: rgba(56, 189, 248, 0.18); }
+  .pill { display: inline-block; padding: 1px 6px; border-radius: 999px; font-size: 11px; font-weight: 600; }
+  .pill.ac { background: rgba(52, 211, 153, 0.16); color: var(--good); }
+  .pill.err { background: rgba(248, 113, 113, 0.16); color: var(--bad); }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 12px; }
+  .turn-log {
+    max-height: 170px;
+    overflow-y: auto;
+    background: #090e1d;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 11.5px;
+    color: #cbd5e1;
+  }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>天翼幽灵兔：四重奇点追截战 · 艾森斯坦蜂窝交互回放器</h1>
+    <div class="sub">可视化查看艾森斯坦素数跳板、Local 3-AP-Free 陷阱阵、幽灵弹开、声呐测距与信念云演化</div>
+  </div>
+  <div class="controls">
+    <label class="btn primary" for="fileInput">打开回放 JSON</label>
+    <input id="fileInput" type="file" accept=".json" />
+    <button id="btnDemoSample">加载内置 4 回合样例</button>
+    <button id="btnAutoDemo">尝试载入 replays/replay_demo.json</button>
+  </div>
+</header>
+
+<main>
+  <div id="dropzone" class="dropzone">
+    将 <code>scripts/record_replay.py</code> 生成的回放文件（如 <code>replays/replay_demo.json</code>）拖拽到此处，或点击右上角“打开回放 JSON”。
+  </div>
+
+  <div class="workspace">
+    <div class="box">
+      <h2>
+        <span id="stageTitle">艾森斯坦蜂窝棋盘 H_ω</span>
+        <span class="controls">
+          <button id="btnFit">缩放全局</button>
+          <button id="btnFollow">跟随兔子: 开</button>
+          <button id="btnResetCam">居中原点</button>
+        </span>
+      </h2>
+      <div class="canvas-wrap">
+        <canvas id="board"></canvas>
+        <div id="hudCoords" class="hud-coords">悬停格点: -</div>
+        <div class="overlay-legend">
+          <span class="lg-item"><span class="dot" style="background:#fbbf24"></span>艾森斯坦素数 P_ω</span>
+          <span class="lg-item"><span class="dot" style="background:#38bdf8"></span>已固化陷阱 F</span>
+          <span class="lg-item"><span class="dot" style="background:#2dd4bf"></span>本轮新落陷阱</span>
+          <span class="lg-item"><span class="dot" style="background:#f87171"></span>幽灵弹开</span>
+          <span class="lg-item"><span class="dot" style="background:#f472b6"></span>幽灵兔见证轨迹</span>
+          <span class="lg-item"><span class="dot" style="background:#34d399"></span>信念候选云</span>
+          <span class="lg-item"><span class="dot" style="background:#a78bfa"></span>声呐探测</span>
+        </div>
+      </div>
+
+      <div class="playback-bar">
+        <button id="btnPlay" class="primary">播放</button>
+        <button id="btnPrev">上一步</button>
+        <button id="btnNext">下一步</button>
+        <button id="btnFirst">起点</button>
+        <button id="btnLast">终局</button>
+        <input id="scrubber" class="scrubber" type="range" min="0" max="0" value="0" />
+        <span id="frameLabel" class="mono">T 0 / 0</span>
+        <select id="speedSel" title="回放速度">
+          <option value="1">1 帧/秒</option>
+          <option value="4" selected>4 帧/秒</option>
+          <option value="12">12 帧/秒</option>
+          <option value="30">30 帧/秒</option>
+          <option value="60">60 帧/秒</option>
+        </select>
+      </div>
+
+      <div class="checks">
+        <label><input type="checkbox" id="chkPrimes" checked /> 显示素数洞穴 P_ω</label>
+        <label><input type="checkbox" id="chkBelief" checked /> 显示信念云</label>
+        <label><input type="checkbox" id="chkTrail" checked /> 显示见证轨迹</label>
+        <label><input type="checkbox" id="chkSonar" checked /> 显示声呐与距环</label>
+        <label><input type="checkbox" id="chkCoords" /> 显示格点坐标</label>
+      </div>
+    </div>
+
+    <div>
+      <div class="box">
+        <h2>对局列表</h2>
+        <div style="max-height: 210px; overflow-y: auto;">
+          <table>
+            <thead>
+              <tr><th>对局</th><th>判决</th><th>速率</th><th>回合</th><th>陷阱</th><th>Norm</th></tr>
+            </thead>
+            <tbody id="matchRows"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <div class="box">
+        <h2>当前回合遥测</h2>
+        <div class="kv-grid">
+          <div class="kv"><div class="k">声明速率 q = P'/Q'</div><div id="kvRate" class="v">-</div></div>
+          <div class="kv"><div class="k">Raw / Norm 分数</div><div id="kvScore" class="v">-</div></div>
+          <div class="kv"><div class="k">累计固化陷阱 |F|</div><div id="kvTraps" class="v">0 / 4000</div></div>
+          <div class="kv"><div class="k">信念集大小 |B|</div><div id="kvBelief" class="v">1</div></div>
+          <div class="kv"><div class="k">声呐回传 (dist / fl / bn)</div><div id="kvObs" class="v">-</div></div>
+          <div class="kv"><div class="k">兔子见证坐标 r_t</div><div id="kvRpos" class="v">(1, 0)</div></div>
+        </div>
+        <div style="margin-top: 9px;">
+          <div class="mono" style="display:flex;justify-content:space-between;color:var(--muted);">
+            <span>有理漏桶代币 (tokens / 2Q')</span>
+            <span id="kvTok">0 -> 0 / 0</span>
+          </div>
+          <div class="bucket-bar"><div id="bucketFill" class="bucket-fill" style="width:0%"></div></div>
+        </div>
+      </div>
+
+      <div class="box">
+        <h2>本轮指令与事件详情</h2>
+        <div id="turnDetail" class="turn-log">尚未加载回放。</div>
+      </div>
+    </div>
+  </div>
+</main>
+
+<script>
+(() => {
+  const SQRT3_2 = Math.sqrt(3) / 2;
+
+  function mod3(x) {
+    const r = x % 3;
+    return r < 0 ? r + 3 : r;
+  }
+
+  function validGrid(a, b) {
+    return mod3(a + b) !== 0;
+  }
+
+  function ptToXY(a, b) {
+    return { x: a - 0.5 * b, y: -SQRT3_2 * b };
+  }
+
+  function xyToApproxAB(x, y) {
+    const b = Math.round(-y / SQRT3_2);
+    const a = Math.round(x + 0.5 * b);
+    return [a, b];
+  }
+
+  function toC3(a, b) {
+    const d = mod3(a + b);
+    return [(2 * a - b + d) / 3, (2 * b - a + d) / 3, (-a - b + d) / 3];
+  }
+
+  function hexDist(a1, b1, a2, b2) {
+    const u = toC3(a1, b1), v = toC3(a2, b2);
+    return Math.abs(u[0] - v[0]) + Math.abs(u[1] - v[1]) + Math.abs(u[2] - v[2]);
+  }
+
+  // 精确素数判定（覆盖显示视口内所有范数）
+  const primeCache = new Map();
+  function isPrimeInt(n) {
+    if (n < 2) return false;
+    if (primeCache.has(n)) return primeCache.get(n);
+    if (n % 2 === 0) { const r = n === 2; primeCache.set(n, r); return r; }
+    if (n % 3 === 0) { const r = n === 3; primeCache.set(n, r); return r; }
+    for (let i = 5; i * i <= n; i += 6) {
+      if (n % i === 0 || n % (i + 2) === 0) { primeCache.set(n, false); return false; }
+    }
+    primeCache.set(n, true);
+    return true;
+  }
+
+  function isEisensteinPrime(a, b) {
+    if (mod3(a + b) === 0) return false;
+    if (a === 0 || b === 0 || a === b) {
+      const r = Math.max(Math.abs(a), Math.abs(b));
+      return r % 3 === 2 && isPrimeInt(r);
+    }
+    const norm = a * a - a * b + b * b;
+    return norm % 3 === 1 && isPrimeInt(norm);
+  }
+
+  const N1_ODD = [[1, 0], [0, 1], [-1, -1]];
+
+  // 内置核验过的 4 回合样例（离线开箱即看）
+  const BUILTIN_SAMPLE = {
+    format: "ghost_rabbit_replay_bundle/1",
+    problem: "ghost_rabbit",
+    title: "内置 4 回合核验样例（q = 3/2 = 1.50）",
+    submission: "blitz_150_sample.cpp",
+    matches: [{
+      name: "Sample_4Turns (q=3/2)",
+      strategy: "Sample_Blitz",
+      seed: 0,
+      verdict: "AC",
+      message: "Captured on turn 4 with 5 traps",
+      P_red: 3, Q_red: 2, q: 1.5,
+      captured: true, singularity: false,
+      raw_score: 50.0, norm_score: 20.0,
+      turns: 4, traps_placed: 5, bounces: 0, prime_flashes: 0,
+      witness_path: [[1,0],[1,1],[1,0],[1,1]],
+      frames: [
+        { t: 1, tok0: 3, tok1: 1, att: [[2,0]], land: [[2,0]], sonar: [0,100000], st: 0, dist: 133333, fl: 0, bn: 0, r0: [1,0], r1: [1,1], bsz: 1, bel: [[1,1]] },
+        { t: 2, tok0: 4, tok1: 0, att: [[2,2],[0,1]], land: [[2,2],[0,1]], sonar: [1,0], st: 0, dist: 0, fl: 0, bn: 0, r0: [1,1], r1: [1,0], bsz: 1, bel: [[1,0]] },
+        { t: 3, tok0: 3, tok1: 1, att: [[0,-1]], land: [[0,-1]], sonar: [1,1], st: 0, dist: 0, fl: 0, bn: 0, r0: [1,0], r1: [1,1], bsz: 1, bel: [[1,1]] },
+        { t: 4, tok0: 4, tok1: 2, att: [[1,0]], land: [[1,0]], sonar: [1,0], st: 1, dist: 0, fl: 0, bn: 0, r0: [1,1], r1: [1,1], bsz: 0, bel: [] },
+      ]
+    }]
+  };
+
+  let matches = [];
+  let curMatchIdx = 0;
+  let curFrame = 0; // 0 = 初始态, 1..N = frames[curFrame-1]
+  let playing = false;
+  let playTimer = null;
+  let autoFollow = true;
+
+  // 相机状态（世界坐标 -> 画布像素）
+  const cam = { x: 0.5, y: 0, scale: 34 };
+  let dragging = false;
+  let dragStart = { x: 0, y: 0, cx: 0, cy: 0 };
+
+  const canvas = document.getElementById("board");
+  const ctx = canvas.getContext("2d");
+
+  function resizeCanvas() {
+    const rect = canvas.parentElement.getBoundingClientRect();
+    const dpr = window.devicePixelRatio || 1;
+    canvas.width = Math.max(100, Math.floor(rect.width * dpr));
+    canvas.height = Math.max(100, Math.floor(rect.height * dpr));
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    draw();
+  }
+  window.addEventListener("resize", resizeCanvas);
+
+  function worldToScreen(wx, wy) {
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    return {
+      sx: w * 0.5 + (wx - cam.x) * cam.scale,
+      sy: h * 0.5 + (wy - cam.y) * cam.scale,
+    };
+  }
+
+  function screenToWorld(sx, sy) {
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    return {
+      wx: cam.x + (sx - w * 0.5) / cam.scale,
+      wy: cam.y + (sy - h * 0.5) / cam.scale,
+    };
+  }
+
+  function currentMatch() {
+    return matches[curMatchIdx] || null;
+  }
+
+  function fitMatch() {
+    const m = currentMatch();
+    if (!m) return;
+    let minX = -4, maxX = 4, minY = -4, maxY = 4;
+    const eat = (pt) => {
+      const p = ptToXY(pt[0], pt[1]);
+      if (p.x < minX) minX = p.x;
+      if (p.x > maxX) maxX = p.x;
+      if (p.y < minY) minY = p.y;
+      if (p.y > maxY) maxY = p.y;
+    };
+    eat([1, 0]);
+    for (const fr of (m.frames || [])) {
+      for (const p of (fr.land || [])) eat(p);
+      if (fr.r1) eat(fr.r1);
+    }
+    const w = canvas.clientWidth || 800;
+    const h = canvas.clientHeight || 600;
+    const spanX = Math.max(6, maxX - minX + 4);
+    const spanY = Math.max(6, maxY - minY + 4);
+    cam.x = 0.5 * (minX + maxX);
+    cam.y = 0.5 * (minY + maxY);
+    cam.scale = Math.max(4, Math.min(54, Math.min(w / spanX, h / spanY) * 0.92));
+    draw();
+  }
+
+  function loadPayload(obj) {
+    stopPlay();
+    if (obj && obj.format === "ghost_rabbit_replay_bundle/1" && Array.isArray(obj.matches)) {
+      matches = obj.matches;
+    } else if (obj && obj.format === "ghost_rabbit_replay/1") {
+      matches = [obj];
+    } else {
+      alert("无法识别的回放 JSON 格式（需要 ghost_rabbit_replay/1 或 ghost_rabbit_replay_bundle/1）。");
+      return;
+    }
+    curMatchIdx = 0;
+    renderMatchTable();
+    selectMatch(0);
+  }
+
+  function escHtml(s) {
+    return String(s).replace(/[&<>"']/g, ch => (
+      ch === "&" ? "&amp;" : ch === "<" ? "&lt;" : ch === ">" ? "&gt;" : ch === '"' ? "&quot;" : "&#39;"
+    ));
+  }
+
+  function renderMatchTable() {
+    const tb = document.getElementById("matchRows");
+    tb.innerHTML = "";
+    matches.forEach((m, idx) => {
+      const tr = document.createElement("tr");
+      tr.className = "sel" + (idx === curMatchIdx ? " active" : "");
+      const pq = m.Q_red > 0 ? `${m.P_red}/${m.Q_red}` : "-";
+      const pillCls = m.verdict === "AC" ? "ac" : "err";
+      const label = escHtml(m.name || m.strategy || ("Match #" + (idx + 1)));
+      const verd = escHtml(m.verdict || "?");
+      tr.innerHTML = `
+        <td>${label}</td>
+        <td><span class="pill ${pillCls}">${verd}</span></td>
+        <td class="mono">${escHtml(pq)}</td>
+        <td class="mono">${Number(m.turns ?? 0)}</td>
+        <td class="mono">${Number(m.traps_placed ?? 0)}</td>
+        <td class="mono">${Number(m.norm_score || 0).toFixed(2)}</td>
+      `;
+      tr.onclick = () => selectMatch(idx);
+      tb.appendChild(tr);
+    });
+  }
+
+  function selectMatch(idx) {
+    stopPlay();
+    curMatchIdx = idx;
+    curFrame = 0;
+    renderMatchTable();
+    const m = currentMatch();
+    const n = (m && m.frames) ? m.frames.length : 0;
+    const sc = document.getElementById("scrubber");
+    sc.max = String(n);
+    sc.value = "0";
+    document.getElementById("stageTitle").textContent =
+      `艾森斯坦蜂窝棋盘 H_ω · ${m ? (m.name || m.strategy) : ""}`;
+    fitMatch();
+    updateTelemetry();
+    draw();
+  }
+
+  function setFrame(f) {
+    const m = currentMatch();
+    if (!m) return;
+    const n = (m.frames || []).length;
+    curFrame = Math.max(0, Math.min(n, f));
+    document.getElementById("scrubber").value = String(curFrame);
+    if (autoFollow && curFrame > 0) {
+      const fr = m.frames[curFrame - 1];
+      const rp = fr.r1 || fr.r0 || [1, 0];
+      const p = ptToXY(rp[0], rp[1]);
+      cam.x = cam.x * 0.72 + p.x * 0.28;
+      cam.y = cam.y * 0.72 + p.y * 0.28;
+    }
+    updateTelemetry();
+    draw();
+  }
+
+  function updateTelemetry() {
+    const m = currentMatch();
+    if (!m) return;
+    const frames = m.frames || [];
+    const n = frames.length;
+    document.getElementById("frameLabel").textContent = `T ${curFrame} / ${n}`;
+    const pq = m.Q_red > 0 ? `${m.P_red}/${m.Q_red} (${Number(m.q || 0).toFixed(3)})` : "-";
+    document.getElementById("kvRate").textContent = pq;
+    const rawStr = m.singularity ? "INF" : Number(m.raw_score || 0).toFixed(2);
+    document.getElementById("kvScore").textContent = `${rawStr} / ${Number(m.norm_score || 0).toFixed(2)}`;
+
+    let trapsCnt = 0;
+    for (let i = 0; i < curFrame; ++i) trapsCnt += (frames[i].land || []).length;
+    document.getElementById("kvTraps").textContent = `${trapsCnt} / 4000`;
+
+    const cap = 2 * (m.Q_red || 1);
+    if (curFrame === 0) {
+      document.getElementById("kvBelief").textContent = "1";
+      document.getElementById("kvObs").textContent = "开局准备";
+      document.getElementById("kvRpos").textContent = "(1, 0)";
+      document.getElementById("kvTok").textContent = `0 / ${cap}`;
+      document.getElementById("bucketFill").style.width = "0%";
+      document.getElementById("turnDetail").textContent =
+        `对局：${m.name || m.strategy}\n种子：${m.seed}\n判决：${m.verdict} (${m.message || ""})\n初始位置：r_0 = (1, 0)（非艾森斯坦素数，3 条出边）`;
+      return;
+    }
+    const fr = frames[curFrame - 1];
+    document.getElementById("kvBelief").textContent = String(fr.bsz ?? 0);
+    document.getElementById("kvObs").textContent =
+      fr.st === 1 ? "CAPTURED!" : `d=${fr.dist} fl=${fr.fl} bn=${fr.bn}`;
+    const rp = fr.r1 || fr.r0 || [1, 0];
+    document.getElementById("kvRpos").textContent = `(${rp[0]}, ${rp[1]})`;
+    document.getElementById("kvTok").textContent = `${fr.tok0} -> ${fr.tok1} / ${cap}`;
+    document.getElementById("bucketFill").style.width = `${Math.min(100, (fr.tok1 / Math.max(1, cap)) * 100).toFixed(1)}%`;
+
+    const attStr = (fr.att || []).map(p => `(${p[0]},${p[1]})`).join(", ") || "无";
+    const landStr = (fr.land || []).map(p => `(${p[0]},${p[1]})`).join(", ") || "无";
+    const snStr = fr.sonar ? `(${fr.sonar[0]}, ${fr.sonar[1]})` : "-";
+    const jumpNote = fr.fl === 1 ? "★ 素数起跳（p=2 天使翼展开）" : "普通 1-步移动";
+    const bounceNote = fr.bn > 0 ? `⚡ 命中第 ${fr.bn} 枚陷阱触发幽灵弹开！` : "无弹开";
+    const statusNote = fr.st === 1 ? "🏆 捕获成功（M_t = ∅，status = 1）" : `继续（dist = ${fr.dist}）`;
+    document.getElementById("turnDetail").textContent =
+      `第 ${fr.t} 轮 · ${statusNote}\n` +
+      `尝试落子：${attStr}\n` +
+      `实际固化：${landStr}\n` +
+      `声呐探测：${snStr}\n` +
+      `移动事件：(${fr.r0[0]},${fr.r0[1]}) -> (${fr.r1[0]},${fr.r1[1]}) | ${jumpNote}\n` +
+      `弹开事件：${bounceNote}`;
+  }
+
+  function draw() {
+    const w = canvas.clientWidth, h = canvas.clientHeight;
+    ctx.clearRect(0, 0, w, h);
+    ctx.fillStyle = "#070b16";
+    ctx.fillRect(0, 0, w, h);
+
+    const showPrimes = document.getElementById("chkPrimes").checked;
+    const showBelief = document.getElementById("chkBelief").checked;
+    const showTrail = document.getElementById("chkTrail").checked;
+    const showSonar = document.getElementById("chkSonar").checked;
+    const showCoords = document.getElementById("chkCoords").checked;
+
+    const tl = screenToWorld(0, 0);
+    const br = screenToWorld(w, h);
+    const bMin = Math.floor(-br.wy / SQRT3_2) - 2;
+    const bMax = Math.ceil(-tl.wy / SQRT3_2) + 2;
+    const aMin = Math.floor(tl.wx + 0.5 * Math.min(bMin, bMax)) - 3;
+    const aMax = Math.ceil(br.wx + 0.5 * Math.max(bMin, bMax)) + 3;
+
+    const gridSpan = (aMax - aMin) * (bMax - bMin);
+    const drawFullGrid = gridSpan <= 18000 && cam.scale >= 7.5;
+
+    // 1. 背景蜂窝网格边与素数洞穴
+    if (drawFullGrid) {
+      ctx.strokeStyle = "rgba(56, 82, 130, 0.28)";
+      ctx.lineWidth = Math.max(0.7, Math.min(1.5, cam.scale * 0.04));
+      ctx.beginPath();
+      for (let b = bMin; b <= bMax; ++b) {
+        for (let a = aMin; a <= aMax; ++a) {
+          if (mod3(a + b) !== 1) continue;
+          const p0 = ptToXY(a, b);
+          const s0 = worldToScreen(p0.x, p0.y);
+          for (const [da, db] of N1_ODD) {
+            const p1 = ptToXY(a + da, b + db);
+            const s1 = worldToScreen(p1.x, p1.y);
+            ctx.moveTo(s0.sx, s0.sy);
+            ctx.lineTo(s1.sx, s1.sy);
+          }
+        }
+      }
+      ctx.stroke();
+
+      if (showPrimes) {
+        const prR = Math.max(2.0, Math.min(6.0, cam.scale * 0.16));
+        ctx.fillStyle = "rgba(251, 191, 36, 0.58)";
+        for (let b = bMin; b <= bMax; ++b) {
+          for (let a = aMin; a <= aMax; ++a) {
+            if (!validGrid(a, b)) continue;
+            if (!isEisensteinPrime(a, b)) continue;
+            const p = ptToXY(a, b);
+            const s = worldToScreen(p.x, p.y);
+            if (s.sx < -10 || s.sx > w + 10 || s.sy < -10 || s.sy > h + 10) continue;
+            ctx.beginPath();
+            ctx.moveTo(s.sx, s.sy - prR);
+            ctx.lineTo(s.sx + prR, s.sy);
+            ctx.lineTo(s.sx, s.sy + prR);
+            ctx.lineTo(s.sx - prR, s.sy);
+            ctx.closePath();
+            ctx.fill();
+          }
+        }
+      }
+
+      if (showCoords && cam.scale >= 28) {
+        ctx.fillStyle = "rgba(142, 160, 194, 0.55)";
+        ctx.font = "10px ui-monospace, Consolas, monospace";
+        ctx.textAlign = "center";
+        for (let b = bMin; b <= bMax; ++b) {
+          for (let a = aMin; a <= aMax; ++a) {
+            if (!validGrid(a, b)) continue;
+            const p = ptToXY(a, b);
+            const s = worldToScreen(p.x, p.y);
+            ctx.fillText(`${a},${b}`, s.sx, s.sy + 13);
+          }
+        }
+      }
+    }
+
+    // 标出起点 r_0 = (1, 0)
+    {
+      const p0 = ptToXY(1, 0);
+      const s0 = worldToScreen(p0.x, p0.y);
+      ctx.strokeStyle = "rgba(148, 163, 184, 0.6)";
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(s0.sx, s0.sy, Math.max(5, cam.scale * 0.28), 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    const m = currentMatch();
+    if (!m) return;
+    const frames = m.frames || [];
+    const fr = curFrame > 0 ? frames[curFrame - 1] : null;
+
+    // 2. 收集已固化陷阱（区分历史陷阱与本轮新落陷阱）
+    const trapR = Math.max(2.6, Math.min(11, cam.scale * 0.30));
+    const drawHexTrap = (a, b, fill, stroke) => {
+      const p = ptToXY(a, b);
+      const s = worldToScreen(p.x, p.y);
+      if (s.sx < -20 || s.sx > w + 20 || s.sy < -20 || s.sy > h + 20) return;
+      ctx.beginPath();
+      for (let k = 0; k < 6; ++k) {
+        const ang = (Math.PI / 3) * k + Math.PI / 6;
+        const x = s.sx + trapR * Math.cos(ang);
+        const y = s.sy + trapR * Math.sin(ang);
+        if (k === 0) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.fillStyle = fill;
+      ctx.fill();
+      if (stroke) {
+        ctx.strokeStyle = stroke;
+        ctx.lineWidth = 1.2;
+        ctx.stroke();
+      }
+    };
+
+    for (let i = 0; i < Math.max(0, curFrame - 1); ++i) {
+      for (const pt of (frames[i].land || [])) {
+        drawHexTrap(pt[0], pt[1], "rgba(56, 189, 248, 0.78)", "rgba(14, 116, 144, 0.9)");
+      }
+    }
+    if (fr) {
+      for (const pt of (fr.land || [])) {
+        drawHexTrap(pt[0], pt[1], "#2dd4bf", "#ffffff");
+      }
+      if (fr.bn > 0 && fr.att && fr.att[fr.bn - 1]) {
+        const bp = fr.att[fr.bn - 1];
+        const p = ptToXY(bp[0], bp[1]);
+        const s = worldToScreen(p.x, p.y);
+        ctx.strokeStyle = "#f87171";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(s.sx, s.sy, trapR * 1.6, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+    }
+
+    // 3. 信念候选云
+    if (showBelief && fr && Array.isArray(fr.bel)) {
+      const bR = Math.max(3.5, Math.min(12, cam.scale * 0.34));
+      for (const pt of fr.bel) {
+        const p = ptToXY(pt[0], pt[1]);
+        const s = worldToScreen(p.x, p.y);
+        ctx.fillStyle = "rgba(52, 211, 153, 0.32)";
+        ctx.strokeStyle = "rgba(52, 211, 153, 0.85)";
+        ctx.lineWidth = 1.2;
+        ctx.beginPath();
+        ctx.arc(s.sx, s.sy, bR, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.stroke();
+      }
+    }
+
+    // 4. 声呐点与探测方向 / 局部等距环
+    if (showSonar && fr && fr.sonar) {
+      const [sa, sb] = fr.sonar;
+      const sp = ptToXY(sa, sb);
+      const ss = worldToScreen(sp.x, sp.y);
+      const isFar = Math.abs(sa) > 2000 || Math.abs(sb) > 2000;
+      if (isFar) {
+        // 远场投影声呐：从兔子位置向声呐方向绘制紫色渐变方向射线
+        const rp = ptToXY(fr.r1[0], fr.r1[1]);
+        const rs = worldToScreen(rp.x, rp.y);
+        const dx = sp.x - rp.x, dy = sp.y - rp.y;
+        const len = Math.hypot(dx, dy) || 1;
+        ctx.save();
+        ctx.strokeStyle = "rgba(167, 139, 250, 0.75)";
+        ctx.setLineDash([6, 4]);
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.moveTo(rs.sx, rs.sy);
+        ctx.lineTo(rs.sx + (dx / len) * 90, rs.sy + (dy / len) * 90);
+        ctx.stroke();
+        ctx.restore();
+      } else {
+        ctx.save();
+        ctx.strokeStyle = "#a78bfa";
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.arc(ss.sx, ss.sy, Math.max(4, cam.scale * 0.22), 0, Math.PI * 2);
+        ctx.stroke();
+        if (fr.dist > 0 && fr.dist <= 60) {
+          ctx.setLineDash([4, 4]);
+          ctx.strokeStyle = "rgba(167, 139, 250, 0.45)";
+          ctx.beginPath();
+          ctx.arc(ss.sx, ss.sy, fr.dist * 0.866 * cam.scale, 0, Math.PI * 2);
+          ctx.stroke();
+        }
+        ctx.restore();
+      }
+    }
+
+    // 5. 兔子见证轨迹
+    if (showTrail && curFrame > 0) {
+      ctx.beginPath();
+      const firstPt = frames[0].r0 || [1, 0];
+      const f0 = worldToScreen(ptToXY(firstPt[0], firstPt[1]).x, ptToXY(firstPt[0], firstPt[1]).y);
+      ctx.moveTo(f0.sx, f0.sy);
+      for (let i = 0; i < curFrame; ++i) {
+        const pt = frames[i].r1 || frames[i].r0;
+        const xy = ptToXY(pt[0], pt[1]);
+        const sc = worldToScreen(xy.x, xy.y);
+        ctx.lineTo(sc.sx, sc.sy);
+      }
+      ctx.strokeStyle = "rgba(244, 114, 182, 0.62)";
+      ctx.lineWidth = Math.max(1.5, Math.min(3.5, cam.scale * 0.08));
+      ctx.stroke();
+    }
+
+    // 6. 当前兔子位置（素数天使翼光环标于起跳格 r0，捕获终局光环标于 r1）
+    {
+      const rpt = fr ? (fr.r1 || fr.r0) : [1, 0];
+      const rp = ptToXY(rpt[0], rpt[1]);
+      const rs = worldToScreen(rp.x, rp.y);
+      const rRad = Math.max(4.5, Math.min(13, cam.scale * 0.34));
+      if (fr && fr.fl === 1) {
+        const fpt = fr.r0 || rpt;
+        const fp = ptToXY(fpt[0], fpt[1]);
+        const fs = worldToScreen(fp.x, fp.y);
+        ctx.strokeStyle = "#fbbf24";
+        ctx.lineWidth = 2.5;
+        ctx.beginPath();
+        ctx.arc(fs.sx, fs.sy, rRad * 1.85, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      if (fr && fr.st === 1) {
+        ctx.strokeStyle = "#34d399";
+        ctx.lineWidth = 3.2;
+        ctx.beginPath();
+        ctx.arc(rs.sx, rs.sy, rRad * 2.1, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.fillStyle = "#f472b6";
+      ctx.strokeStyle = "#ffffff";
+      ctx.lineWidth = 1.8;
+      ctx.beginPath();
+      ctx.arc(rs.sx, rs.sy, rRad, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.stroke();
+    }
+  }
+
+  // 播放控制
+  function stopPlay() {
+    playing = false;
+    if (playTimer) { clearInterval(playTimer); playTimer = null; }
+    document.getElementById("btnPlay").textContent = "播放";
+  }
+
+  function startPlay() {
+    const m = currentMatch();
+    if (!m || !(m.frames || []).length) return;
+    if (curFrame >= m.frames.length) curFrame = 0;
+    playing = true;
+    document.getElementById("btnPlay").textContent = "暂停";
+    const fps = Number(document.getElementById("speedSel").value) || 4;
+    playTimer = setInterval(() => {
+      const n = currentMatch().frames.length;
+      if (curFrame >= n) { stopPlay(); return; }
+      setFrame(curFrame + 1);
+    }, Math.max(16, Math.floor(1000 / fps)));
+  }
+
+  document.getElementById("btnPlay").onclick = () => playing ? stopPlay() : startPlay();
+  document.getElementById("speedSel").onchange = () => { if (playing) { stopPlay(); startPlay(); } };
+  document.getElementById("btnPrev").onclick = () => { stopPlay(); setFrame(curFrame - 1); };
+  document.getElementById("btnNext").onclick = () => { stopPlay(); setFrame(curFrame + 1); };
+  document.getElementById("btnFirst").onclick = () => { stopPlay(); setFrame(0); };
+  document.getElementById("btnLast").onclick = () => {
+    stopPlay();
+    const m = currentMatch();
+    if (m) setFrame((m.frames || []).length);
+  };
+  document.getElementById("scrubber").oninput = (e) => { stopPlay(); setFrame(Number(e.target.value)); };
+  document.getElementById("btnFit").onclick = () => fitMatch();
+  document.getElementById("btnResetCam").onclick = () => { cam.x = 0.5; cam.y = 0; cam.scale = 34; draw(); };
+  document.getElementById("btnFollow").onclick = (e) => {
+    autoFollow = !autoFollow;
+    e.target.textContent = `跟随兔子: ${autoFollow ? "开" : "关"}`;
+  };
+  ["chkPrimes", "chkBelief", "chkTrail", "chkSonar", "chkCoords"].forEach(id => {
+    document.getElementById(id).onchange = () => draw();
+  });
+
+  // 鼠标拖拽与缩放
+  canvas.addEventListener("mousedown", (e) => {
+    dragging = true;
+    dragStart = { x: e.clientX, y: e.clientY, cx: cam.x, cy: cam.y };
+  });
+  window.addEventListener("mouseup", () => { dragging = false; });
+  canvas.addEventListener("mousemove", (e) => {
+    const rect = canvas.getBoundingClientRect();
+    const sx = e.clientX - rect.left, sy = e.clientY - rect.top;
+    if (dragging) {
+      cam.x = dragStart.cx - (e.clientX - dragStart.x) / cam.scale;
+      cam.y = dragStart.cy - (e.clientY - dragStart.y) / cam.scale;
+      draw();
+      return;
+    }
+    const w = screenToWorld(sx, sy);
+    const [a, b] = xyToApproxAB(w.wx, w.wy);
+    const valid = validGrid(a, b);
+    const ep = valid && isEisensteinPrime(a, b);
+    document.getElementById("hudCoords").textContent =
+      valid ? `格点 (${a}, ${b}) · ${ep ? "素数 P_ω" : "普通格"}` : `非格点 (${a}, ${b})`;
+  });
+  canvas.addEventListener("wheel", (e) => {
+    e.preventDefault();
+    const factor = e.deltaY < 0 ? 1.15 : 1 / 1.15;
+    cam.scale = Math.max(3, Math.min(90, cam.scale * factor));
+    draw();
+  }, { passive: false });
+
+  // 文件打开与拖拽
+  function readFileObj(file) {
+    const reader = new FileReader();
+    reader.onload = () => {
+      try { loadPayload(JSON.parse(String(reader.result))); }
+      catch (err) { alert("JSON 解析失败：" + err); }
+    };
+    reader.readAsText(file, "utf-8");
+  }
+  document.getElementById("fileInput").onchange = (e) => {
+    if (e.target.files && e.target.files[0]) readFileObj(e.target.files[0]);
+  };
+  const dz = document.getElementById("dropzone");
+  dz.addEventListener("dragover", (e) => { e.preventDefault(); dz.classList.add("drag"); });
+  dz.addEventListener("dragleave", () => dz.classList.remove("drag"));
+  dz.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dz.classList.remove("drag");
+    if (e.dataTransfer.files && e.dataTransfer.files[0]) readFileObj(e.dataTransfer.files[0]);
+  });
+
+  document.getElementById("btnDemoSample").onclick = () => loadPayload(BUILTIN_SAMPLE);
+  document.getElementById("btnAutoDemo").onclick = async () => {
+    try {
+      const resp = await fetch("../replays/replay_demo.json");
+      if (!resp.ok) throw new Error("HTTP " + resp.status);
+      loadPayload(await resp.json());
+    } catch (err) {
+      alert("无法自动 fetch ../replays/replay_demo.json（若以 file:// 直接打开，请手动拖入该 JSON 文件）。");
+    }
+  };
+
+  resizeCanvas();
+  loadPayload(BUILTIN_SAMPLE);
+})();
+</script>
+</body>
+</html>

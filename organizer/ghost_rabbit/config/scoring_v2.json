@@ -1,0 +1,26 @@
+{
+  "version": "ghost_rabbit_v2",
+  "profile_revision": "2026-11-23-gr-4fam-32-sandbox-v2",
+  "problem": "ghost_rabbit",
+  "submission_ext": ".cpp",
+  "evaluation_protocol": "online_interactive_dynamic_adversary",
+  "seed_source": "os_csprng",
+  "scenario_sampling": "per_run_random",
+  "official_cases": 32,
+  "official_families": 4,
+  "cases_per_family": 8,
+  "max_turns": 5000,
+  "max_traps": 4000,
+  "solver_time_limit_ms": 5000,
+  "solver_memory_limit_mb": 512,
+  "fourth_constraint": "local_3ap_free_dist_le_6",
+  "frozen_files": {
+    "config/format.json": "04e6827e1286689cc2e3091c5095afe7068dfa158890714a8d8df20fc5abb6c8",
+    "engine/common.py": "fd5bbfbbaf807ee4ea6dfc122bfed8aff1f760f1dc0d1b9a9d0df344962800c1",
+    "engine/judge_core.hpp": "509e4f8f8bad5c33d17cd0ad5c81f69326b5b6469ba3e82e16a8828c90698e0d",
+    "engine/practice_interactor.cpp": "b0d74c3a8740821be78e00b0e07c7d0ff1f08d7dcf627cf2910f2f2895a5d296",
+    "engine/runner.py": "473e9970f39ad36e8be66455464fe0adafd65004100dabcb24de955a9b70d046",
+    "hidden/official_interactor.cpp": "92c3a146173a2837cb26444acc8ff1701f39c8962b68888e38f20b009637566a",
+    "hidden/schedule.py": "1484afa041eabea7f6e7f1e4c48dddb067581761d60295066241c9e54ba567a6"
+  }
+}

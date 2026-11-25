@@ -1,0 +1,1137 @@
+这是聊天模式参赛题面。所有必读资料已在下方展开，无须访问文件路径。
+请基于这些资料编写参赛策略（文件夹模式支持多文件 .zip 压缩包；聊天模式请返回完整的 main.py 代码块或清晰标注的多文件代码块）；不要声称已写入文件或已运行本地测试。
+
+# 给 AI 的入口：读完这个文件夹，写出你的农场对抗策略包
+
+你是参赛模型。读完本文件和下列 4 个必读文件后，直接编写并交付参赛代码包。常规实现选择自行决定，不要只给计划或策略说明。
+
+**文件夹模式（默认）**：有文件读写能力时，推荐在 `agents/submissions/` 下以多文件目录开发（根目录含 `main.py`，可拆分辅助模块与只读查表/参数文件），用 `scripts/make_submission.py` 打包为 `.zip` 并自测、修复问题；最后简短报告提交包路径和真实测试结果。
+**聊天模式**：无法读写文件时，使用裁判方提供的完整 `prompts/task.txt`，返回完整可执行代码。
+
+**使用范围**：每个参赛 AI 使用独立工作区副本。初始文件夹只含公开材料，没有其他选手的提交、成绩、日志或回放。本目录不配置操作系统沙箱，也不会改变本机 AI 的读取权限；请自觉遵守边界，不要访问工作区外的外部文件。
+
+---
+
+## 0. 你的交付物
+
+| 项 | 要求 |
+|---|---|
+| 提交格式 | **UTF-8 `.zip` 压缩包**（根目录必须含 `main.py`；可自由附带任意辅助 `.py` 子模块与包内只读数据文件如 `.json`/查表/权重） |
+| 统一交卷路径（综合工作区必交） | `../submissions/kaggriculture.zip`（即顶层 `submissions/kaggriculture.zip`；正式评分只从顶层 `submissions/` 读取） |
+| 题内开发 / 独立工作区默认路径 | `agents/submissions/my_agent.zip`（本地工具同时兼容 `.zip`、含 `main.py` 的目录及单文件 `.py`） |
+| 入口 | `main.py` 定义模块级 `def act(observation) -> dict:`；或 `class Agent:` 实现 `def act(self, observation) -> dict:` |
+| 体积配额 | 压缩后 `<= 64 MiB`，解压后 `<= 256 MiB`，条目数 `<= 2048`（不限代码行数） |
+| 依赖与能力 | **完整 Python 3.10+ 标准库** + 导入压缩包内子模块 + 只读读取包内数据文件（如 `Path(__file__).resolve().parent / "params.json"`） |
+
+工作区中已有自己的策略时可以继续改进。不得读取或覆盖其他选手的文件；不要为了猜模型名而询问用户。Python 要求 3.10+，陪练和裁判只依赖标准库，无须安装额外依赖。
+
+## 1. 按顺序读这几个文件（读完即可动手）
+
+| 顺序 | 文件 | 作用 |
+|---|---|---|
+| 1 | `handbook/player-guide.md` | 观测字段、动作字典、压缩包规范、自检清单 |
+| 2 | `handbook/game-facts.md` | 作物/动物/市场/雇佣/土地/城镇的精确数值 |
+| 3 | `agents/template/`（`main.py`、`planner.py`、`params.json`） | 多文件包 + 包内数据读取起步模板（极简参考见 `agents/starter.py`） |
+| 4 | `engine/rules.py` | 官方规则源码，**唯一权威**；任何文档与它冲突以它为准 |
+| 参考 | `README.md` | 完整题面规则、结算顺序与 `scoring_v2` 正式计分公式 |
+| 参考 | `FORMAT.md` | 公开赛制与判罚摘要（同 `handbook/contest-rules.md`） |
+| 参考 | `engine/loader.py` | 压缩包安全校验与子进程加载协议 |
+
+沙箱隔离约束的是**参赛代码运行时**。编写代码的 AI 可以读取本工作区公开资料、使用终端运行打包与自测脚本，并查看自己本次自测生成的结果与回放。
+
+## 2. 一句话规则与正式计分标准
+
+1v1 农场经营，配置 `episodeSteps = 720`（`30` 天 × `24` 小时；实际执行 `step = 0 .. 718` 共 `719` 步），**终局现金高者胜**。终局未卖出的库存、种子、建筑与动物价值均为 `0`。
+
+- **正式计分（`scoring_v2`，满分 `100`）**：固定对阵 `3` 个隐藏参考对手 × `64` 个 OS 随机场景 × 交换座位（共 `384` 局），正常结束单局按 $s = 50 + 50\tanh\big((money_T - money_R) / 80096.26\big)$ 连续计分并等权平均（现金相同为 `50` 分）。
+- **技术判负优先**：本方超时、异常超 `30` 次或加载失败判负时该局直接得 `0` 分；仅对手技术判负得 `100` 分；双方均判负各得 `0` 分。
+
+## 3. 硬约束（违反 = 拒赛或判负）
+
+- **压缩包结构与安全校验**：根目录必须包含 `main.py`；禁止路径穿越（`..`）、绝对路径、符号链接、加密条目与异常压缩比（`> 100×`）；压缩体积 `<= 64 MiB`，解压总大小 `<= 256 MiB`，条目数 `<= 2048`。
+- **子进程与系统沙箱隔离**：每局在独立子进程中加载提交（工作目录与 `sys.path[0]` 均为解压后的包根目录），顶层代码、数据读取与 `Agent()` 初始化限时 `60` 秒；正式评测在系统级沙箱中运行，禁止联网、禁止读写包外文件、内存上限 `1 GiB`。观测与动作经 JSON 传递（元组变列表），`print` 输出被丢弃；调用 `exit()`、`quit()`、`raise SystemExit` 或进程崩溃后子进程不再恢复，后续每步计 1 次错误直至判负。
+- **结构与参数约束**：`farmer`、`hands`、`market` 三键必填；**`hands` 长度必须严格等于当前工人数**（`len(obs["farms"][me]["hands"])`）；`market` 每步最多 10 条订单（超出截断）；未知 `op` 或参数类型错误（如 `["PICKUP", "WHEAT", "x"]`、`["PLANT", []]`、`["SELL", "WHEAT", float("inf")]`）均算结构错误，替换为全员 `PASS` 并计 `1` 次错误。
+- **计时（正式口径）**：每步基础时限 **`1.0` 秒**；单步超出 `1.0` 秒的部分从**每局 `60.0` 秒超时池**（`observation["remainingOverageTime"]`）中扣除；池耗尽后任意一步超过 `1.0` 秒立即杀掉子进程并判超时负（该局 `0` 分）。
+- **错误上限**：单局累计异常/结构错误超过 `30` 次立即判负（该局 `0` 分）。
+- **公平性红线**：不得针对特定种子或对手写死逻辑；不得读取其他选手文件，不得与其他选手对战。公开陪练仅限 `passive` / `random` / `greedy` / `champion`（可自身镜像自搏）。
+- **工作区边界**：只能访问当前工作区（及综合工作区顶层的 `../submissions/kaggriculture.zip`）；自测成绩、调试 trace、回放与日志只保存在 `results/`、`replays/`、`logs/`。自测工具会拒绝外部路径（含软链接越界）、非公开陪练与 `--unrestricted`；禁止修改 `config/workspace.json`、规则引擎、裁判、陪练脚本与 `config/format.json`。
+
+## 4. 编写、打包、验证、改进、交付
+
+充分利用压缩包上限：可将规划器、市场预测、路径优化、畜牧调度拆分为多个模块，并在包内附带只读查表/参数文件。`agents/template/` 与 `agents/starter.py` 仅用于理解接口，不算完成参赛任务。
+
+```bash
+# 1. 把多文件策略目录（根目录含 main.py）打包并做 3 步冒烟校验
+python scripts/make_submission.py agents/submissions/my_bot --out ../submissions/kaggriculture.zip
+# （独立工作区可输出至 agents/submissions/my_agent.zip）
+
+# 2. 查看公开陪练列表
+python scripts/spar.py --list
+
+# 3. 与公开基线自测（同样支持直接传开发目录 agents/submissions/my_bot 或 .zip）
+python scripts/spar.py ../submissions/kaggriculture.zip passive --seed-count 1
+python scripts/spar.py ../submissions/kaggriculture.zip greedy --seed-count 2
+python scripts/spar.py ../submissions/kaggriculture.zip --all --seed-count 2
+
+# 4. 单场详细对局 / 镜像自搏回归测试
+python scripts/run_match.py --a ../submissions/kaggriculture.zip --b agents/baselines/greedy_farm.py --seed-count 4
+python scripts/run_match.py --a ../submissions/kaggriculture.zip --b --self --seed-count 2
+
+# 5. 挑战公开冠军陪练（运行较慢，--all 不包含它，建议先用 --seed-count 1）
+python scripts/spar.py ../submissions/kaggriculture.zip champion --seed-count 1
+```
+
+- 短名对手：`passive`（全员待机）/ `random`（随机合法）/ `greedy`（基础贪心）/ `champion`（公开强陪练对手，正式评分使用独立的 3 个隐藏参考对手）。
+- 检查自己生成的 `results/<时间戳>/spar.json` 与 `results/<时间戳>/match.json`：重点排查 `stats` 中己方的 `errors`、`first_error`、`timeout` 与 `overage_used_s`（`seat_a` 为己方座位）。命令退出码为 0 不代表没有静默错误或已经赢下对手。
+- 正式评测由裁判方在正式评测环境中按 `scoring_v2` 百分制运行（固定对阵 3 个隐藏参考对手，默认 64 个随机场景 × 双座位 = 384 局，详见 `README.md` 第 6 节）。
+
+录制对局回放并用浏览器肉眼复盘（强烈推荐，定位路径与经济瓶颈远快于看纯数字）：
+
+```bash
+python scripts/record_replay.py --a ../submissions/kaggriculture.zip --b greedy --seed 11
+```
+
+生成的回放 JSON 落在 `replays/`，可直接拖入离线单文件播放器 `viz/player.html` 查看逐帧 10×10 棋盘、现金曲线、市场行情与双方动作。选手工作区禁用 `--serve`，录制在裁判计时区间之外，不影响超时统计。
+
+## 5. 六个必踩的坑（省你半天）
+
+1. **雇工出生点可能落在未解锁格（`LOCKED`）**：谷仓相邻 4 格中 `(5,4)`、`(4,5)`、`(5,5)` 开局未解锁；单位可以走进或出生在 `LOCKED` 格（仍可执行 `DROP`/`PICKUP`/入库 `PLACE`），但不能耕作或建造，必须写移回已解锁区的逻辑；
+2. **新种作物当天必须浇水，且非持续作物初产 `yield_units = 1`**：刚种下时 `consecutive_unwatered = 1`，当天不浇水日终直接枯成 `WEED`；另外非持续作物种下即有 `yield_units = 1`，但未达 `first_yield_day` 时 `HARVEST` 会被静默忽略，判断收割必须同时检查天龄；
+3. **第 29 天没有日终结算**：`step = 719` 不执行，第 29 天背包物品**不会自动入库**；必须在谷仓相邻格手动 `DROP` 或 `PLACE` 后再 `SELL`（单位行动先于市场订单，最晚可在 `step 718` 同一步完成 `DROP` 与 `SELL`）；
+4. **雇工每日自动解散且雇佣费当日斐波那契递增**：当日第 `k` 次雇佣费 `fib(k) = 1, 1, 2, 3, 5, 8, 13, 21, ...`，日终（第 0..28 天）自动把背包转入谷仓、主农夫重置回 `(4, 4)`、解散所有雇工并清零 `hires_today`；单日狂雇会迅速烧光现金；
+5. **卖货砸价与同槽锁步竞争**：市场按槽位逐件锁步成交，同品卖越多价格越低，双方同卖会互相压价；结合城镇商店消耗错峰/分散出货收益更高；
+6. **谷仓容量上限 `100`**：`DROP` 把整个背包倒入谷仓，超出 `100` 的部分**直接销毁**；若需避免丢货，可在谷仓旁改用 `PLACE <ITEM> <n>`（装不下的部分留在背包）。
+
+## 6. 目录地图
+
+```text
+README.md             完整权威规则与 scoring_v2 正式计分说明
+AGENTS.md             编码 AI 自动读取的参赛工作流入口
+AI_README.md          本文件（快速参赛指南）
+FORMAT.md             公开赛制与判罚摘要（同 handbook/contest-rules.md）
+handbook/             选手手册（player-guide.md）、游戏事实卡（game-facts.md）与公开赛制
+engine/               官方规则 rules.py、裁判 arena.py、压缩包加载器 loader.py、回放编码 replay.py
+  champion/           公开冠军陪练运行代码（禁止修改）
+agents/
+  template/           多文件压缩包起步模板（main.py + planner.py + params.json）
+  starter.py          极简单文件参考模板
+  baselines/          三个公开基线：passive / random_legal / greedy_farm
+  reference/
+    champion.py       公开冠军陪练适配器
+  submissions/        题内开发自测目录（综合工作区终版须打包至 ../submissions/kaggriculture.zip）
+scripts/              make_submission.py 打包 / spar.py 陪练 / run_match.py 对局 / record_replay.py 回放
+viz/player.html       离线单文件回放播放器（无外部 CDN 依赖）
+config/format.json    比赛时间、预算、加赛种子与计分尺度参数
+config/workspace.json 独立选手工作区标记（禁止修改）
+prompts/task.txt      无文件工具时的聊天模式完整题面
+results/              本地自测结果输出目录
+replays/              本地录制回放输出目录
+logs/                 本地运行日志目录
+manifest.json         选手包文件清单与校验哈希
+```
+
+## 7. 交付前自检
+
+- [ ] 已使用 `scripts/make_submission.py` 打包为合法 `.zip`（综合工作区：`../submissions/kaggriculture.zip`；独立工作区：`agents/submissions/my_agent.zip`），根目录含 `main.py`
+- [ ] 所有包内数据均通过 `Path(__file__).resolve().parent` 相对路径只读读取，不写文件系统、不联网
+- [ ] 每步 `hands` 长度与当前雇工数一致，`market` ≤ 10 条，无参数类型错误或 `inf`/`NaN`
+- [ ] `money = 0`、`hands = []`、无空地、谷仓满、第 29 天手动清仓均不抛异常且无库存残留
+- [ ] 已用打包后的 `.zip` 与 `greedy`（及可选 `champion`）实测，并如实报告终局现金、得分、错误数与超时情况
+
+
+============================== 选手手册 ==============================
+
+# 选手手册（参赛模型必读）
+
+你的任务：写出一个能在 Kaggriculture 农场 1v1 对抗中赢下对手的 Python 策略包（打包为 `.zip` 提交）。
+你只写代码（及可选包内只读数据/查表）；对局全程你的模型不再参与。终局按农场现金决定胜负。
+
+## 1. 提交格式与运行约束
+
+- **压缩包形态（正式要求）**：单个 UTF-8 `.zip` 压缩包，根目录必须包含 `main.py`；可自由拆分任意辅助 `.py` 子模块/子包，并携带包内只读数据文件（如 `.json`、预计算参数、策略查表等）。
+  - 综合工作区最终统一提交路径：`../submissions/kaggriculture.zip`
+  - 独立工作区 / 题内自测默认路径：`agents/submissions/my_agent.zip`（开发阶段可在 `agents/submissions/<目录>/` 编写，使用 `python scripts/make_submission.py <目录> --out ../submissions/kaggriculture.zip` 打包校验；本地工具同时兼容 `.zip`、目录与单文件 `.py`）
+  - 压缩包安全配额：压缩体积 `<= 64 MiB`，解压总大小 `<= 256 MiB`，条目数 `<= 2048`，禁止加密条目、符号链接、路径穿越（`..`）和异常压缩比（`> 100×`）。
+- **入口**：`main.py` 定义模块级函数 `def act(observation): ...` 返回动作 `dict`（或 `class Agent: def act(self, observation): ...`，裁判自动实例化一次并在整局复用）；
+- **标准库与包内数据**：允许使用**完整 Python 3.10+ 标准库**、导入包内子模块、以及通过 `Path(__file__).resolve().parent / ...` 只读读取包内数据文件；取消原单文件 9 模块白名单与正则静态扫描限制。
+- **子进程隔离与加载时限**：每局在独立子进程中加载提交（工作目录与 `sys.path[0]` 均为解压后的包根目录），顶层代码、数据加载与 `Agent()` 初始化限时 `60` 秒；观测与动作通过 JSON 传递（元组会变成列表），`print` 输出被丢弃；调用 `exit()`、`quit()`、`raise SystemExit` 或进程崩溃后子进程不再恢复，之后每步计 1 次错误直到判负；正式评测在系统级沙箱内运行，禁止联网、禁止越界读写宿主机文件、内存上限 `1 GiB`。
+- **错误预算**：抛出异常或动作结构非法（缺 `farmer`/`hands`/`market` 键、`hands` 长度不符、未知 `op`、或参数类型错误如 `["PICKUP", "WHEAT", "x"]`、`["PLANT", []]`、`["SELL", "WHEAT", float("inf")]`）时，该步替换为全员 `PASS` 并计 `1` 次错误；单局累计超过 `30` 次立即判负（该局 `0` 分）；
+- **计时（正式口径）**：每步基础时限 **`1.0` 秒**；单步超出 `1.0` 秒的部分从**每局 `60.0` 秒超时池**中扣除；池耗尽后任意一步超过 `1.0` 秒立即判该局超时负（`0` 分）。池余额即观测中的 `remainingOverageTime`——偶尔长考被允许，但整局总共只有 `60` 秒可借，搜索规划需留余量。
+
+## 2. 观测（每步给你的只读快照）
+
+`observation` 同时支持属性访问 `obs.day` 与字典访问 `obs["day"]`（裁判保证两种都可用）。
+
+| 字段 | 含义 |
+|---|---|
+| `step` / `day` / `hour` | 全局步（`0..718`，共 `719` 步） / 天（`0..29`） / 小时（`0..23`） |
+| `player` | 你的座位号 `0` 或 `1` |
+| `farms[2]` | 双方公开农场：`money`、`tiles[10][10]`（按 `tiles[y][x]` 索引）、`farmer: [x, y]`、`hands: [[x, y], ...]`、`unlocked_quadrants`、`hires_today` |
+| `market` | `inventory`（9 种商品当前库存）、`prices`（9 种商品当前单价） |
+| `town` | `unlocked_shops`（已解锁商店名称列表，可能含重复商店） |
+| `private` | 仅己方可见：`shed`（仓库物品/动物数量）、`seeds`（5 种作物种子数量，不占仓库容量）、`inventories`（随身背包列表，无容量上限） |
+| `remainingOverageTime` | 剩余超时池秒数（初始 `60.0`） |
+
+- `tiles[y][x]` 单元取值：`None`（空地）、`"LOCKED"`（未解锁）、`{"kind": "WEED"}`、`{"kind": "PLANT", "crop", "planted_day", "watered_today", "consecutive_unwatered", "yield_units", "max_lifespan_step", "fertilized_until_day"}`、`{"kind": "COOP"|"PASTURE", ...}`（若含动物则额外带 `"animal", "placed_day", "yield_units", "consecutive_unfed", "fed_today", "cared_today", "fertilizer_available", "pending_care_bonus"`）。
+- `private["inventories"]` 与单位一一对应：`inventories[0]` 是主农夫，`inventories[k]` 对应 `hands[k - 1]`。
+
+## 3. 动作（每步返回）
+
+```python
+{
+    "farmer": [op, *args],          # 主农夫动作
+    "hands":  [[op, *args], ...],   # 长度必须严格等于当前 len(farms[player]["hands"])
+    "market": [[op, *args], ...],   # 最多 10 条订单（超出截断）
+}
+```
+
+- **单位动作 `op`**：`NORTH` / `SOUTH` / `EAST` / `WEST`、`PASS`、`PLANT <CROP>`、`WATER`、`HARVEST`、`DIG`、`FERTILIZE`、`BUILD_COOP`、`BUILD_PASTURE`、`PLACE <ITEM> [n]`、`PICKUP <ITEM> [n]`、`DROP`、`FEED`、`COLLECT_FERTILIZER`、`CARE`。
+- **市场订单 `op`**：`BUY_SEED <CROP> <n>`、`BUY_PRODUCT <WHEAT|FERTILIZER> <n>`、`BUY_ANIMAL <ANIMAL> <n>`、`SELL <ITEM> <n>`、`HIRE`、`BUY_LAND`。
+- 方向：`NORTH = (0, -1)`、`SOUTH = (0, +1)`、`EAST = (+1, 0)`、`WEST = (-1, 0)`。
+- 参数类型合法但当前无法执行的子动作（如越界移动、对空地收割、钱不够买地）会被引擎**静默忽略**，不计错误；但参数类型错误会触发结构错误并扣错误预算。
+
+## 4. 关键机制（精确数值见 `handbook/game-facts.md`）
+
+- **结算顺序**：每步严格按 `单位行动 → 市场订单 → 城镇消耗 → 过熟作物衰减 → 日终结算（仅每日最后一步 (step + 1) % 24 == 0）` 执行。
+- **种植与浇水**：
+  - 本步全员计划 `PLANT <CROP>` 总数若超过 `private["seeds"][crop]`，本步针对该作物的**全部** `PLANT` 动作统一失效变 `PASS`；
+  - 刚种下的作物 `consecutive_unwatered = 1`，**种植当天必须浇水**，否则当日日终直接枯萎变 `WEED`；浇过水后需连续 2 天不浇才会枯死；
+  - `WATER` 每天每株只生效一次；非持续作物种下即有 `yield_units = 1`，但未达到 `first_yield_day` 前 `HARVEST` 会被忽略。
+- **仓库与背包**：
+  - 收割的农产品与动物产品进入随身背包；`SELL` 只卖 `shed` 里的商品；`shed` 总容量 `100`（所有农产品与未放置动物共享）；
+  - 谷仓相邻格为棋盘中心 4 格 `(4, 4)`、`(5, 4)`、`(4, 5)`、`(5, 5)`；`DROP`、`PICKUP` 及向仓库存货的 `PLACE` 仅在这 4 格生效（即使格子处于 `LOCKED` 状态也能存取）；
+  - `DROP` 清空整个背包入库，**超出 100 容量的部分直接销毁**；`PLACE <ITEM> [n]` 入库受剩余容量限制，放不下的保留在背包里。
+- **日终结算与第 29 天清仓**：
+  - 第 `0..28` 天日终（`hour == 23`）会自动把所有单位背包转入 `shed`（溢出销毁）、主农夫重置回 `(4, 4)`、**所有当日雇工自动解散**并清零 `hires_today`；
+  - **第 `29` 天没有日终结算**（引擎在 `step = 718` 后结束，`step = 719` 不执行），第 29 天背包里的货不会自动入库！必须手动走到谷仓相邻格执行 `DROP` 或 `PLACE` 后再 `SELL`（因单位行动先于市场订单，最晚可在 `step 718` 同一步完成 `DROP` 和 `SELL`）；
+  - 终局只看 `money`：未卖出的库存、种子、建筑与动物价值全部为 `0`。
+- **雇佣与买地**：
+  - `HIRE` 当日第 `k` 次费用为斐波那契数 `fib(k)`（`1, 1, 2, 3, 5, 8, 13, 21, ...`），每日重置；新雇工在当步市场阶段出生在谷仓相邻 4 格中人数最少的第一格，下一步开始行动；
+  - `BUY_LAND` 依次解锁 `NE(1000) → SW(2000) → SE(4000)`；初始只有 `NW` 解锁。单位可走入 `LOCKED` 格但不能在其上耕作或建造。
+- **市场与城镇**：
+  - 卖货压低市场价（地板价 `1`），买货（`WHEAT`/`FERTILIZER`）推高市场价；双方同槽位订单按逐件锁步成交，同卖同品会互相砸价；
+  - 城镇商店每 4 步消耗需求品（单品店消耗 2 件），镇中心每 24 步消耗除 `FERTILIZER` 外的其余 8 种商品各 1 件，推动价格回升。
+
+## 5. 允许的做法与本地自测
+
+允许并鼓励：多模块架构、预计算策略表/开局参数（只读放在 `.zip` 内）、精确市场模拟、前瞻搜索/动态规划（在时间预算内）、仅基于公开观测的对手建模（看不到对手的 `seeds`/`shed`/`inventories`）。
+
+本地可使用：
+- `python scripts/make_submission.py <策略目录> --out ../submissions/kaggriculture.zip`：打包并做安全与冒烟校验；
+- `python scripts/spar.py --list`：查看公开陪练（`passive` / `random` / `greedy` / `champion`）；
+- `python scripts/spar.py ../submissions/kaggriculture.zip greedy --seed-count 2`：按正式计分口径对阵公开基线；
+- `python scripts/run_match.py --a ../submissions/kaggriculture.zip --b --self --seed-count 2`：镜像自搏回归测试；
+- `python scripts/record_replay.py --a ../submissions/kaggriculture.zip --b greedy --seed 11`：录制回放并用 `viz/player.html` 离线查看。
+
+禁止针对特定种子或对手硬编码逻辑；禁止读取外部目录或其他选手文件。
+
+## 6. 提交前自检清单
+
+1. 已用 `scripts/make_submission.py` 打包为 `.zip`，根目录含 `main.py`，无越界路径或外部文件依赖；
+2. 仅使用 Python 标准库与包内子模块/只读数据文件，不联网、不写文件；
+3. 每步 `hands` 数组长度等于当前雇工数，`market` ≤ 10 条，无参数类型错误或非有限数值；
+4. 极端情形（`money = 0`、`hands = []`、全图无空地、`shed` 已满、第 29 天手动清仓）均不抛异常；
+5. 已保存至目标路径（综合工作区：`../submissions/kaggriculture.zip`；独立工作区：`agents/submissions/my_agent.zip`），并在本地至少稳定击败 `greedy` 基线。
+
+
+============================== 游戏事实卡 ==============================
+
+# 游戏事实卡（全部核对自权威规则源码 `engine/rules.py`）
+
+## 对局参数
+
+- `episodeSteps = 720`（`30` 天 × `24` 小时；实际调用 `act` 共 `719` 次：`step = 0 .. 718`，`day = step // 24`，`hour = step % 24`）
+- `boardSize = 10`（坐标 `0 <= x < 10, 0 <= y < 10`，`tiles[y][x]`），`turnsPerDay = 24`
+- `startingMoney = 3000.0`，`maxMarketOrdersPerTurn = 10`，`shedCapacity = 100`，`weedSpawnChance = 0.005`
+- 终局得分 = `step = 718` 结算完毕后各农场的 `money`（未售库存、种子、建筑与动物均不折算现金）。**第 `29` 天没有日终结算**（`step = 719` 不执行）。
+
+## 作物 `CROPS`（`seed` = 固定买种价）
+
+| 作物 | 种价 | 首收天 `first_yield_day` | 最高产天 `max_yield_day` | 间隔 `interval` | 持续产 `ongoing` | 产量上限 `max_yield` |
+|---|---:|---:|---:|---:|:---:|---:|
+| `WHEAT` | 10 | 2 | 4 | 0 | 否 | 6 |
+| `CARROT` | 20 | 2 | 3 | 0 | 否 | 4 |
+| `TOMATO` | 50 | 8 | 8 | 1 | 是 | 4 |
+| `STRAWBERRY` | 100 | 10 | 10 | 2 | 是 | 4 |
+| `MELON` | 80 | 10 | 12 | 0 | 否 | 6 |
+
+- **批量种植检查**：若同一步内全员提交的 `PLANT <CROP>` 次数大于 `private["seeds"][crop]`，本步针对该作物的**全部** `PLANT` 动作统一变 `PASS`。
+- **初始状态**：种下时 `planted_day = day`、`watered_today = False`、`consecutive_unwatered = 1`、`fertilized_until_day = -1`。**种下当天必须浇水，否则当日日终 `consecutive_unwatered` 达到 `2` 直接变 `WEED`。** 浇过水后归 `0`，此后需连续 2 天不浇水才枯萎。
+- **非持续作物（`WHEAT` / `CARROT` / `MELON`）**：初始 `yield_units = 1`，`max_lifespan_step = (day + max_yield_day + 1) * 24`。在天龄 `age = day - planted_day` 满足 `(max_yield_day + 1) // 2 <= age <= max_yield_day` 的当天首次 `WATER` 时，`yield_units` 增加 `2`（若 `fertilized_until_day >= day`）或 `1`（封顶 `max_yield`）。`HARVEST` 需 `age >= first_yield_day` 且 `yield_units > 0`，收割后格子变 `None`。
+- **持续作物（`TOMATO` / `STRAWBERRY`）**：初始 `yield_units = 0`，`max_lifespan_step = -1`。在日终结算（记 `next_day = day + 1`、`d = next_day - planted_day - first_yield_day`）时，若 `d >= 0`、`d % interval == 0` 且累计产果次数 `c = d // interval + 1 <= max_yield`，则 `yield_units` 增加 `2`（若当日浇过水且 `fertilized_until_day >= day`）或 `1`（封顶 `max_yield`）；当 `c == max_yield` 时设 `max_lifespan_step = (next_day + 1) * 24`。`HARVEST` 将 `yield_units` 收入背包并清零，植株保留。
+- **过熟衰减**：对 `max_lifespan_step >= 0` 的作物，当 `step >= max_lifespan_step` 且 `(step - max_lifespan_step) % 2 == 0` 时 `yield_units -= 1`；减至 `<= 0` 变 `{"kind": "WEED"}`。
+- **施肥 `FERTILIZE`**：消耗背包 `1` 个 `FERTILIZER`，令 `fertilized_until_day = max(fertilized_until_day, day + 2)`。
+
+## 动物 `ANIMALS`
+
+| 动物 | 购买价 | 所需建筑 | 首产天 `first_yield_day` | 间隔 `interval` | 存量上限 `max_held` | 产出商品 |
+|---|---:|:---:|---:|---:|---:|:---:|
+| `GOOSE` | 300 | `COOP` | 4 | 1 | 4 | `EGG` |
+| `COW` | 400 | `PASTURE` | 8 | 2 | 6 | `MILK` |
+| `SHEEP` | 500 | `PASTURE` | 6 | 3 | 6 | `WOOL` |
+
+- `BUILD_COOP` 与 `BUILD_PASTURE` 在空地 `None` 上免费建造。
+- `BUY_ANIMAL` 购得动物进入 `shed`（占 `1` 格容量），需在谷仓旁 `PICKUP <ANIMAL> 1` 拿到背包，走到空建筑格执行 `PLACE <ANIMAL>` 安置。
+- 动物产品用 `HARVEST` 站在动物格上收取（全部 `yield_units` 入背包并清零）。
+- `FEED` 消耗背包 `1` 个 `WHEAT`（每只每天限一次）；`CARE` 不耗物（每只每天限一次）。
+- **动物日终结算**：未喂则 `consecutive_unfed += 1`，达到 `2` 时动物消失、退回空建筑；存活时若 `(next_day - placed_day - first_yield_day) >= 0` 且能被 `interval` 整除，则产出 `1 + (pending_care_bonus if fed_today else 0)`（封顶 `max_held`）并清零 `pending_care_bonus`；随后若当日 `cared_today and fed_today`，下一轮 `pending_care_bonus += 1`；最后所有存活的动物均置 `fertilizer_available = True`、`fed_today = False`、`cared_today = False`。
+- `COLLECT_FERTILIZER` 在 `fertilizer_available == True` 的动物格收取 `1` 个 `FERTILIZER` 到背包（安置当天初始为 `False`，次日起每日可收 1 次）。
+
+## 市场定价 `MARKET_PARAMS`
+
+9 种商品：`WHEAT, CARROT, TOMATO, STRAWBERRY, MELON, EGG, MILK, WOOL, FERTILIZER`。
+初始库存均为 `I0 = 10000`（库存无下限，可低于 `0`），初始价等于 `base`，地板价 `PRICE_FLOOR = 1`（`round` 为 Python 四舍六入五成双）。
+
+- 当 `I < I0`：`price = max(1, round(base + amp_below * shape(below_func, I0 - I, T)))`，`amp_below = below_target * base / shape(below_func, T, T)`
+- 当 `I >= I0`：`price = max(1, round(base - amp_above * shape(above_func, I - I0, T)))`，`amp_above = above_target * base / shape(above_func, T, T)`
+- `shape(func, x, T)`：`linear = x`，`sq = x^2`，`sqrt = sqrt(x)`，`log = ln(1 + x)`，`hinge = (x / T) + 8.0 * max(0, x / T - 1)^2`。
+
+| 商品 | `base` | `T` | `below_func` | `below_target` | `above_func` | `above_target` |
+|---|---:|---:|:---:|---:|:---:|---:|
+| `WHEAT` | 25 | 400 | `sqrt` | 0.8 | `log` | 0.2 |
+| `CARROT` | 35 | 450 | `hinge` | 1.0 | `sqrt` | 0.7 |
+| `TOMATO` | 60 | 200 | `hinge` | 0.4 | `sqrt` | 0.6 |
+| `STRAWBERRY` | 120 | 100 | `sqrt` | 0.7 | `linear` | 1.6 |
+| `MELON` | 250 | 300 | `log` | 0.2 | `sq` | 3.6 |
+| `EGG` | 50 | 332 | `hinge` | 0.4 | `log` | 0.2 |
+| `MILK` | 160 | 122 | `sqrt` | 0.6 | `linear` | 1.6 |
+| `WOOL` | 200 | 105 | `log` | 0.2 | `sq` | 3.2 |
+| `FERTILIZER` | 100 | 200 | `linear` | 0.4 | `linear` | 0.4 |
+
+- `SELL <ITEM> <n>`：仅卖 `shed` 内 9 种商品；按当前报价得钱，仅当成交价 `> 1` 时市场库存 `+1`（地板价 `1` 时库存不再增加）。
+- `BUY_PRODUCT <ITEM> <n>`：仅限 `WHEAT` / `FERTILIZER`，报价按 `market_price(item, I - 1)`，存入 `shed`（受 `100` 容量限制），市场库存 `-1`。
+- `BUY_SEED <CROP> <n>` 与 `BUY_ANIMAL <ANIMAL> <n>`：按固定表价成交，不影响市场库存（种子进 `seeds`，动物进 `shed` 占容量）。
+- **逐件同步锁步（per-unit lockstep）**：按订单槽位 `i = 0 .. 9` 推进；`HIRE`/`BUY_LAND` 立即执行，其余买卖订单逐件同步报价（双方基于同一当前库存同时报价）、逐件扣库存成交，单槽最多循环 `99999` 轮，随后刷新公开市场价。
+
+## 城镇商店 `SHOPS`
+
+- `BAKERY`: `["EGG", "WHEAT"]`
+- `PIZZA_SHOP`: `["MILK", "TOMATO", "WHEAT"]`
+- `BRUNCH_SPOT`: `["EGG", "WHEAT", "STRAWBERRY"]`
+- `YARN_STORE`: `["WOOL"]`（单品店，每次消耗 2 件）
+- `ICE_CREAM_SHOP`: `["STRAWBERRY", "MILK", "WHEAT"]`
+- `PET_CAFE`: `["CARROT"]`（单品店，每次消耗 2 件）
+- `SMOOTHIE_SHOP`: `["STRAWBERRY", "MILK"]`
+- `FARMERS_MARKET`: `["WHEAT", "CARROT", "TOMATO", "STRAWBERRY"]`
+
+- 每 `4` 步（`step % 4 == 0`）：遍历每家已解锁商店消耗库存（单品店减 `2`，其余每种减 `1`）。
+- 每 `24` 步（`step % 24 == 0`）：镇中心消耗除 `FERTILIZER` 外的其余 `8` 种商品库存各 `1` 件。
+- 解锁商店：日终若 `(day + 1) % 3 == 0` 且已解锁商店总数 `< 8`，使用日结随机流 `rng = random.Random(seed * 1000003 ^ day)`（在双方杂草抽签之后）从 8 类商店中等概率**可重复**随机解锁 1 家。
+
+## 雇佣、土地与日终重置
+
+- **`HIRE`**：当日第 `k` 次（`k = hires_today >= 0`）费用为 `fib(k)`：`1, 1, 2, 3, 5, 8, 13, 21, 34, ...`；新雇工在当步市场阶段出生在谷仓相邻 4 格 `[(4,4), (5,4), (4,5), (5,5)]` 中当前本方人数最少的第一格，下一步开始行动。
+- **`BUY_LAND`**：按 `NE (1000) → SW (2000) → SE (4000)` 顺序解锁象限，将象限内 `"LOCKED"` 格变为 `None`。
+- **日终重置（第 `0..28` 天 `step % 24 == 23`）**：
+  1. 初始化日结 `rng = random.Random(seed * 1000003 ^ day)`，按座位 `0 → 1` 依次执行：作物日结 → 动物日结 → 空地杂草生长（每空地 `None` 以 `0.005` 概率变 `WEED`，与官方 Kaggle 环境一致）；
+  2. 所有单位背包按顺序自动转入 `shed`（超出 `100` 容量的部分销毁）；
+  3. 主农夫重置回 `(4, 4)`，**所有雇工解散**（`hands = []`，`hires_today = 0`，`inventories = [{}]`）；
+  4. 按需使用同一日结 `rng` 解锁新商店。
+
+## 空间、单位与已实测事实
+
+- **谷仓相邻格**：`(4, 4)`、`(5, 4)`、`(4, 5)`、`(5, 5)`。`DROP`（溢出销毁）、`PICKUP` 及向仓库存货的 `PLACE`（溢出留在背包）在这 4 格均生效，即便该格处于 `"LOCKED"` 状态。
+- 移动方向：`NORTH = (0, -1)`、`SOUTH = (0, +1)`、`EAST = (+1, 0)`、`WEST = (-1, 0)`。允许走进 `"LOCKED"` 格，但不能在其上耕作或建造。
+- `DIG` 清除脚下作物、杂草或无动物的空建筑（有动物的建筑不能 `DIG`）。
+- 实测要点：
+  - 单押 `MELON` 极易把自身市场价砸到地板价 `1`；高需求品（如多店需求的 `STRAWBERRY` / `MILK` / `WHEAT`）常随城镇消耗拉升；
+  - 单日无节制 `HIRE`（如 16+ 次）会因斐波那契费用迅速吃光现金，须设雇佣护栏；
+  - 终局未售库存价值为 `0`，末期（尤其第 29 天，因无日终自动入库）必须主动 `DROP`/`PLACE` 并清仓卖出。
+
+
+============================== 多文件包模板 agents/template/main.py ==============================
+
+# -*- coding: utf-8 -*-
+"""Kaggriculture 多文件压缩包提交起步模板入口（根目录 main.py）。
+
+打包提交示例：
+  python scripts/make_submission.py agents/template --out ../submissions/kaggriculture.zip
+"""
+from __future__ import annotations
+
+import json
+from pathlib import Path
+
+from planner import SimplePlanner
+
+_PKG_DIR = Path(__file__).resolve().parent
+
+
+class Agent:
+    def __init__(self) -> None:
+        params_path = _PKG_DIR / "params.json"
+        params = json.loads(params_path.read_text(encoding="utf-8"))
+        self.planner = SimplePlanner(params)
+
+    def act(self, observation: dict) -> dict:
+        return self.planner.step(observation)
+
+
+============================== 多文件包模板 agents/template/planner.py ==============================
+
+# -*- coding: utf-8 -*-
+"""多文件包示例子模块：演示如何拆分策略逻辑并读取包内只读配置参数。"""
+from __future__ import annotations
+
+
+class SimplePlanner:
+    def __init__(self, params: dict) -> None:
+        self.default_crop = str(params.get("default_crop", "WHEAT"))
+        self.min_seed_stock = int(params.get("min_seed_stock", 2))
+        self.seed_buy_batch = int(params.get("seed_buy_batch", 2))
+
+    def step(self, obs: dict) -> dict:
+        me = obs["player"]
+        farm = obs["farms"][me]
+        priv = obs["private"]
+        hands = farm["hands"]
+        fx, fy = farm["farmer"]
+        tile = farm["tiles"][fy][fx]
+        seeds = priv.get("seeds", {})
+        shed = priv.get("shed", {})
+
+        farmer_act: list = ["PASS"]
+        market_orders: list = []
+
+        # 简单闭环示例：买种子 -> 在脚下种植/浇水/收获 -> 回谷仓交货并出售
+        if seeds.get(self.default_crop, 0) < self.min_seed_stock and farm["money"] >= 50:
+            market_orders.append(["BUY_SEED", self.default_crop, self.seed_buy_batch])
+
+        if shed.get(self.default_crop, 0) > 0:
+            market_orders.append(["SELL", self.default_crop, shed[self.default_crop]])
+
+        carry = priv.get("inventories", [{}])[0] if priv.get("inventories") else {}
+        if carry and (fx, fy) in ((4, 4), (5, 4), (4, 5), (5, 5)):
+            farmer_act = ["DROP"]
+        elif tile is None and seeds.get(self.default_crop, 0) > 0:
+            farmer_act = ["PLANT", self.default_crop]
+        elif isinstance(tile, dict) and tile.get("kind") == "PLANT":
+            if tile.get("yield_units", 0) > 0 and obs["day"] - tile.get("planted_day", 0) >= 2:
+                farmer_act = ["HARVEST"]
+            elif not tile.get("watered_today"):
+                farmer_act = ["WATER"]
+        elif isinstance(tile, dict) and tile.get("kind") == "WEED":
+            farmer_act = ["DIG"]
+
+        return {
+            "farmer": farmer_act,
+            "hands": [["PASS"] for _ in hands],
+            "market": market_orders[:10],
+        }
+
+
+============================== 多文件包模板 agents/template/params.json ==============================
+
+{
+  "default_crop": "WHEAT",
+  "min_seed_stock": 2,
+  "seed_buy_batch": 2
+}
+
+
+============================== 官方规则源码（只用于理解，勿整份复制到提交） ==============================
+
+# Adapted from the user-provided joint-adaptive-fast-d15 package.
+# Original source SHA256 and provenance: references/d15/manifest.json.
+# See REFERENCE_NOTES.md for reused code and RSIdemo changes.
+"""Exact installed Kaggriculture rules, extracted for local simulation. Source: Kaggle kaggle-environments."""
+import math
+import random
+
+SOURCE_SHA256 = 'bc8a54879ef02c7ea64b8b333d6a976f0ea65c4949149d01f463f23bccee653e'
+CROPS = {'WHEAT': {'seed': 10, 'first_yield_day': 2, 'max_yield_day': 4, 'interval': 0, 'max_yield': 6, 'ongoing': False}, 'CARROT': {'seed': 20, 'first_yield_day': 2, 'max_yield_day': 3, 'interval': 0, 'max_yield': 4, 'ongoing': False}, 'TOMATO': {'seed': 50, 'first_yield_day': 8, 'max_yield_day': 8, 'interval': 1, 'max_yield': 4, 'ongoing': True}, 'STRAWBERRY': {'seed': 100, 'first_yield_day': 10, 'max_yield_day': 10, 'interval': 2, 'max_yield': 4, 'ongoing': True}, 'MELON': {'seed': 80, 'first_yield_day': 10, 'max_yield_day': 12, 'interval': 0, 'max_yield': 6, 'ongoing': False}}
+ANIMALS = {'GOOSE': {'cost': 300, 'structure': 'COOP', 'first_yield_day': 4, 'interval': 1, 'max_held': 4, 'product': 'EGG'}, 'COW': {'cost': 400, 'structure': 'PASTURE', 'first_yield_day': 8, 'interval': 2, 'max_held': 6, 'product': 'MILK'}, 'SHEEP': {'cost': 500, 'structure': 'PASTURE', 'first_yield_day': 6, 'interval': 3, 'max_held': 6, 'product': 'WOOL'}}
+PRODUCTS = ['WHEAT', 'CARROT', 'TOMATO', 'STRAWBERRY', 'MELON', 'EGG', 'MILK', 'WOOL', 'FERTILIZER']
+MARKET_I0 = 10000
+PRICE_FLOOR = 1
+MARKET_PARAMS = {'WHEAT': {'base': 25, 'I0': MARKET_I0, 'T': 400, 'below_func': 'sqrt', 'below_target': 0.8, 'above_func': 'log', 'above_target': 0.2}, 'CARROT': {'base': 35, 'I0': MARKET_I0, 'T': 450, 'below_func': 'hinge', 'below_target': 1.0, 'above_func': 'sqrt', 'above_target': 0.7}, 'TOMATO': {'base': 60, 'I0': MARKET_I0, 'T': 200, 'below_func': 'hinge', 'below_target': 0.4, 'above_func': 'sqrt', 'above_target': 0.6}, 'STRAWBERRY': {'base': 120, 'I0': MARKET_I0, 'T': 100, 'below_func': 'sqrt', 'below_target': 0.7, 'above_func': 'linear', 'above_target': 1.6}, 'MELON': {'base': 250, 'I0': MARKET_I0, 'T': 300, 'below_func': 'log', 'below_target': 0.2, 'above_func': 'sq', 'above_target': 3.6}, 'EGG': {'base': 50, 'I0': MARKET_I0, 'T': 332, 'below_func': 'hinge', 'below_target': 0.4, 'above_func': 'log', 'above_target': 0.2}, 'MILK': {'base': 160, 'I0': MARKET_I0, 'T': 122, 'below_func': 'sqrt', 'below_target': 0.6, 'above_func': 'linear', 'above_target': 1.6}, 'WOOL': {'base': 200, 'I0': MARKET_I0, 'T': 105, 'below_func': 'log', 'below_target': 0.2, 'above_func': 'sq', 'above_target': 3.2}, 'FERTILIZER': {'base': 100, 'I0': MARKET_I0, 'T': 200, 'below_func': 'linear', 'below_target': 0.4, 'above_func': 'linear', 'above_target': 0.4}}
+HINGE_GAIN = 8.0
+
+def _shape(func, x, T=None):
+    x = max(0.0, x)
+    if func == 'linear':
+        return x
+    if func == 'sq':
+        return x * x
+    if func == 'sqrt':
+        return math.sqrt(x)
+    if func == 'log':
+        return math.log(1.0 + x)
+    if func == 'log10':
+        return math.log10(1.0 + x)
+    if func == 'hinge':
+        if not T or T <= 0:
+            return x
+        u = x / T
+        return u + HINGE_GAIN * max(0.0, u - 1.0) ** 2
+    return x
+
+def _resolve_market_params(overrides):
+    """Merge per-resource overrides onto MARKET_PARAMS defaults (sparse)."""
+    resolved = {item: dict(p) for item, p in MARKET_PARAMS.items()}
+    if not overrides:
+        return resolved
+    for item, patch in overrides.items():
+        if item in resolved and isinstance(patch, dict):
+            resolved[item].update(patch)
+    return resolved
+FARMER_MOVES = {'NORTH': (0, -1), 'SOUTH': (0, 1), 'EAST': (1, 0), 'WEST': (-1, 0)}
+LAND_ORDER = ['NE', 'SW', 'SE']
+LAND_PRICES = [1000, 2000, 4000]
+FARM_HAND_COST_MULT = 1
+SHOPS = {'BAKERY': ['EGG', 'WHEAT'], 'PIZZA_SHOP': ['MILK', 'TOMATO', 'WHEAT'], 'BRUNCH_SPOT': ['EGG', 'WHEAT', 'STRAWBERRY'], 'YARN_STORE': ['WOOL'], 'ICE_CREAM_SHOP': ['STRAWBERRY', 'MILK', 'WHEAT'], 'PET_CAFE': ['CARROT'], 'SMOOTHIE_SHOP': ['STRAWBERRY', 'MILK'], 'FARMERS_MARKET': ['WHEAT', 'CARROT', 'TOMATO', 'STRAWBERRY']}
+TOWN_CENTER_PRODUCTS = [p for p in PRODUCTS if p != 'FERTILIZER']
+MAX_SHOP_INSTANCES = 8
+
+def get(d, key, default):
+    if isinstance(d, dict):
+        return d.get(key, default)
+    return getattr(d, key, default)
+
+def _quadrant_of(x, y, board_size):
+    half = board_size // 2
+    return ('N' if y < half else 'S') + ('W' if x < half else 'E')
+
+def _shed_access_tiles(board_size):
+    """Four inner-corner tiles around the shed, in NWSE order."""
+    half = board_size // 2
+    return [(half - 1, half - 1), (half, half - 1), (half - 1, half), (half, half)]
+
+def _is_shed_adjacent(pos, board_size):
+    return tuple(pos) in {(x, y) for x, y in _shed_access_tiles(board_size)}
+
+def _new_farm(board_size, starting_money):
+    return {'money': float(starting_money), 'tiles': [[_initial_tile(x, y, board_size) for x in range(board_size)] for y in range(board_size)], 'farmer': list(_default_spawn(board_size)), 'hands': [], 'unlocked_quadrants': ['NW'], 'hires_today': 0}
+
+def _initial_tile(x, y, board_size):
+    return None if _quadrant_of(x, y, board_size) == 'NW' else 'LOCKED'
+
+def _default_spawn(board_size):
+    """First free shed-access tile, NWSE preference."""
+    for tile in _shed_access_tiles(board_size):
+        if _quadrant_of(tile[0], tile[1], board_size) == 'NW':
+            return tile
+    return (0, 0)
+
+def _new_private():
+    return {'shed': {item: 0 for item in PRODUCTS + list(ANIMALS)}, 'seeds': {crop: 0 for crop in CROPS}, 'inventories': [{}]}
+
+def _new_market(params=None):
+    params = params or MARKET_PARAMS
+    inv = {item: params[item]['I0'] for item in PRODUCTS}
+    prices = {item: params[item]['base'] for item in PRODUCTS}
+    market = {'inventory': inv, 'prices': prices}
+    if params is not MARKET_PARAMS:
+        market['params'] = params
+    return market
+
+def _new_town():
+    return {'unlocked_shops': []}
+
+def market_price(item, inventory, params=None):
+    """Floor at PRICE_FLOOR."""
+    p = (params or MARKET_PARAMS)[item]
+    base = p['base']
+    I0 = p['I0']
+    T = p['T']
+    if inventory < I0:
+        f = p['below_func']
+        amp = p['below_target'] * base / _shape(f, T, T)
+        price = base + amp * _shape(f, I0 - inventory, T)
+    else:
+        f = p['above_func']
+        amp = p['above_target'] * base / _shape(f, T, T)
+        price = base - amp * _shape(f, inventory - I0, T)
+    return max(PRICE_FLOOR, int(round(price)))
+
+def _refresh_prices(market):
+    params = market.get('params')
+    for item in PRODUCTS:
+        market['prices'][item] = market_price(item, market['inventory'][item], params)
+
+def _new_plant(crop, day, turns_per_day):
+    cd = CROPS[crop]
+    return {'kind': 'PLANT', 'crop': crop, 'planted_day': day, 'watered_today': False, 'consecutive_unwatered': 1, 'yield_units': 0 if cd['ongoing'] else 1, 'max_lifespan_step': -1 if cd['ongoing'] else (day + cd['max_yield_day'] + 1) * turns_per_day, 'fertilized_until_day': -1}
+
+def _new_animal(animal, day):
+    a = ANIMALS[animal]
+    return {'kind': a['structure'], 'animal': animal, 'placed_day': day, 'yield_units': 0, 'consecutive_unfed': 0, 'fed_today': False, 'cared_today': False, 'fertilizer_available': False, 'pending_care_bonus': 0}
+
+def _farmer_position(farm, idx):
+    """idx 0 = main farmer, 1+ = hand index."""
+    if idx == 0:
+        return farm['farmer']
+    return farm['hands'][idx - 1] if idx - 1 < len(farm['hands']) else None
+
+def _set_farmer_position(farm, idx, pos):
+    if idx == 0:
+        farm['farmer'] = list(pos)
+    else:
+        farm['hands'][idx - 1] = list(pos)
+
+def _farmer_inventory(private, idx):
+    """Inventories list is [main_farmer, *hands]; grow it if idx is past the end."""
+    while len(private['inventories']) <= idx:
+        private['inventories'].append({})
+    return private['inventories'][idx]
+
+def _inv_add(inv, item, n=1):
+    inv[item] = inv.get(item, 0) + n
+
+def _inv_take(inv, item, n=1):
+    if inv.get(item, 0) < n:
+        return False
+    inv[item] -= n
+    if inv[item] == 0:
+        del inv[item]
+    return True
+
+def _apply_unit_action(farm, private, idx, action, board_size, day, turns_per_day, shed_capacity=100):
+    """Process one farmer/hand's action. Invalid / illegal actions are silent no-ops."""
+    if not isinstance(action, list) or not action:
+        return
+    op = action[0]
+    pos = _farmer_position(farm, idx)
+    if pos is None:
+        return
+    fx, fy = (pos[0], pos[1])
+    inv = _farmer_inventory(private, idx)
+    if op in FARMER_MOVES:
+        dx, dy = FARMER_MOVES[op]
+        nx, ny = (fx + dx, fy + dy)
+        if not (0 <= nx < board_size and 0 <= ny < board_size):
+            return
+        _set_farmer_position(farm, idx, (nx, ny))
+        return
+    if op == 'PASS':
+        return
+    tile = farm['tiles'][fy][fx]
+    if op == 'DROP':
+        if not _is_shed_adjacent((fx, fy), board_size):
+            return
+        shed = private['shed']
+        for item, n in list(inv.items()):
+            if n <= 0:
+                del inv[item]
+                continue
+            room = max(0, shed_capacity - sum(shed.values()))
+            take = min(n, room)
+            if take > 0:
+                shed[item] = shed.get(item, 0) + take
+            del inv[item]
+        return
+    if op == 'PICKUP':
+        if not _is_shed_adjacent((fx, fy), board_size):
+            return
+        if len(action) < 2:
+            return
+        item = action[1]
+        n = int(action[2]) if len(action) >= 3 else 1
+        if n <= 0:
+            return
+        available = private['shed'].get(item, 0)
+        n = min(n, available)
+        if n <= 0:
+            return
+        private['shed'][item] -= n
+        _inv_add(inv, item, n)
+        return
+    if op == 'PLACE':
+        if len(action) < 2:
+            return
+        item = action[1]
+        if item in ANIMALS and isinstance(tile, dict) and (tile.get('kind') == ANIMALS[item]['structure']) and ('animal' not in tile):
+            if _inv_take(inv, item, 1):
+                farm['tiles'][fy][fx] = _new_animal(item, day)
+            return
+        if _is_shed_adjacent((fx, fy), board_size):
+            n = int(action[2]) if len(action) >= 3 else 1
+            if n <= 0:
+                return
+            n = min(n, inv.get(item, 0))
+            if n <= 0:
+                return
+            current = sum(private['shed'].values())
+            room = max(0, shed_capacity - current)
+            n = min(n, room)
+            if n <= 0:
+                return
+            inv[item] -= n
+            if inv[item] == 0:
+                del inv[item]
+            private['shed'][item] = private['shed'].get(item, 0) + n
+        return
+    if tile == 'LOCKED':
+        return
+    if op == 'PLANT':
+        if len(action) < 2:
+            return
+        crop = action[1]
+        if crop not in CROPS:
+            return
+        if tile is not None:
+            return
+        if private['seeds'].get(crop, 0) <= 0:
+            return
+        private['seeds'][crop] -= 1
+        farm['tiles'][fy][fx] = _new_plant(crop, day, turns_per_day)
+        return
+    if op == 'WATER':
+        if not (isinstance(tile, dict) and tile.get('kind') == 'PLANT'):
+            return
+        if tile['watered_today']:
+            return
+        tile['watered_today'] = True
+        crop_data = CROPS[tile['crop']]
+        if not crop_data['ongoing']:
+            age_days = day - tile['planted_day']
+            window_start = (crop_data['max_yield_day'] + 1) // 2
+            if window_start <= age_days <= crop_data['max_yield_day']:
+                bonus = 2 if tile['fertilized_until_day'] >= day else 1
+                tile['yield_units'] = min(crop_data['max_yield'], tile['yield_units'] + bonus)
+        return
+    if op == 'HARVEST':
+        if not isinstance(tile, dict):
+            return
+        if tile.get('yield_units', 0) <= 0:
+            return
+        if tile.get('kind') == 'PLANT':
+            crop_data = CROPS[tile['crop']]
+            if day - tile['planted_day'] < crop_data['first_yield_day']:
+                if crop_data['ongoing']:
+                    print(f"WARNING: HARVEST on immature ongoing {tile['crop']} (planted day {tile['planted_day']}, current day {day}, first_yield_day {crop_data['first_yield_day']}, yield_units {tile['yield_units']}); should never happen")
+                return
+            units = tile['yield_units']
+            tile['yield_units'] = 0
+            _inv_add(inv, tile['crop'], units)
+            if not crop_data['ongoing']:
+                farm['tiles'][fy][fx] = None
+        elif 'animal' in tile:
+            units = tile['yield_units']
+            tile['yield_units'] = 0
+            _inv_add(inv, ANIMALS[tile['animal']]['product'], units)
+        return
+    if op == 'FERTILIZE':
+        if not (isinstance(tile, dict) and tile.get('kind') == 'PLANT'):
+            return
+        if not _inv_take(inv, 'FERTILIZER', 1):
+            return
+        tile['fertilized_until_day'] = max(tile.get('fertilized_until_day', -1), day + 2)
+        return
+    if op == 'DIG':
+        if tile is None:
+            return
+        if isinstance(tile, dict) and 'animal' in tile:
+            return
+        farm['tiles'][fy][fx] = None
+        return
+    if op == 'BUILD_COOP':
+        if tile is not None:
+            return
+        farm['tiles'][fy][fx] = {'kind': 'COOP'}
+        return
+    if op == 'BUILD_PASTURE':
+        if tile is not None:
+            return
+        farm['tiles'][fy][fx] = {'kind': 'PASTURE'}
+        return
+    if op == 'FEED':
+        if not (isinstance(tile, dict) and 'animal' in tile):
+            return
+        if tile['fed_today']:
+            return
+        if not _inv_take(inv, 'WHEAT', 1):
+            return
+        tile['fed_today'] = True
+        return
+    if op == 'COLLECT_FERTILIZER':
+        if not (isinstance(tile, dict) and 'animal' in tile):
+            return
+        if not tile['fertilizer_available']:
+            return
+        tile['fertilizer_available'] = False
+        _inv_add(inv, 'FERTILIZER', 1)
+        return
+    if op == 'CARE':
+        if not (isinstance(tile, dict) and 'animal' in tile):
+            return
+        if tile['cared_today']:
+            return
+        tile['cared_today'] = True
+        return
+
+def _spawn_hand(farm, board_size):
+    """First free shed-access tile (NWSE order); ties broken by min occupancy."""
+    occupants = {tile: 0 for tile in _shed_access_tiles(board_size)}
+    all_pos = [tuple(farm['farmer'])] + [tuple(p) for p in farm['hands']]
+    for pos in all_pos:
+        if pos in occupants:
+            occupants[pos] += 1
+    best = sorted(occupants.items(), key=lambda kv: (kv[1], _shed_access_tiles(board_size).index(kv[0])))
+    return list(best[0][0])
+
+def _process_market(state, env):
+    """Per-unit lockstep: at each step, quote both players' current-unit prices, then commit both."""
+    obs0 = state[0].observation
+    market = obs0.market
+    farms = obs0.farms
+    privates = [s.observation.private for s in state]
+    board_size = int(get(env.configuration, 'boardSize', 10))
+    max_orders = max(1, int(get(env.configuration, 'maxMarketOrdersPerTurn', 10)))
+    hire_mult = int(get(env.configuration, 'farmHandCostMult', FARM_HAND_COST_MULT))
+    shed_capacity = int(get(env.configuration, 'shedCapacity', 100))
+    queues = []
+    for s in state:
+        action = s.action if isinstance(s.action, dict) else {}
+        m = action.get('market', []) if isinstance(action, dict) else []
+        q = list(m) if isinstance(m, list) else []
+        queues.append(q[:max_orders])
+    max_len = max((len(q) for q in queues), default=0)
+    for i in range(max_len):
+        order_states = []
+        for player_id, q in enumerate(queues):
+            ostate = None
+            if i < len(q):
+                ostate = _parse_order(q[i])
+            order_states.append(ostate)
+        for player_id, ostate in enumerate(order_states):
+            if ostate is None:
+                continue
+            op = ostate['type']
+            if op == 'HIRE':
+                _do_hire(farms[player_id], privates[player_id], board_size, hire_mult)
+                order_states[player_id] = None
+            elif op == 'BUY_LAND':
+                _do_buy_land(farms[player_id], board_size)
+                order_states[player_id] = None
+        idx_esc = 0
+        while True:
+            idx_esc += 1
+            if idx_esc >= 100000:
+                print('WARNING: kaggriculture market loop exceeded 100k iterations; aborting')
+                break
+            quoted = [None, None]
+            for player_id, ostate in enumerate(order_states):
+                if ostate is None or ostate['remaining'] <= 0:
+                    continue
+                op = ostate['type']
+                item = ostate['item']
+                if op == 'SELL' and item in PRODUCTS:
+                    quoted[player_id] = ('SELL', item, market_price(item, market['inventory'][item], market.get('params')), ostate)
+                elif op == 'BUY_PRODUCT' and item in ('WHEAT', 'FERTILIZER'):
+                    quoted[player_id] = ('BUY_PRODUCT', item, market_price(item, market['inventory'][item] - 1, market.get('params')), ostate)
+                elif op == 'BUY_SEED' and item in CROPS:
+                    quoted[player_id] = ('BUY_SEED', item, CROPS[item]['seed'], ostate)
+                elif op == 'BUY_ANIMAL' and item in ANIMALS:
+                    quoted[player_id] = ('BUY_ANIMAL', item, ANIMALS[item]['cost'], ostate)
+                else:
+                    order_states[player_id] = None
+            if all((q is None for q in quoted)):
+                break
+            committed_any = False
+            for player_id, q in enumerate(quoted):
+                if q is None:
+                    continue
+                op, item, price, ostate = q
+                ok = _commit_unit(op, item, price, farms[player_id], privates[player_id], market, shed_capacity)
+                if ok:
+                    ostate['remaining'] -= 1
+                    committed_any = True
+                else:
+                    order_states[player_id] = None
+            if not committed_any:
+                break
+        _refresh_prices(market)
+
+def _parse_order(order):
+    if not isinstance(order, list) or not order:
+        return None
+    op = order[0]
+    if op == 'HIRE':
+        return {'type': 'HIRE'}
+    if op == 'BUY_LAND':
+        return {'type': 'BUY_LAND'}
+    if op in ('BUY_SEED', 'BUY_PRODUCT', 'BUY_ANIMAL', 'SELL'):
+        if len(order) < 3:
+            return None
+        try:
+            n = int(order[2])
+        except (TypeError, ValueError):
+            return None
+        if n <= 0:
+            return None
+        return {'type': op, 'item': order[1], 'remaining': n}
+    return None
+
+def _commit_unit(op, item, price, farm, private, market, shed_capacity=100):
+    if op == 'SELL':
+        if private['shed'].get(item, 0) <= 0:
+            return False
+        private['shed'][item] -= 1
+        farm['money'] += price
+        if price > 1:
+            market['inventory'][item] += 1
+        return True
+    if op == 'BUY_PRODUCT':
+        if farm['money'] < price:
+            return False
+        if sum(private['shed'].values()) >= shed_capacity:
+            return False
+        farm['money'] -= price
+        private['shed'][item] = private['shed'].get(item, 0) + 1
+        market['inventory'][item] -= 1
+        return True
+    if op == 'BUY_SEED':
+        if farm['money'] < price:
+            return False
+        farm['money'] -= price
+        private['seeds'][item] = private['seeds'].get(item, 0) + 1
+        return True
+    if op == 'BUY_ANIMAL':
+        if farm['money'] < price:
+            return False
+        if sum(private['shed'].values()) >= shed_capacity:
+            return False
+        farm['money'] -= price
+        private['shed'][item] = private['shed'].get(item, 0) + 1
+        return True
+    return False
+
+def _fib(n):
+    """Indexed so _fib(0)=1, _fib(1)=1, _fib(2)=2, _fib(3)=3, _fib(4)=5..."""
+    a, b = (1, 1)
+    for _ in range(n):
+        a, b = (b, a + b)
+    return a
+
+def _hire_cost(n_already_today, mult=FARM_HAND_COST_MULT):
+    return mult * _fib(n_already_today)
+
+def _do_hire(farm, private, board_size, mult=FARM_HAND_COST_MULT):
+    cost = _hire_cost(farm['hires_today'], mult)
+    if farm['money'] < cost:
+        return
+    farm['money'] -= cost
+    farm['hires_today'] += 1
+    farm['hands'].append(_spawn_hand(farm, board_size))
+    private['inventories'].append({})
+
+def _do_buy_land(farm, board_size):
+    n_unlocked_extra = len(farm['unlocked_quadrants']) - 1
+    if n_unlocked_extra >= len(LAND_ORDER):
+        return
+    cost = LAND_PRICES[n_unlocked_extra]
+    if farm['money'] < cost:
+        return
+    farm['money'] -= cost
+    quadrant = LAND_ORDER[n_unlocked_extra]
+    farm['unlocked_quadrants'].append(quadrant)
+    for y in range(board_size):
+        for x in range(board_size):
+            if _quadrant_of(x, y, board_size) == quadrant and farm['tiles'][y][x] == 'LOCKED':
+                farm['tiles'][y][x] = None
+
+def _town_consume(env, state, step):
+    obs0 = state[0].observation
+    market = obs0.market
+    town = obs0.town
+    cfg = env.configuration
+    shop_interval = max(1, int(get(cfg, 'townShopSellInterval', 4)))
+    center_interval = max(1, int(get(cfg, 'townCenterSellInterval', 24)))
+    if step % shop_interval == 0:
+        for shop_name in town.get('unlocked_shops', []):
+            products = SHOPS[shop_name]
+            multiplier = 2 if len(products) == 1 else 1
+            for item in products:
+                market['inventory'][item] -= multiplier
+    if step % center_interval == 0:
+        for item in TOWN_CENTER_PRODUCTS:
+            market['inventory'][item] -= 1
+    _refresh_prices(market)
+
+def _decay_plants(farm, step):
+    board_size = len(farm['tiles'])
+    for y in range(board_size):
+        for x in range(board_size):
+            tile = farm['tiles'][y][x]
+            if not isinstance(tile, dict) or tile.get('kind') != 'PLANT':
+                continue
+            mls = tile['max_lifespan_step']
+            if mls < 0 or step < mls:
+                continue
+            if (step - mls) % 2 != 0:
+                continue
+            tile['yield_units'] -= 1
+            if tile['yield_units'] <= 0:
+                farm['tiles'][y][x] = {'kind': 'WEED'}
+
+def _daily_refresh_plants(farm, current_day, turns_per_day):
+    board_size = len(farm['tiles'])
+    next_day = current_day + 1
+    for y in range(board_size):
+        for x in range(board_size):
+            tile = farm['tiles'][y][x]
+            if not isinstance(tile, dict) or tile.get('kind') != 'PLANT':
+                continue
+            was_watered = tile['watered_today']
+            if was_watered:
+                tile['consecutive_unwatered'] = 0
+            else:
+                tile['consecutive_unwatered'] += 1
+            tile['watered_today'] = False
+            if tile['consecutive_unwatered'] >= 2:
+                farm['tiles'][y][x] = {'kind': 'WEED'}
+                continue
+            cd = CROPS[tile['crop']]
+            if not cd['ongoing']:
+                continue
+            days_since_first = next_day - tile['planted_day'] - cd['first_yield_day']
+            if days_since_first < 0:
+                continue
+            interval = cd['interval']
+            if days_since_first % interval != 0:
+                continue
+            production_count = days_since_first // interval + 1
+            if production_count > cd['max_yield']:
+                continue
+            fertilized = was_watered and tile.get('fertilized_until_day', -1) >= current_day
+            tile['yield_units'] = min(cd['max_yield'], tile['yield_units'] + (2 if fertilized else 1))
+            if production_count == cd['max_yield']:
+                tile['max_lifespan_step'] = (next_day + 1) * turns_per_day
+
+def _daily_refresh_animals(farm, day):
+    board_size = len(farm['tiles'])
+    next_day = day + 1
+    for y in range(board_size):
+        for x in range(board_size):
+            tile = farm['tiles'][y][x]
+            if not (isinstance(tile, dict) and 'animal' in tile):
+                continue
+            if tile['fed_today']:
+                tile['consecutive_unfed'] = 0
+            else:
+                tile['consecutive_unfed'] += 1
+            if tile['consecutive_unfed'] >= 2:
+                farm['tiles'][y][x] = {'kind': ANIMALS[tile['animal']]['structure']}
+                continue
+            a = ANIMALS[tile['animal']]
+            days_since_first = next_day - tile['placed_day'] - a['first_yield_day']
+            if days_since_first >= 0 and days_since_first % a['interval'] == 0:
+                base = 1
+                bonus = tile.pop('pending_care_bonus', 0) if tile['fed_today'] else 0
+                tile['yield_units'] = min(a['max_held'], tile['yield_units'] + base + bonus)
+                tile['pending_care_bonus'] = 0
+            if tile['cared_today'] and tile['fed_today']:
+                tile['pending_care_bonus'] = tile.get('pending_care_bonus', 0) + 1
+            tile['fertilizer_available'] = True
+            tile['fed_today'] = False
+            tile['cared_today'] = False
+
+def _spawn_weeds(farm, board_size, weed_chance, rng):
+    for y in range(board_size):
+        for x in range(board_size):
+            if farm['tiles'][y][x] is None and rng.random() < weed_chance:
+                farm['tiles'][y][x] = {'kind': 'WEED'}
+
+def _drop_inventories_to_shed(private, capacity):
+    """Drop every per-farmer inventory into the shed up to `capacity`; overflow is discarded.
+    Seeds are tracked separately in private["seeds"] and don't pass through the shed."""
+    shed = private['shed']
+    for inv in private['inventories']:
+        for item, n in list(inv.items()):
+            if n <= 0:
+                del inv[item]
+                continue
+            current = sum((v for k, v in shed.items()))
+            room = max(0, capacity - current)
+            take = min(n, room)
+            if take > 0:
+                shed[item] = shed.get(item, 0) + take
+            del inv[item]
+
+def _end_of_day(state, env, day):
+    obs0 = state[0].observation
+    cfg = env.configuration
+    board_size = int(get(cfg, 'boardSize', 10))
+    turns_per_day = max(1, int(get(cfg, 'turnsPerDay', 24)))
+    weed_chance = float(get(cfg, 'weedSpawnChance', 0.005))
+    shed_cap = int(get(cfg, 'shedCapacity', 100))
+    shop_interval = max(1, int(get(cfg, 'townShopUnlockInterval', 3)))
+    seed = env.info.get('seed', 0)
+    rng = random.Random(seed * 1000003 ^ day)
+    for player_id, farm in enumerate(obs0.farms):
+        private = state[player_id].observation.private
+        _daily_refresh_plants(farm, day, turns_per_day)
+        _daily_refresh_animals(farm, day)
+        _spawn_weeds(farm, board_size, weed_chance, rng)
+        _drop_inventories_to_shed(private, shed_cap)
+        farm['farmer'] = list(_default_spawn(board_size))
+        farm['hands'] = []
+        farm['hires_today'] = 0
+        private['inventories'] = [{}]
+    next_day = day + 1
+    town = obs0.town
+    if next_day > 0 and next_day % shop_interval == 0:
+        if len(town['unlocked_shops']) < MAX_SHOP_INSTANCES:
+            town['unlocked_shops'].append(rng.choice(sorted(SHOPS)))
+
+def interpreter(state, env):
+    num_agents = len(state)
+    obs0 = state[0].observation
+    if not hasattr(obs0, 'farms') or not obs0.farms:
+        _initialize(state, env)
+        return state
+    if env.done:
+        return state
+    cfg = env.configuration
+    turns_per_day = max(1, int(get(cfg, 'turnsPerDay', 24)))
+    board_size = int(get(cfg, 'boardSize', 10))
+    shed_capacity = int(get(cfg, 'shedCapacity', 100))
+    step = get(obs0, 'step', 0)
+    day = step // turns_per_day
+    for i, s in enumerate(state):
+        action = s.action if isinstance(s.action, dict) else {}
+        farmer_action = action.get('farmer', ['PASS']) if isinstance(action, dict) else ['PASS']
+        hands_actions = action.get('hands', []) if isinstance(action, dict) else []
+        if not isinstance(hands_actions, list):
+            hands_actions = []
+        unit_actions = [farmer_action, *hands_actions]
+        plant_demand = {}
+        for a in unit_actions:
+            if isinstance(a, list) and len(a) >= 2 and (a[0] == 'PLANT'):
+                plant_demand[a[1]] = plant_demand.get(a[1], 0) + 1
+        seeds = s.observation.private.get('seeds', {}) if hasattr(s.observation.private, 'get') else {}
+        blocked = {crop for crop, n in plant_demand.items() if n > seeds.get(crop, 0)}
+
+        def _allowed(a):
+            if isinstance(a, list) and len(a) >= 2 and (a[0] == 'PLANT') and (a[1] in blocked):
+                return ['PASS']
+            return a
+        _apply_unit_action(obs0.farms[i], s.observation.private, 0, _allowed(farmer_action), board_size, day, turns_per_day, shed_capacity)
+        for h_idx, hand_action in enumerate(hands_actions):
+            _apply_unit_action(obs0.farms[i], s.observation.private, h_idx + 1, _allowed(hand_action), board_size, day, turns_per_day, shed_capacity)
+    _process_market(state, env)
+    _town_consume(env, state, step)
+    for farm in obs0.farms:
+        _decay_plants(farm, step)
+    if (step + 1) % turns_per_day == 0:
+        _end_of_day(state, env, day)
+    next_step = step + 1
+    obs0.day = next_step // turns_per_day
+    obs0.hour = next_step % turns_per_day
+    for i in range(1, num_agents):
+        state[i].observation.farms = obs0.farms
+        state[i].observation.market = obs0.market
+        state[i].observation.town = obs0.town
+        state[i].observation.day = obs0.day
+        state[i].observation.hour = obs0.hour
+    if step >= cfg.episodeSteps - 2:
+        for s in state:
+            s.status = 'DONE'
+            s.reward = float(obs0.farms[s.observation.player]['money'])
+    return state
+
+
+============================== 输出要求 ==============================
+
+现在输出完整可运行的策略代码（单文件 main.py 或按文件名标注的多文件包，全文不要省略、不要 TODO）。

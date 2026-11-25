@@ -1,0 +1,1116 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>缓存攻防 · 回放播放器</title>
+<style>
+  :root{
+    --bg:#f5f7f8; --panel:#ffffff; --panel2:#eef2f4; --border:#d8e0e5; --text:#18272d;
+    --muted:#617781; --a:#078cab; --b:#b96530; --hit:#1d8a5e; --hit-bg:#e3f6ed;
+    --miss:#c94a44; --miss-bg:#fdeceb; --evict:#b86e0c; --evict-bg:#fef4e4;
+    --fault:#b4236b; --fault-bg:#fce8f3; --div:#7c4dff;
+    --grid:#dfe7ea; --marker:#18272d80; --slot:#f8fafb;
+  }
+  :root[data-theme="dark"]{
+    --bg:#111719; --panel:#1a2327; --panel2:#243036; --border:#36454c; --text:#e3edf1;
+    --muted:#9aadb6; --a:#42c6d8; --b:#edb572; --hit:#37c88d; --hit-bg:#143528;
+    --miss:#f0716b; --miss-bg:#3b1e20; --evict:#f2ae52; --evict-bg:#3a2c16;
+    --fault:#f472b6; --fault-bg:#3d1a2e; --div:#b694ff;
+    --grid:#2f3e46; --marker:#e3edf180; --slot:#141c20;
+  }
+  *{box-sizing:border-box;letter-spacing:0}
+  [hidden]{display:none!important}
+  body{margin:0;background:var(--bg);color:var(--text);font:13.5px/1.5 -apple-system,"Segoe UI","Microsoft YaHei",sans-serif}
+  button,input,select{font:inherit}
+  button:focus-visible,input:focus-visible,select:focus-visible{outline:2px solid var(--a);outline-offset:2px}
+  .mono{font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+  #wrap{max-width:1640px;margin:0 auto;padding:18px 22px 136px}
+  header#top{display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;border-bottom:1px solid var(--border);padding-bottom:12px;margin-bottom:16px}
+  h1{font-size:19px;margin:0;overflow-wrap:anywhere}
+  .tag{font-size:11.5px;color:var(--muted);padding:2px 0;font-family:ui-monospace,Consolas,monospace}
+  #theme{margin-left:auto}
+  .nm{font-weight:700;overflow-wrap:anywhere}
+  .nmA{color:var(--a)} .nmB{color:var(--b)}
+  #drop{border:1px dashed var(--border);border-radius:6px;padding:48px 20px;text-align:center;color:var(--muted);background:var(--panel)}
+  #drop.hot{border-color:var(--a);color:var(--text);background:var(--panel2)}
+  #loadbox{margin:8px 0 0;font-size:12px;color:var(--muted)}
+  #err{color:var(--miss);white-space:pre-wrap;font-size:12px;margin-top:8px}
+  main{display:grid;grid-template-columns:minmax(0,1fr) minmax(300px,360px);gap:18px;align-items:start}
+  .col-main{display:flex;flex-direction:column;gap:16px;min-width:0}
+  .boards{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .charts2{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}
+  .card{min-width:0;border:1px solid var(--border);border-radius:6px;padding:12px 14px;background:var(--panel)}
+  .card h2{font-size:13.5px;margin:0 0 10px;display:flex;gap:8px;flex-wrap:wrap;justify-content:space-between;align-items:center}
+  .card h2 .sub{font-size:11.5px;font-weight:500;color:var(--muted)}
+  .statline{font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums;font-size:12.5px;font-weight:700;white-space:nowrap}
+  .badge{display:inline-flex;align-items:center;gap:4px;padding:1px 7px;border-radius:999px;font-size:11px;font-weight:700;font-family:ui-monospace,Consolas,monospace}
+  .badge.hit{background:var(--hit-bg);color:var(--hit)}
+  .badge.miss{background:var(--miss-bg);color:var(--miss)}
+  .badge.evict{background:var(--evict-bg);color:var(--evict)}
+  .badge.fault{background:var(--fault-bg);color:var(--fault)}
+  .badge.neutral{background:var(--panel2);color:var(--muted)}
+  .badge.optwin{background:var(--evict-bg);color:var(--evict)}
+
+  /* Cache slot grid */
+  .cache-grid{display:grid;gap:5px;min-width:0}
+  .slot{position:relative;border:1px solid var(--border);border-radius:4px;background:var(--slot);
+        min-height:36px;padding:4px 3px;display:flex;flex-direction:column;align-items:center;justify-content:center;
+        font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums;transition:border-color .1s,background .1s}
+  .slot.compact{min-height:28px;padding:2px}
+  .slot.empty{opacity:.42;border-style:dashed}
+  .slot .sid{position:absolute;top:1px;left:3px;font-size:8.5px;color:var(--muted);opacity:.75}
+  .slot .kval{font-size:13px;font-weight:700;line-height:1.1}
+  .slot.compact .kval{font-size:11.5px}
+  .slot.active-hit{background:var(--hit-bg);border-color:var(--hit);box-shadow:0 0 0 2px color-mix(in srgb,var(--hit) 32%,transparent)}
+  .slot.active-hit .kval{color:var(--hit)}
+  .slot.active-miss{background:var(--miss-bg);border-color:var(--miss);box-shadow:0 0 0 2px color-mix(in srgb,var(--miss) 32%,transparent)}
+  .slot.active-miss .kval{color:var(--miss)}
+  .slot.active-fault{background:var(--fault-bg);border-color:var(--fault);box-shadow:0 0 0 2px color-mix(in srgb,var(--fault) 35%,transparent)}
+  .slot .divdot{position:absolute;top:3px;right:3px;width:6px;height:6px;border-radius:50%;background:var(--div)}
+
+  .cache-foot{display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;margin-top:10px;padding-top:8px;border-top:1px solid var(--border);font-size:12px}
+  .cache-foot .lbl{color:var(--muted);font-size:11.5px}
+  .legend{display:flex;flex-wrap:wrap;gap:6px 12px;margin-top:8px;font-size:10.5px;color:var(--muted)}
+  .legend i{display:inline-block;width:8px;height:8px;border-radius:2px;margin-right:4px;vertical-align:-1px}
+
+  /* Rolling Access Tape */
+  .tape-tools{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
+  .tape-tools button{padding:3px 8px;min-height:26px;font-size:11.5px}
+  .tape{display:grid;grid-template-columns:repeat(33,minmax(0,1fr));gap:3px;overflow-x:auto;padding:4px 1px}
+  .tcell{position:relative;border:1px solid var(--border);border-radius:4px;background:var(--slot);
+         padding:4px 1px 3px;text-align:center;cursor:pointer;min-width:26px;user-select:none;
+         font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums}
+  .tcell:hover{border-color:var(--a)}
+  .tcell.hit{background:var(--hit-bg);border-color:color-mix(in srgb,var(--hit) 45%,var(--border))}
+  .tcell.miss{background:var(--miss-bg);border-color:color-mix(in srgb,var(--miss) 45%,var(--border))}
+  .tcell.cur{outline:2px solid var(--a);outline-offset:1px;z-index:2;transform:translateY(-1px)}
+  .tcell.pad{visibility:hidden;pointer-events:none}
+  .tcell .tt{font-size:8.5px;color:var(--muted);line-height:1}
+  .tcell .tk{font-size:11.5px;font-weight:700;line-height:1.25;margin-top:1px}
+  .tcell.hit .tk{color:var(--hit)}
+  .tcell.miss .tk{color:var(--miss)}
+  .tcell .te{font-size:8.5px;color:var(--evict);line-height:1.05;min-height:10px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+  .tcell .tmk{position:absolute;top:1px;right:2px;font-size:8px;line-height:1}
+  .tcell .tmk.opt{color:var(--a)}
+  .tcell .tmk.flt{color:var(--fault);left:2px;right:auto}
+
+  /* Charts */
+  canvas{width:100%;height:170px;display:block;border-radius:4px}
+  canvas.scrub{cursor:crosshair}
+  #cvFreq{height:150px}
+  .chart-leg{display:flex;flex-wrap:wrap;gap:8px 14px;font-size:11px;color:var(--muted);margin-top:6px}
+  .chart-leg i{display:inline-block;width:10px;height:3px;margin-right:4px;vertical-align:3px;border-radius:1px}
+
+  /* Sidebar */
+  aside{display:flex;flex-direction:column;gap:16px;min-width:0}
+  table.kv{width:100%;border-collapse:collapse;font-size:12px}
+  table.kv td{padding:4px 2px;border-bottom:1px solid var(--border);vertical-align:top}
+  table.kv tr:last-child td{border-bottom:none}
+  table.kv td.k{color:var(--muted);white-space:nowrap;padding-right:10px}
+  table.kv td.v{text-align:right;font-family:ui-monospace,Consolas,monospace;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+  .hotkeys{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
+  .chip{font-family:ui-monospace,Consolas,monospace;font-size:11px;padding:2px 6px;border-radius:4px;background:var(--panel2);border:1px solid var(--border)}
+  .chip.in-cache{border-color:var(--a);color:var(--a);font-weight:700}
+  .segbtn{padding:2px 8px;min-height:24px;font-size:11px}
+  .segbtn.on{background:var(--a);color:var(--bg);border-color:var(--a)}
+
+  /* Fixed playback bar */
+  #controls{position:fixed;bottom:0;left:0;right:0;z-index:20;border-top:1px solid var(--border);background:var(--bg);padding:12px 22px calc(10px + env(safe-area-inset-bottom))}
+  #controls .row{max-width:1596px;margin-left:auto;margin-right:auto}
+  .row{display:flex;flex-wrap:wrap;gap:7px;align-items:center}
+  button,select{background:var(--panel);color:var(--text);border:1px solid var(--border);border-radius:4px;padding:5px 10px;min-height:32px;cursor:pointer;font-size:12.5px}
+  button:hover{border-color:var(--a)}
+  button.on{background:var(--a);color:var(--bg);border-color:var(--a)}
+  #play,#b1,#f1,#b50,#f50,#start,#end{min-width:36px;padding:4px 7px;font-size:14px}
+  #play{color:var(--a);font-size:16px}
+  input[type=range]{flex:1;width:100%;min-width:0;accent-color:var(--a);height:20px}
+  .hint{color:var(--muted);font-size:12px}
+  #clock{margin-left:auto;overflow-wrap:anywhere}
+
+  @media(max-width:1200px){main{grid-template-columns:1fr}aside{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:16px}aside .card:last-child{grid-column:1/-1}}
+  @media(max-width:780px){#wrap{padding:12px 12px 180px}.boards,.charts2{grid-template-columns:1fr}aside{grid-template-columns:1fr}#theme{margin-left:0}#clock{width:100%;margin-left:0}.tape{grid-template-columns:repeat(17,minmax(30px,1fr))}}
+</style>
+</head>
+<body>
+<div id="wrap">
+  <header id="top">
+    <h1>缓存攻防 · 回放</h1>
+    <span class="tag" id="tSeed">seed –</span>
+    <span class="tag" id="tCfg">C=– K=– N=–</span>
+    <span class="tag" id="tStep">step –</span>
+    <span id="tPlayers"></span>
+    <span class="tag" id="tScore">–</span>
+    <span class="tag" id="tEngine">–</span>
+    <button id="openFile" type="button">打开回放</button>
+    <select id="theme" aria-label="主题">
+      <option value="light">亮色</option>
+      <option value="dark">暗色</option>
+      <option value="system">跟随系统</option>
+    </select>
+  </header>
+
+  <div id="drop">
+    把 <span class="mono">afb-cache-duel-replay/1</span> 回放 JSON 拖到这里，或
+    <label style="cursor:pointer;text-decoration:underline;color:var(--a)">
+      选择文件<input id="file" type="file" accept=".json,application/json" hidden>
+    </label>
+    <div id="loadbox" role="status"></div>
+    <div id="err"></div>
+  </div>
+
+  <main id="main" hidden>
+    <div class="col-main">
+      <div class="boards">
+        <div class="card" id="cardDef">
+          <h2>
+            <span>防守方缓存 · <span class="nm nmB" id="nameDef">Defender</span></span>
+            <span class="statline" id="statDef">–</span>
+          </h2>
+          <div class="cache-grid" id="gridDef"></div>
+          <div class="cache-foot" id="footDef"></div>
+          <div class="legend">
+            <span><i style="background:var(--hit)"></i>命中(HIT)</span>
+            <span><i style="background:var(--miss)"></i>缺失装入(MISS)</span>
+            <span><i style="background:var(--fault)"></i>犯规强驱</span>
+            <span><i style="background:var(--div);border-radius:50%"></i>仅防守方持有(与OPT分歧)</span>
+          </div>
+        </div>
+
+        <div class="card" id="cardOpt">
+          <h2>
+            <span>离线最优 · <span class="nm nmA">Belady OPT</span></span>
+            <span class="statline" id="statOpt">–</span>
+          </h2>
+          <div class="cache-grid" id="gridOpt"></div>
+          <div class="cache-foot" id="footOpt"></div>
+          <div class="legend">
+            <span><i style="background:var(--hit)"></i>OPT 命中</span>
+            <span><i style="background:var(--miss)"></i>OPT 缺失装入</span>
+            <span><i style="background:var(--div);border-radius:50%"></i>仅 OPT 持有(防守方错失)</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>
+          <span>滚动访问磁带 <span class="sub" id="tapeRange">t-24 .. t .. t+8（点击任意格跳转）</span></span>
+          <span class="tape-tools">
+            <button id="prevDiv" type="button" title="跳转到上一个 OPT 命中但防守缺失的步">上个分歧</button>
+            <button id="nextDiv" type="button" title="跳转到下一个 OPT 命中但防守缺失的步">下个分歧</button>
+            <button id="nextMiss" type="button" title="跳转到下一个防守缺失步">下个缺失</button>
+            <button id="nextFault" type="button" title="跳转到下一个犯规步">下个犯规</button>
+          </span>
+        </h2>
+        <div class="tape" id="tape"></div>
+        <div class="legend">
+          <span><i style="background:var(--hit)"></i>防守命中</span>
+          <span><i style="background:var(--miss)"></i>防守缺失</span>
+          <span><i style="background:var(--evict)"></i>底部 -k 表示被驱逐的 key</span>
+          <span><i style="background:var(--a)"></i>右上 ★ 表示 OPT 命中而防守缺失</span>
+          <span><i style="background:var(--fault)"></i>左上 ⚠ 表示攻/防犯规</span>
+        </div>
+      </div>
+
+      <div class="charts2">
+        <div class="card">
+          <h2>
+            <span>累计缺失曲线 <span class="sub">（点击画布跳转）</span></span>
+            <span class="sub mono" id="missHead">–</span>
+          </h2>
+          <canvas id="cvMiss" class="scrub" width="640" height="220"></canvas>
+          <div class="chart-leg">
+            <span><i style="background:var(--b)"></i>Defender 累计缺失</span>
+            <span><i style="background:var(--a)"></i>Belady OPT 累计缺失</span>
+          </div>
+        </div>
+
+        <div class="card">
+          <h2>
+            <span>实时竞争分 &amp; 命中率 <span class="sub">（点击画布跳转）</span></span>
+            <span class="sub mono" id="scoreHead">–</span>
+          </h2>
+          <canvas id="cvScore" class="scrub" width="640" height="220"></canvas>
+          <div class="chart-leg">
+            <span><i style="background:var(--a)"></i>防守竞争分 OPT / M_def</span>
+            <span><i style="background:var(--hit)"></i>100 步滑动命中率</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <aside>
+      <div class="card">
+        <h2>当前步详情 <span class="sub mono" id="detailStep">t = –</span></h2>
+        <table class="kv" id="stepDetail"></table>
+      </div>
+
+      <div class="card">
+        <h2>
+          <span>Key 访问频次分布</span>
+          <span>
+            <button id="freqCur" type="button" class="segbtn on">截至当前</button>
+            <button id="freqAll" type="button" class="segbtn">全局</button>
+          </span>
+        </h2>
+        <canvas id="cvFreq" width="520" height="190"></canvas>
+        <div class="chart-leg">
+          <span><i style="background:var(--a)"></i>当前在防守缓存内</span>
+          <span><i style="background:var(--muted)"></i>未在防守缓存内</span>
+          <span><i style="background:var(--b)"></i>当前请求 Key</span>
+        </div>
+        <div class="hotkeys" id="hotKeys"></div>
+      </div>
+
+      <div class="card">
+        <h2>对局元信息</h2>
+        <table class="kv" id="metaBox"></table>
+      </div>
+    </aside>
+  </main>
+
+  <div id="controls" hidden>
+    <div class="row" style="margin-bottom:6px">
+      <button id="play" title="播放/暂停 (Space)" aria-label="播放">▶</button>
+      <select id="spd" aria-label="播放速度">
+        <option value="1">1×</option>
+        <option value="2">2×</option>
+        <option value="5" selected>5×</option>
+        <option value="10">10×</option>
+        <option value="25">25×</option>
+        <option value="50">50×</option>
+      </select>
+      <button id="start" title="跳到开头 (Home)" aria-label="开头">⇤</button>
+      <button id="b50" title="后退 50 步 (Shift+←)" aria-label="后退50步">-50</button>
+      <button id="b1" title="上一步 (←)" aria-label="上一步">←</button>
+      <button id="f1" title="下一步 (→)" aria-label="下一步">→</button>
+      <button id="f50" title="前进 50 步 (Shift+→)" aria-label="前进50步">+50</button>
+      <button id="end" title="跳到结束 (End)" aria-label="结束">⇥</button>
+      <span class="hint mono" id="clock">–</span>
+    </div>
+    <div class="row">
+      <input id="seek" aria-label="回放进度" type="range" min="0" max="0" value="0" step="1">
+    </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+var FORMAT = "afb-cache-duel-replay/1";
+var BASE_SPS = 5; // 1x = 5 steps/sec, 50x = 250 steps/sec
+var SLOT_STRIDE = 128;
+
+var S = {
+  rep: null,
+  N: 0,
+  C: 0,
+  K: 0,
+  idx: 0,
+  renderedIdx: -1,
+  playing: false,
+  speed: 5,
+  lastTs: 0,
+  acc: 0,
+  raf: 0,
+  src: "",
+  loadSeq: 0,
+  freqMode: "cur",
+  cumDefMiss: null,
+  cumOptMiss: null,
+  cumDefHit: null,
+  rollHit: null,
+  globalFreq: null,
+  attFaultSet: null,
+  defFaultSet: null,
+  slotSnaps: [],
+  curDefSlots: [],
+  curOptSlots: [],
+  curSimStep: -1,
+  defCells: [],
+  optCells: [],
+  charts: { miss: null, score: null }
+};
+
+function esc(v){
+  return String(v === null || v === undefined ? "" : v).replace(/[&<>"']/g, function(c){
+    return {"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c];
+  });
+}
+
+function fmtPct(x){ return (x * 100).toFixed(1) + "%"; }
+function fmt4(x){ return Number(x).toFixed(4); }
+
+/* ---------------- 预计算与确定性槽位快照 ---------------- */
+function preprocess(rep){
+  var cfg = rep.meta.config;
+  var N = cfg.length | 0, C = cfg.cache_size | 0, K = cfg.universe | 0;
+  var keys = rep.keys, hits = rep.hits, evicts = rep.evicts;
+  var optHits = rep.opt_hits, optEvicts = rep.opt_evicts;
+
+  var cumDefMiss = new Int32Array(N);
+  var cumOptMiss = new Int32Array(N);
+  var cumDefHit = new Int32Array(N);
+  var rollHit = new Float32Array(N);
+  var globalFreq = new Int32Array(K);
+  var slotSnaps = [];
+
+  var dm = 0, om = 0, dh = 0;
+  var defSlots = [], optSlots = [];
+
+  for (var t = 0; t < N; t++){
+    var k = keys[t] | 0;
+    if (k >= 0 && k < K) globalFreq[k]++;
+
+    if (hits[t]){
+      dh++;
+    } else {
+      dm++;
+      var ev = evicts[t];
+      if (ev >= 0){
+        var pos = defSlots.indexOf(ev);
+        if (pos >= 0) defSlots[pos] = k;
+        else if (defSlots.length < C) defSlots.push(k);
+      } else {
+        defSlots.push(k);
+      }
+    }
+
+    if (!optHits[t]){
+      om++;
+      var oev = optEvicts[t];
+      if (oev >= 0){
+        var opos = optSlots.indexOf(oev);
+        if (opos >= 0) optSlots[opos] = k;
+        else if (optSlots.length < C) optSlots.push(k);
+      } else {
+        optSlots.push(k);
+      }
+    }
+
+    cumDefMiss[t] = dm;
+    cumOptMiss[t] = om;
+    cumDefHit[t] = dh;
+    var win = Math.min(100, t + 1);
+    var prevDh = t >= 100 ? cumDefHit[t - 100] : 0;
+    rollHit[t] = (dh - prevDh) / win;
+
+    if (t % SLOT_STRIDE === 0){
+      slotSnaps.push({
+        t: t,
+        defSlots: defSlots.slice(),
+        optSlots: optSlots.slice()
+      });
+    }
+  }
+
+  S.N = N; S.C = C; S.K = K;
+  S.cumDefMiss = cumDefMiss;
+  S.cumOptMiss = cumOptMiss;
+  S.cumDefHit = cumDefHit;
+  S.rollHit = rollHit;
+  S.globalFreq = globalFreq;
+  S.attFaultSet = new Set(rep.att_faults || []);
+  S.defFaultSet = new Set(rep.def_faults || []);
+  S.slotSnaps = slotSnaps;
+  S.curDefSlots = [];
+  S.curOptSlots = [];
+  S.curSimStep = -1;
+}
+
+function advanceOne(t, defSlots, optSlots){
+  var rep = S.rep, k = rep.keys[t];
+  if (!rep.hits[t]){
+    var ev = rep.evicts[t];
+    if (ev >= 0){
+      var p = defSlots.indexOf(ev);
+      if (p >= 0) defSlots[p] = k;
+      else if (defSlots.length < S.C) defSlots.push(k);
+    } else if (defSlots.length < S.C) {
+      defSlots.push(k);
+    }
+  }
+  if (!rep.opt_hits[t]){
+    var oev = rep.opt_evicts[t];
+    if (oev >= 0){
+      var op = optSlots.indexOf(oev);
+      if (op >= 0) optSlots[op] = k;
+      else if (optSlots.length < S.C) optSlots.push(k);
+    } else if (optSlots.length < S.C) {
+      optSlots.push(k);
+    }
+  }
+}
+
+function slotsAt(target){
+  if (S.curSimStep === target){
+    return { def: S.curDefSlots, opt: S.curOptSlots };
+  }
+  if (S.curSimStep >= 0 && target > S.curSimStep && (target - S.curSimStep) <= SLOT_STRIDE){
+    for (var s = S.curSimStep + 1; s <= target; s++){
+      advanceOne(s, S.curDefSlots, S.curOptSlots);
+    }
+    S.curSimStep = target;
+    return { def: S.curDefSlots, opt: S.curOptSlots };
+  }
+  var snapIdx = Math.floor(target / SLOT_STRIDE);
+  var snap = S.slotSnaps[Math.min(snapIdx, S.slotSnaps.length - 1)];
+  var defSlots = snap.defSlots.slice();
+  var optSlots = snap.optSlots.slice();
+  for (var t = snap.t + 1; t <= target; t++){
+    advanceOne(t, defSlots, optSlots);
+  }
+  S.curDefSlots = defSlots;
+  S.curOptSlots = optSlots;
+  S.curSimStep = target;
+  return { def: defSlots, opt: optSlots };
+}
+
+/* ---------------- 缓存格子渲染 ---------------- */
+function buildCacheGrid(el, C){
+  el.innerHTML = "";
+  var cols = C <= 4 ? C : (C <= 8 ? 4 : (C <= 16 ? 4 : (C <= 64 ? 8 : 10)));
+  el.style.gridTemplateColumns = "repeat(" + cols + ",minmax(0,1fr))";
+  var compact = C > 16;
+  var cells = [];
+  for (var i = 0; i < C; i++){
+    var d = document.createElement("div");
+    d.className = "slot empty" + (compact ? " compact" : "");
+    d.innerHTML = '<span class="sid">' + i + '</span><span class="kval">–</span>';
+    el.appendChild(d);
+    cells.push(d);
+  }
+  return cells;
+}
+
+function paintCacheGrid(cells, slots, otherSet, reqKey, isHit, isFault, isOpt){
+  var C = S.C, compact = C > 16;
+  for (var i = 0; i < C; i++){
+    var cell = cells[i];
+    var has = i < slots.length;
+    var k = has ? slots[i] : null;
+    var cls = "slot" + (compact ? " compact" : "");
+    var tip = "槽位 #" + i;
+    if (!has){
+      cls += " empty";
+      tip += "（空）";
+    } else {
+      tip += " · Key " + k;
+      if (k === reqKey){
+        if (isFault) { cls += " active-fault"; tip += " · 本步犯规替换后装入"; }
+        else if (isHit) { cls += " active-hit"; tip += " · 本步命中"; }
+        else { cls += " active-miss"; tip += " · 本步缺失装入"; }
+      }
+    }
+    var div = has && !otherSet.has(k);
+    if (div){
+      tip += isOpt ? " · 仅 OPT 保留（防守方未保留）" : " · 仅防守方保留（OPT 未保留）";
+    }
+    cell.className = cls;
+    cell.title = tip;
+    cell.children[1].textContent = has ? String(k) : "–";
+    var dot = cell.querySelector(".divdot");
+    if (div && !dot){
+      dot = document.createElement("i");
+      dot.className = "divdot";
+      cell.appendChild(dot);
+    } else if (!div && dot){
+      dot.remove();
+    }
+  }
+}
+
+/* ---------------- 滚动访问磁带 ---------------- */
+function paintTape(t){
+  var rep = S.rep, N = S.N;
+  var el = document.getElementById("tape");
+  var start = t - 24, end = t + 8;
+  document.getElementById("tapeRange").textContent =
+    "t=" + Math.max(0, start) + " .. " + Math.min(N - 1, end) + "（共 33 格，点击跳转）";
+
+  var html = "";
+  for (var i = start; i <= end; i++){
+    if (i < 0 || i >= N){
+      html += '<div class="tcell pad"><div class="tt">0</div><div class="tk">0</div><div class="te"></div></div>';
+      continue;
+    }
+    var hit = rep.hits[i] === 1;
+    var ev = rep.evicts[i];
+    var optAdv = (!hit && rep.opt_hits[i] === 1);
+    var flt = S.attFaultSet.has(i) || S.defFaultSet.has(i);
+    var cls = "tcell " + (hit ? "hit" : "miss") + (i === t ? " cur" : "");
+    var tip = "t=" + i + " key=" + rep.keys[i] + " | 防守:" + (hit ? "HIT" : "MISS") +
+              (ev >= 0 ? " 驱逐=" + ev : "") + " | OPT:" + (rep.opt_hits[i] ? "HIT" : "MISS") +
+              (flt ? " | 存在犯规" : "");
+    html += '<div class="' + cls + '" data-step="' + i + '" title="' + esc(tip) + '">' +
+            (flt ? '<span class="tmk flt">⚠</span>' : "") +
+            (optAdv ? '<span class="tmk opt">★</span>' : "") +
+            '<div class="tt">' + i + '</div>' +
+            '<div class="tk">' + esc(rep.keys[i]) + '</div>' +
+            '<div class="te">' + (ev >= 0 ? ("-" + esc(ev)) : "") + '</div>' +
+            '</div>';
+  }
+  el.innerHTML = html;
+}
+
+/* ---------------- HTML5 Canvas 折线图 ---------------- */
+function getCssVars(){
+  var css = getComputedStyle(document.documentElement);
+  function g(k){ return css.getPropertyValue(k).trim(); }
+  return {
+    panel: g("--panel"), grid: g("--grid"), muted: g("--muted"), text: g("--text"),
+    a: g("--a"), b: g("--b"), hit: g("--hit"), miss: g("--miss"), marker: g("--marker")
+  };
+}
+
+function buildLineChartBase(key, canvasId, spec){
+  var cv = document.getElementById(canvasId);
+  var ratio = window.devicePixelRatio || 1;
+  var W = Math.max(240, Math.round((cv.clientWidth || 480) * ratio));
+  var H = Math.max(120, Math.round((cv.clientHeight || 170) * ratio));
+  cv.width = W; cv.height = H;
+  var base = document.createElement("canvas");
+  base.width = W; base.height = H;
+  var ctx = base.getContext("2d");
+  var C = getCssVars();
+
+  ctx.fillStyle = C.panel;
+  ctx.fillRect(0, 0, W, H);
+  var left = 44 * ratio, top = 12 * ratio, right = W - 10 * ratio, bottom = H - 22 * ratio;
+
+  ctx.strokeStyle = C.grid;
+  ctx.lineWidth = ratio;
+  for (var g = 0; g <= 4; g++){
+    var y = top + (bottom - top) * g / 4;
+    ctx.beginPath(); ctx.moveTo(left, y); ctx.lineTo(right, y); ctx.stroke();
+  }
+
+  var N = S.N, maxY = spec.maxY, minY = spec.minY;
+  var spanY = Math.max(1e-9, maxY - minY);
+  var stepStride = Math.max(1, Math.floor(N / Math.max(200, right - left)));
+
+  ctx.save();
+  ctx.beginPath(); ctx.rect(left, top, right - left, bottom - top); ctx.clip();
+  for (var si = 0; si < spec.series.length; si++){
+    var ser = spec.series[si];
+    ctx.strokeStyle = C[ser.color];
+    ctx.lineWidth = (ser.width || 1.8) * ratio;
+    ctx.beginPath();
+    for (var t = 0; t < N; t += stepStride){
+      var x = left + (right - left) * (N > 1 ? t / (N - 1) : 0);
+      var v = ser.fn(t);
+      var py = bottom - (bottom - top) * ((v - minY) / spanY);
+      if (t === 0) ctx.moveTo(x, py); else ctx.lineTo(x, py);
+    }
+    if (N > 1){
+      var vl = ser.fn(N - 1);
+      ctx.lineTo(right, bottom - (bottom - top) * ((vl - minY) / spanY));
+    }
+    ctx.stroke();
+  }
+  ctx.restore();
+
+  ctx.fillStyle = C.muted;
+  ctx.font = (10 * ratio) + "px ui-monospace,Consolas,monospace";
+  ctx.fillText(spec.fmt(maxY), 3 * ratio, top + 7 * ratio);
+  ctx.fillText(spec.fmt((maxY + minY) / 2), 3 * ratio, (top + bottom) / 2 + 3 * ratio);
+  ctx.fillText(spec.fmt(minY), 3 * ratio, bottom);
+  ctx.fillText("0", left, H - 5 * ratio);
+  var endTxt = String(N - 1);
+  ctx.fillText(endTxt, right - ctx.measureText(endTxt).width, H - 5 * ratio);
+
+  S.charts[key] = { base: base, left: left, right: right, top: top, bottom: bottom, ratio: ratio, W: W, H: H, C: C };
+}
+
+function rebuildCharts(){
+  if (!S.rep) return;
+  var maxMiss = Math.max(1, S.cumDefMiss[S.N - 1], S.cumOptMiss[S.N - 1]);
+  buildLineChartBase("miss", "cvMiss", {
+    minY: 0, maxY: maxMiss,
+    fmt: function(v){ return String(Math.round(v)); },
+    series: [
+      { color: "b", width: 2.0, fn: function(t){ return S.cumDefMiss[t]; } },
+      { color: "a", width: 2.0, fn: function(t){ return S.cumOptMiss[t]; } }
+    ]
+  });
+  buildLineChartBase("score", "cvScore", {
+    minY: 0, maxY: 1,
+    fmt: function(v){ return v.toFixed(2); },
+    series: [
+      { color: "hit", width: 1.5, fn: function(t){ return S.rollHit[t]; } },
+      { color: "a", width: 2.0, fn: function(t){
+        var dm = S.cumDefMiss[t];
+        return dm > 0 ? S.cumOptMiss[t] / dm : 1.0;
+      }}
+    ]
+  });
+}
+
+function paintLineCursor(key, canvasId, t){
+  var ch = S.charts[key];
+  if (!ch) return;
+  var cv = document.getElementById(canvasId), ctx = cv.getContext("2d");
+  ctx.clearRect(0, 0, cv.width, cv.height);
+  ctx.drawImage(ch.base, 0, 0);
+  var frac = S.N > 1 ? t / (S.N - 1) : 0;
+  var x = ch.left + (ch.right - ch.left) * frac;
+  ctx.strokeStyle = ch.C.marker;
+  ctx.lineWidth = ch.ratio;
+  ctx.beginPath(); ctx.moveTo(x, ch.top); ctx.lineTo(x, ch.bottom); ctx.stroke();
+  ctx.fillStyle = ch.C.muted;
+  ctx.font = (10 * ch.ratio) + "px ui-monospace,Consolas,monospace";
+  var label = "t=" + t;
+  var lx = Math.min(x + 4 * ch.ratio, cv.width - 56 * ch.ratio);
+  ctx.fillText(label, lx, ch.top + 10 * ch.ratio);
+}
+
+/* ---------------- Key 访问频次分布图 ---------------- */
+function paintFreq(t, defSet, reqKey){
+  var K = S.K, rep = S.rep;
+  var counts;
+  if (S.freqMode === "all"){
+    counts = S.globalFreq;
+  } else {
+    counts = new Int32Array(K);
+    var keys = rep.keys;
+    for (var i = 0; i <= t; i++) counts[keys[i]]++;
+  }
+
+  var cv = document.getElementById("cvFreq");
+  var ratio = window.devicePixelRatio || 1;
+  var W = Math.max(240, Math.round((cv.clientWidth || 320) * ratio));
+  var H = Math.max(120, Math.round((cv.clientHeight || 150) * ratio));
+  if (cv.width !== W || cv.height !== H){ cv.width = W; cv.height = H; }
+  var ctx = cv.getContext("2d");
+  var C = getCssVars();
+
+  ctx.fillStyle = C.panel;
+  ctx.fillRect(0, 0, W, H);
+  var left = 36 * ratio, top = 10 * ratio, right = W - 8 * ratio, bottom = H - 20 * ratio;
+  var plotW = Math.max(1, right - left), plotH = Math.max(1, bottom - top);
+
+  var bins = K <= 128 ? K : 128;
+  var binSize = K / bins;
+  var binVal = new Float32Array(bins);
+  var binInCache = new Uint8Array(bins);
+  var binHasReq = new Uint8Array(bins);
+  var maxV = 1;
+
+  for (var k = 0; k < K; k++){
+    var b = Math.min(bins - 1, Math.floor(k / binSize));
+    var c = counts[k];
+    if (c > binVal[b]) binVal[b] = c; // 桶内取峰值，热点不被稀释
+    if (defSet.has(k)) binInCache[b] = 1;
+    if (k === reqKey) binHasReq[b] = 1;
+  }
+  for (var j = 0; j < bins; j++) if (binVal[j] > maxV) maxV = binVal[j];
+
+  ctx.strokeStyle = C.grid;
+  ctx.lineWidth = ratio;
+  for (var g = 0; g <= 3; g++){
+    var gy = top + plotH * g / 3;
+    ctx.beginPath(); ctx.moveTo(left, gy); ctx.lineTo(right, gy); ctx.stroke();
+  }
+
+  var bw = plotW / bins;
+  for (var bi = 0; bi < bins; bi++){
+    var v = binVal[bi];
+    if (!v && !binHasReq[bi]) continue;
+    var bh = Math.max(v ? ratio : 0, (v / maxV) * plotH);
+    var bx = left + bi * bw;
+    ctx.fillStyle = binHasReq[bi] ? C.b : (binInCache[bi] ? C.a : C.muted);
+    ctx.fillRect(bx, bottom - bh, Math.max(1, bw - (bins <= 64 ? ratio : 0)), bh);
+  }
+
+  ctx.fillStyle = C.muted;
+  ctx.font = (9.5 * ratio) + "px ui-monospace,Consolas,monospace";
+  ctx.fillText(String(Math.round(maxV)), 2 * ratio, top + 7 * ratio);
+  ctx.fillText("0", 2 * ratio, bottom);
+  ctx.fillText("key 0", left, H - 5 * ratio);
+  var endLbl = "key " + (K - 1) + (K > 128 ? " (128桶峰值)" : "");
+  ctx.fillText(endLbl, right - ctx.measureText(endLbl).width, H - 5 * ratio);
+
+  // Top-8 hottest keys
+  var topList = [];
+  for (var k2 = 0; k2 < K; k2++){
+    if (counts[k2] > 0) topList.push([k2, counts[k2]]);
+  }
+  topList.sort(function(a, b){ return b[1] - a[1] || a[0] - b[0]; });
+  var hotHtml = "";
+  var limit = Math.min(8, topList.length);
+  for (var h = 0; h < limit; h++){
+    var hk = topList[h][0], hc = topList[h][1];
+    hotHtml += '<span class="chip' + (defSet.has(hk) ? " in-cache" : "") + '" title="Key ' + hk + ' 访问 ' + hc + ' 次">' +
+               '#' + hk + ' ×' + hc + '</span>';
+  }
+  document.getElementById("hotKeys").innerHTML = hotHtml || '<span class="hint">暂无访问记录</span>';
+}
+
+/* ---------------- 主渲染 ---------------- */
+function render(force){
+  if (!S.rep || !S.N) return;
+  S.idx = Math.max(0, Math.min(S.idx | 0, S.N - 1));
+  if (!force && S.renderedIdx === S.idx) return;
+  S.renderedIdx = S.idx;
+
+  var t = S.idx, rep = S.rep, meta = rep.meta;
+  var k = rep.keys[t];
+  var hit = rep.hits[t] === 1;
+  var ev = rep.evicts[t];
+  var optHit = rep.opt_hits[t] === 1;
+  var optEv = rep.opt_evicts[t];
+  var attFault = S.attFaultSet.has(t);
+  var defFault = S.defFaultSet.has(t);
+
+  var dm = S.cumDefMiss[t], om = S.cumOptMiss[t];
+  var defScore = dm > 0 ? om / dm : 1.0;
+  var attScore = 1.0 - defScore;
+  var defHitRate = (t + 1 - dm) / (t + 1);
+  var optHitRate = (t + 1 - om) / (t + 1);
+  var rHit = S.rollHit[t];
+
+  var st = slotsAt(t);
+  var defSet = new Set(st.def);
+  var optSet = new Set(st.opt);
+  var overlap = 0;
+  defSet.forEach(function(x){ if (optSet.has(x)) overlap++; });
+  var divCount = defSet.size - overlap;
+
+  // Header & clock
+  document.getElementById("tStep").textContent = "step " + t + " / " + (S.N - 1);
+  document.getElementById("clock").textContent =
+    "t=" + t + "/" + (S.N - 1) + " · 缺失 " + dm + " vs OPT " + om + " · 防守分 " + fmt4(defScore);
+
+  // Defender & OPT live cache cards
+  document.getElementById("statDef").textContent =
+    "缺失 " + dm + " · 命中率 " + fmtPct(defHitRate) + " · " + st.def.length + "/" + S.C;
+  document.getElementById("statOpt").textContent =
+    "缺失 " + om + " · 命中率 " + fmtPct(optHitRate) + " · 重合 " + overlap + "/" + st.opt.length;
+
+  paintCacheGrid(S.defCells, st.def, optSet, k, hit, defFault, false);
+  paintCacheGrid(S.optCells, st.opt, defSet, k, optHit, false, true);
+
+  // Card footers
+  document.getElementById("footDef").innerHTML =
+    '<span><span class="lbl">请求 Key</span> <b class="mono">' + esc(k) + '</b></span>' +
+    (hit ? '<span class="badge hit">HIT 命中</span>' : '<span class="badge miss">MISS 缺失</span>') +
+    '<span><span class="lbl">驱逐</span> ' +
+    (ev >= 0 ? '<span class="badge ' + (defFault ? 'fault' : 'evict') + '">-' + esc(ev) + (defFault ? ' (犯规强驱)' : '') + '</span>' : '<span class="badge neutral">无</span>') +
+    '</span>' +
+    (attFault ? '<span class="badge fault">攻击方犯规→常量替代</span>' : '') +
+    (divCount > 0 ? '<span class="badge neutral">与OPT差 ' + divCount + ' 项</span>' : '');
+
+  var advBadge = (hit && optHit) ? '<span class="badge hit">双方同命中</span>'
+    : (!hit && optHit) ? '<span class="badge optwin">OPT 命中 · 防守缺失</span>'
+    : (hit && !optHit) ? '<span class="badge neutral">防守命中 · OPT 缺失</span>'
+    : '<span class="badge neutral">双方同缺失</span>';
+
+  document.getElementById("footOpt").innerHTML =
+    '<span><span class="lbl">请求 Key</span> <b class="mono">' + esc(k) + '</b></span>' +
+    (optHit ? '<span class="badge hit">OPT HIT</span>' : '<span class="badge miss">OPT MISS</span>') +
+    '<span><span class="lbl">OPT 驱逐</span> ' +
+    (optEv >= 0 ? '<span class="badge evict">-' + esc(optEv) + '</span>' : '<span class="badge neutral">无</span>') +
+    '</span>' + advBadge;
+
+  // Access tape
+  paintTape(t);
+
+  // Chart headers & cursors
+  document.getElementById("missHead").textContent = "Def=" + dm + " · OPT=" + om + " (Δ=" + (dm - om) + ")";
+  document.getElementById("scoreHead").textContent = "分=" + fmt4(defScore) + " · 滑窗=" + fmtPct(rHit);
+  paintLineCursor("miss", "cvMiss", t);
+  paintLineCursor("score", "cvScore", t);
+
+  // Step detail table
+  document.getElementById("detailStep").textContent = "t = " + t;
+  document.getElementById("stepDetail").innerHTML =
+    '<tr><td class="k">步序号 t</td><td class="v">' + t + ' / ' + (S.N - 1) + '</td></tr>' +
+    '<tr><td class="k">请求 Key</td><td class="v">' + esc(k) + (attFault ? ' <span class="badge fault">攻犯规</span>' : '') + '</td></tr>' +
+    '<tr><td class="k">防守判定 / 驱逐</td><td class="v">' + (hit ? 'HIT' : 'MISS') + ' / ' + (ev >= 0 ? esc(ev) : '—') + (defFault ? ' <span class="badge fault">防犯规</span>' : '') + '</td></tr>' +
+    '<tr><td class="k">OPT 判定 / 驱逐</td><td class="v">' + (optHit ? 'HIT' : 'MISS') + ' / ' + (optEv >= 0 ? esc(optEv) : '—') + '</td></tr>' +
+    '<tr><td class="k">累计缺失 (Def / OPT)</td><td class="v">' + dm + ' / ' + om + '</td></tr>' +
+    '<tr><td class="k">实时防守分 / 攻击分</td><td class="v">' + fmt4(defScore) + ' / ' + fmt4(attScore) + '</td></tr>' +
+    '<tr><td class="k">100 步滑动命中率</td><td class="v">' + fmtPct(rHit) + '</td></tr>' +
+    '<tr><td class="k">缓存重合度 |D∩O|</td><td class="v">' + overlap + ' / ' + st.opt.length + ' (' + fmtPct(st.opt.length ? overlap / st.opt.length : 1) + ')</td></tr>';
+
+  // Frequency distribution
+  paintFreq(t, defSet, k);
+
+  // Seek & URL hash
+  document.getElementById("seek").value = String(t);
+  var params = new URLSearchParams(location.hash.slice(1));
+  if (S.src) params.set("src", S.src); else params.delete("src");
+  params.set("t", String(t));
+  var hash = "#" + params.toString();
+  if (history.replaceState && hash !== location.hash){
+    try { history.replaceState(null, "", hash); } catch (_e) {}
+  }
+}
+
+/* ---------------- 播放控制 ---------------- */
+function tick(ts){
+  if (!S.playing) return;
+  if (!S.lastTs) S.lastTs = ts;
+  var dt = Math.min(0.25, (ts - S.lastTs) / 1000);
+  S.lastTs = ts;
+  S.acc += dt * S.speed * BASE_SPS;
+  var adv = Math.floor(S.acc);
+  if (adv >= 1){
+    S.acc -= adv;
+    S.idx = Math.min(S.N - 1, S.idx + adv);
+    render();
+  }
+  if (S.idx >= S.N - 1) setPlaying(false);
+  if (S.playing) S.raf = requestAnimationFrame(tick);
+}
+
+function setPlaying(on){
+  if (on && !S.N) return;
+  if (on && S.idx >= S.N - 1) S.idx = 0;
+  if (S.playing === on) return;
+  S.playing = on; S.lastTs = 0; S.acc = 0;
+  cancelAnimationFrame(S.raf);
+  var btn = document.getElementById("play"), lbl = on ? "暂停" : "播放";
+  btn.textContent = on ? "⏸" : "▶";
+  btn.title = lbl + " (Space)";
+  btn.setAttribute("aria-label", lbl);
+  if (on) S.raf = requestAnimationFrame(tick);
+}
+
+function jumpTo(step){
+  if (!S.N) return;
+  setPlaying(false);
+  S.idx = Math.max(0, Math.min(S.N - 1, step | 0));
+  render();
+}
+
+function findNext(dir, pred){
+  if (!S.N) return;
+  for (var t = S.idx + dir; t >= 0 && t < S.N; t += dir){
+    if (pred(t)){ jumpTo(t); return; }
+  }
+}
+
+/* ---------------- 载入回放 ---------------- */
+function loadReplay(rep, options){
+  options = options || {};
+  if (!rep || rep.format !== FORMAT){
+    throw new Error("回放格式不匹配，期望 " + FORMAT + "，收到 " + (rep && rep.format));
+  }
+  var meta = rep.meta || {}, cfg = meta.config || {};
+  var N = Number(cfg.length), C = Number(cfg.cache_size), K = Number(cfg.universe);
+  if (!Number.isInteger(N) || N < 1 || !Number.isInteger(C) || C < 1 || !Number.isInteger(K) || K <= C){
+    throw new Error("无效的 config 参数");
+  }
+  if (!Array.isArray(rep.keys) || rep.keys.length !== N ||
+      !Array.isArray(rep.hits) || rep.hits.length !== N ||
+      !Array.isArray(rep.evicts) || rep.evicts.length !== N ||
+      !Array.isArray(rep.opt_hits) || rep.opt_hits.length !== N ||
+      !Array.isArray(rep.opt_evicts) || rep.opt_evicts.length !== N){
+    throw new Error("轨迹数组缺失或长度与 length=" + N + " 不符");
+  }
+  for (var vi = 0; vi < N; vi++){
+    if (!Number.isInteger(rep.keys[vi]) || !Number.isInteger(rep.hits[vi]) ||
+        !Number.isInteger(rep.evicts[vi]) || !Number.isInteger(rep.opt_hits[vi]) ||
+        !Number.isInteger(rep.opt_evicts[vi])){
+      throw new Error("轨迹数组包含非整数元素（步 " + vi + "）");
+    }
+  }
+
+  setPlaying(false);
+  S.rep = rep;
+  S.src = options.src || "";
+  S.renderedIdx = -1;
+  preprocess(rep);
+
+  var att = meta.attacker || {}, dfd = meta.defender || {};
+  var attLbl = att.label || "attacker", defLbl = dfd.label || "defender";
+  var faults = meta.faults || {};
+
+  document.getElementById("tSeed").textContent = "seed " + meta.seed;
+  document.getElementById("tCfg").textContent = "C=" + C + " K=" + K + " N=" + N;
+  document.getElementById("tPlayers").innerHTML =
+    '攻 <span class="nm nmA">' + esc(attLbl) + '</span> → 守 <span class="nm nmB">' + esc(defLbl) + '</span>';
+  document.getElementById("tScore").textContent =
+    "防守分 " + fmt4(meta.def_score) + " · 攻击分 " + fmt4(meta.att_score) +
+    " · 缺失 " + meta.def_misses + " vs OPT " + meta.opt_misses;
+  document.getElementById("tEngine").textContent =
+    "引擎 " + String(meta.engine_sha256 || "").slice(0, 8);
+  document.getElementById("nameDef").textContent = defLbl;
+
+  document.getElementById("metaBox").innerHTML =
+    '<tr><td class="k">攻击方</td><td class="v">' + esc(attLbl) + ' (' + esc(att.file || "–") + ')</td></tr>' +
+    '<tr><td class="k">攻击指纹</td><td class="v">' + esc(String(att.file_sha256 || "–").slice(0, 12)) + '</td></tr>' +
+    '<tr><td class="k">防守方</td><td class="v">' + esc(defLbl) + ' (' + esc(dfd.file || "–") + ')</td></tr>' +
+    '<tr><td class="k">防守指纹</td><td class="v">' + esc(String(dfd.file_sha256 || "–").slice(0, 12)) + '</td></tr>' +
+    '<tr><td class="k">终局缺失</td><td class="v">Def ' + esc(Number(meta.def_misses) || 0) + ' / OPT ' + esc(Number(meta.opt_misses) || 0) + '</td></tr>' +
+    '<tr><td class="k">终局得分</td><td class="v">防 ' + (Number(meta.def_score) * 100).toFixed(2) + ' · 攻 ' + (Number(meta.att_score) * 100).toFixed(2) + '</td></tr>' +
+    '<tr><td class="k">犯规计数</td><td class="v">攻 ' + esc(Number(faults.attacker) || 0) + (faults.attacker_dead ? '(已终止)' : '') +
+      ' · 防 ' + esc(Number(faults.defender) || 0) + (faults.defender_dead ? '(已终止)' : '') + '</td></tr>' +
+    '<tr><td class="k">录制时间</td><td class="v">' + esc(meta.created_at || "–") + '</td></tr>';
+
+  S.defCells = buildCacheGrid(document.getElementById("gridDef"), C);
+  S.optCells = buildCacheGrid(document.getElementById("gridOpt"), C);
+
+  document.getElementById("main").hidden = false;
+  document.getElementById("controls").hidden = false;
+  document.getElementById("drop").style.display = "none";
+  document.getElementById("err").textContent = "";
+  document.getElementById("loadbox").textContent = "";
+
+  var seek = document.getElementById("seek");
+  seek.max = String(N - 1);
+  S.idx = (options.t !== null && options.t !== undefined) ? Math.max(0, Math.min(N - 1, options.t | 0)) : 0;
+  seek.value = String(S.idx);
+
+  rebuildCharts();
+  render(true);
+}
+
+function fail(e){
+  document.getElementById("drop").style.display = "block";
+  document.getElementById("loadbox").textContent = "";
+  document.getElementById("err").textContent = "载入失败：" + (e && e.message ? e.message : e);
+}
+
+function applyTheme(mode){
+  var dark = mode === "dark" || (mode === "system" && window.matchMedia && window.matchMedia("(prefers-color-scheme: dark)").matches);
+  document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+  try { localStorage.setItem("cache_duel.theme", mode); } catch (_e) {}
+  if (S.rep){ rebuildCharts(); render(true); }
+}
+
+function bindCanvasScrub(canvasId, chartKey){
+  var cv = document.getElementById(canvasId);
+  function seekFromEvent(ev){
+    var ch = S.charts[chartKey];
+    if (!ch || !S.N) return;
+    var rect = cv.getBoundingClientRect();
+    var x = (ev.clientX - rect.left) * ch.ratio;
+    var frac = Math.max(0, Math.min(1, (x - ch.left) / Math.max(1, ch.right - ch.left)));
+    jumpTo(Math.round(frac * (S.N - 1)));
+  }
+  var dragging = false;
+  cv.addEventListener("pointerdown", function(ev){ dragging = true; seekFromEvent(ev); });
+  window.addEventListener("pointermove", function(ev){ if (dragging) seekFromEvent(ev); });
+  window.addEventListener("pointerup", function(){ dragging = false; });
+}
+
+function boot(){
+  var theme = document.getElementById("theme"), saved;
+  try { saved = localStorage.getItem("cache_duel.theme"); } catch (_e) {}
+  theme.value = ["light", "dark", "system"].indexOf(saved) >= 0 ? saved : "light";
+  applyTheme(theme.value);
+  theme.addEventListener("change", function(){ applyTheme(theme.value); });
+  if (window.matchMedia){
+    var mq = window.matchMedia("(prefers-color-scheme: dark)");
+    if (mq.addEventListener) mq.addEventListener("change", function(){ if (theme.value === "system") applyTheme("system"); });
+  }
+
+  var params = new URLSearchParams(location.hash.slice(1));
+  var src = params.get("src"), tParam = params.get("t");
+  var wantT = (tParam !== null && /^\d+$/.test(tParam)) ? Number(tParam) : null;
+  if (src){
+    if (/^[a-zA-Z][a-zA-Z0-9+.-]*:/.test(src) || src.indexOf("//") === 0){
+      fail(new Error("仅允许加载同源相对路径回放文件"));
+    } else {
+      var remoteLoad = ++S.loadSeq;
+      document.getElementById("loadbox").textContent = "加载回放…";
+      fetch(src).then(function(r){ if (!r.ok) throw new Error("HTTP " + r.status); return r.json(); })
+        .then(function(rep){ if (remoteLoad === S.loadSeq) loadReplay(rep, { src: src, t: wantT }); })
+        .catch(function(err){ if (remoteLoad === S.loadSeq) fail(err); });
+    }
+  }
+
+  function readFile(file){
+    if (!file) return;
+    var localLoad = ++S.loadSeq;
+    setPlaying(false);
+    var fr = new FileReader();
+    fr.onload = function(){
+      if (localLoad !== S.loadSeq) return;
+      try { loadReplay(JSON.parse(fr.result), { src: "" }); } catch (e) { fail(e); }
+    };
+    fr.onerror = function(){ if (localLoad === S.loadSeq) fail(new Error("无法读取文件")); };
+    fr.readAsText(file);
+  }
+
+  document.getElementById("openFile").addEventListener("click", function(){ document.getElementById("file").click(); });
+  document.getElementById("file").addEventListener("change", function(ev){ readFile(ev.target.files[0]); ev.target.value = ""; });
+
+  var drop = document.getElementById("drop");
+  ["dragenter", "dragover"].forEach(function(tp){
+    window.addEventListener(tp, function(e){ e.preventDefault(); drop.classList.add("hot"); });
+  });
+  ["dragleave", "drop"].forEach(function(tp){
+    window.addEventListener(tp, function(e){ e.preventDefault(); drop.classList.remove("hot"); });
+  });
+  window.addEventListener("drop", function(e){
+    if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]);
+  });
+
+  // Playback buttons
+  document.getElementById("play").addEventListener("click", function(){ setPlaying(!S.playing); });
+  document.getElementById("spd").addEventListener("change", function(ev){ S.speed = Number(ev.target.value) || 5; });
+  document.getElementById("start").addEventListener("click", function(){ jumpTo(0); });
+  document.getElementById("b50").addEventListener("click", function(){ jumpTo(S.idx - 50); });
+  document.getElementById("b1").addEventListener("click", function(){ jumpTo(S.idx - 1); });
+  document.getElementById("f1").addEventListener("click", function(){ jumpTo(S.idx + 1); });
+  document.getElementById("f50").addEventListener("click", function(){ jumpTo(S.idx + 50); });
+  document.getElementById("end").addEventListener("click", function(){ jumpTo(S.N - 1); });
+  document.getElementById("seek").addEventListener("input", function(ev){ jumpTo(Number(ev.target.value) || 0); });
+
+  // Tape click & quick jumps
+  document.getElementById("tape").addEventListener("click", function(ev){
+    var cell = ev.target.closest(".tcell[data-step]");
+    if (cell) jumpTo(Number(cell.getAttribute("data-step")));
+  });
+  document.getElementById("prevDiv").addEventListener("click", function(){
+    findNext(-1, function(t){ return S.rep.hits[t] === 0 && S.rep.opt_hits[t] === 1; });
+  });
+  document.getElementById("nextDiv").addEventListener("click", function(){
+    findNext(1, function(t){ return S.rep.hits[t] === 0 && S.rep.opt_hits[t] === 1; });
+  });
+  document.getElementById("nextMiss").addEventListener("click", function(){
+    findNext(1, function(t){ return S.rep.hits[t] === 0; });
+  });
+  document.getElementById("nextFault").addEventListener("click", function(){
+    findNext(1, function(t){ return S.attFaultSet.has(t) || S.defFaultSet.has(t); });
+  });
+
+  // Freq mode toggle
+  var btnCur = document.getElementById("freqCur"), btnAll = document.getElementById("freqAll");
+  btnCur.addEventListener("click", function(){
+    S.freqMode = "cur"; btnCur.classList.add("on"); btnAll.classList.remove("on"); render(true);
+  });
+  btnAll.addEventListener("click", function(){
+    S.freqMode = "all"; btnAll.classList.add("on"); btnCur.classList.remove("on"); render(true);
+  });
+
+  // Keyboard shortcuts
+  window.addEventListener("keydown", function(e){
+    if (/^(INPUT|SELECT|TEXTAREA)$/.test(e.target.tagName) || e.target.isContentEditable) return;
+    if (e.key === " "){ e.preventDefault(); setPlaying(!S.playing); }
+    else if (e.key === "ArrowRight"){ e.preventDefault(); jumpTo(S.idx + (e.shiftKey ? 50 : 1)); }
+    else if (e.key === "ArrowLeft"){ e.preventDefault(); jumpTo(S.idx - (e.shiftKey ? 50 : 1)); }
+    else if (e.key === "Home"){ e.preventDefault(); jumpTo(0); }
+    else if (e.key === "End"){ e.preventDefault(); jumpTo(S.N - 1); }
+  });
+
+  bindCanvasScrub("cvMiss", "miss");
+  bindCanvasScrub("cvScore", "score");
+
+  document.addEventListener("visibilitychange", function(){ S.lastTs = 0; });
+  if (window.ResizeObserver){
+    var ro = new ResizeObserver(function(){ if (S.rep){ rebuildCharts(); render(true); } });
+    ro.observe(document.getElementById("cvMiss"));
+    ro.observe(document.getElementById("cvFreq"));
+  } else {
+    window.addEventListener("resize", function(){ if (S.rep){ rebuildCharts(); render(true); } });
+  }
+}
+
+boot();
+</script>
+</body>
+</html>

@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>压缩奇点 · 虚拟机回放与评分可视化</title>
+<style>
+  :root {
+    --bg: #0b1020;
+    --panel: #131b31;
+    --panel-2: #192340;
+    --border: #263459;
+    --text: #e6edf7;
+    --muted: #8ea0c2;
+    --accent: #38bdf8;
+    --good: #34d399;
+    --warn: #fbbf24;
+    --bad: #f87171;
+    --purple: #a78bfa;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+  }
+  header {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 14px 22px;
+    background: var(--panel);
+    border-bottom: 1px solid var(--border);
+  }
+  header h1 { margin: 0; font-size: 18px; letter-spacing: 0.4px; }
+  header .sub { color: var(--muted); font-size: 12px; }
+  .controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+  button, label.btn {
+    background: var(--panel-2);
+    color: var(--text);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 6px 12px;
+    font-size: 13px;
+    cursor: pointer;
+  }
+  button:hover, label.btn:hover { border-color: var(--accent); }
+  button.primary { background: #1d4ed8; border-color: #2563eb; }
+  input[type="file"] { display: none; }
+  main { max-width: 1320px; margin: 0 auto; padding: 18px 22px 40px; }
+  .dropzone {
+    border: 1.5px dashed var(--border);
+    border-radius: 10px;
+    padding: 26px;
+    text-align: center;
+    color: var(--muted);
+    background: rgba(19, 27, 49, 0.55);
+    margin-bottom: 18px;
+  }
+  .dropzone.drag { border-color: var(--accent); color: var(--text); }
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+    gap: 12px;
+    margin-bottom: 18px;
+  }
+  .card {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 14px;
+  }
+  .card .k { font-size: 12px; color: var(--muted); }
+  .card .v { font-size: 22px; font-weight: 700; margin-top: 2px; }
+  .grid-2 { display: grid; grid-template-columns: 1.15fr 1fr; gap: 16px; margin-bottom: 16px; }
+  @media (max-width: 960px) { .grid-2 { grid-template-columns: 1fr; } }
+  .box {
+    background: var(--panel);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 16px;
+  }
+  .box h2 { margin: 0 0 10px; font-size: 15px; color: var(--accent); }
+  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  th, td { padding: 7px 8px; border-bottom: 1px solid var(--border); text-align: right; }
+  th:first-child, td:first-child, th:nth-child(2), td:nth-child(2) { text-align: left; }
+  tr.selectable { cursor: pointer; }
+  tr.selectable:hover { background: rgba(56, 189, 248, 0.08); }
+  tr.active { background: rgba(56, 189, 248, 0.16); }
+  .pill {
+    display: inline-block;
+    padding: 1px 7px;
+    border-radius: 999px;
+    font-size: 11px;
+    font-weight: 600;
+  }
+  .pill.ac { background: rgba(52, 211, 153, 0.16); color: var(--good); }
+  .pill.err { background: rgba(248, 113, 113, 0.16); color: var(--bad); }
+  .tape-row {
+    display: flex;
+    gap: 2px;
+    overflow-x: auto;
+    padding: 8px 4px;
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  }
+  .cell {
+    width: 16px;
+    height: 24px;
+    line-height: 24px;
+    text-align: center;
+    font-size: 11px;
+    border-radius: 3px;
+    border: 1px solid #243252;
+    flex: 0 0 auto;
+  }
+  .cell.b0 { background: #10172b; color: #5b6d91; }
+  .cell.b1 { background: #1e3a5f; color: #7dd3fc; font-weight: 700; }
+  .cell.oob { background: #1f1420; color: #6b465b; }
+  .cell.head { border: 2px solid var(--warn); box-shadow: 0 0 8px rgba(251, 191, 36, 0.5); }
+  .slider-bar { display: flex; align-items: center; gap: 10px; margin: 10px 0; }
+  .slider-bar input[type="range"] { flex: 1; }
+  canvas { width: 100%; height: 220px; background: #0e1529; border-radius: 6px; border: 1px solid var(--border); display: block; }
+  .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; }
+  .preview {
+    background: #0e1529;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px;
+    font-size: 12px;
+    word-break: break-all;
+    max-height: 110px;
+    overflow-y: auto;
+    color: #c7d6f3;
+  }
+  .op-bars { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
+  .op-item {
+    background: #0e1529;
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px;
+    text-align: center;
+  }
+  .op-item .sym { font-size: 18px; font-weight: 700; color: var(--accent); }
+  .op-item .cnt { font-size: 13px; margin-top: 2px; }
+  .op-item .pct { font-size: 11px; color: var(--muted); }
+  .hidden { display: none; }
+</style>
+</head>
+<body>
+<header>
+  <div>
+    <h1>压缩奇点 · 虚拟机回放与评分浏览器</h1>
+    <div class="sub">纯离线零依赖 · 支持 scripts/record_replay.py 与 scripts/verify_program.py --trace 生成的 JSON</div>
+  </div>
+  <div class="controls">
+    <label class="btn primary">
+      打开回放 JSON
+      <input id="fileInput" type="file" accept=".json,application/json" />
+    </label>
+    <button id="playBtn" disabled>播放轨迹</button>
+    <button id="stepBackBtn" disabled>上一步</button>
+    <button id="stepFwdBtn" disabled>下一步</button>
+  </div>
+</header>
+
+<main>
+  <div id="dropzone" class="dropzone">
+    将 <code>replays/*.json</code> 拖拽到此处，或点击右上角「打开回放 JSON」。
+  </div>
+
+  <div id="content" class="hidden">
+    <div class="cards" id="summaryCards"></div>
+
+    <div class="box">
+      <h2>测试点成绩明细（点击任意行切换下方虚拟机轨迹）</h2>
+      <div style="overflow-x:auto">
+        <table>
+          <thead>
+            <tr>
+              <th>测试点</th>
+              <th>分组</th>
+              <th>判定</th>
+              <th>L</th>
+              <th>|P|</th>
+              <th>B_ref (bit)</th>
+              <th>原分 (不封顶)</th>
+              <th>折算分 /100</th>
+              <th>原始步数</th>
+              <th>带头区间</th>
+              <th>校验(ms)</th>
+            </tr>
+          </thead>
+          <tbody id="casesBody"></tbody>
+        </table>
+      </div>
+    </div>
+
+    <div class="grid-2">
+      <div class="box">
+        <h2 id="traceTitle">虚拟机带头与输出进度曲线</h2>
+        <canvas id="chartCanvas" width="640" height="220"></canvas>
+        <div class="slider-bar">
+          <span class="mono" id="frameLabel">0 / 0</span>
+          <input id="frameSlider" type="range" min="0" max="0" value="0" />
+        </div>
+        <div id="frameStats" class="mono" style="font-size:12px;color:var(--muted)"></div>
+      </div>
+
+      <div class="box">
+        <h2>静态指令分布（Σ = {&gt;, &lt;, +, ., [, ]}）</h2>
+        <div class="op-bars" id="opBars"></div>
+        <h2 style="margin-top:14px">程序片段预览</h2>
+        <div id="progPreview" class="preview mono">(无预览)</div>
+      </div>
+    </div>
+
+    <div class="box">
+      <h2>读写头邻域 65 格比特带快照（黄框为当前读写头 p）</h2>
+      <div id="tapeRow" class="tape-row"></div>
+    </div>
+  </div>
+</main>
+
+<script>
+(function () {
+  "use strict";
+
+  let replayData = null;
+  let activeCaseIdx = 0;
+  let activeFrameIdx = 0;
+  let playTimer = null;
+
+  const $ = (id) => document.getElementById(id);
+  const fileInput = $("fileInput");
+  const dropzone = $("dropzone");
+  const content = $("content");
+  const playBtn = $("playBtn");
+  const stepBackBtn = $("stepBackBtn");
+  const stepFwdBtn = $("stepFwdBtn");
+  const frameSlider = $("frameSlider");
+
+  function fmtNum(v) {
+    if (v === null || v === undefined || Number.isNaN(Number(v))) return "-";
+    return Number(v).toLocaleString("en-US");
+  }
+
+  function stopPlay() {
+    if (playTimer !== null) {
+      clearInterval(playTimer);
+      playTimer = null;
+      playBtn.textContent = "播放轨迹";
+    }
+  }
+
+  function loadReplayObj(obj) {
+    stopPlay();
+    if (!obj || !Array.isArray(obj.cases) || obj.cases.length === 0) {
+      alert("无效的回放 JSON：缺少 cases 数组。");
+      return;
+    }
+    replayData = obj;
+    activeCaseIdx = 0;
+    activeFrameIdx = 0;
+    dropzone.classList.add("hidden");
+    content.classList.remove("hidden");
+    renderSummary();
+    renderCaseTable();
+    selectCase(0);
+  }
+
+  function renderSummary() {
+    const s = replayData.summary || {};
+    const cards = [
+      { k: "提交文件", v: replayData.submission || "-" },
+      { k: "通过率", v: `${s.ac_count ?? 0} / ${s.total_cases ?? replayData.cases.length}` },
+      { k: "题面原分（不封顶均分）", v: Number(s.raw_score ?? 0).toFixed(2), color: "var(--accent)" },
+      { k: "百分制折算分", v: `${Number(s.score ?? 0).toFixed(2)} / 100`, color: "var(--good)" },
+      { k: "总判定", v: s.status || "-" },
+    ];
+    $("summaryCards").innerHTML = cards.map((c) => (
+      `<div class="card"><div class="k">${c.k}</div>` +
+      `<div class="v" style="${c.color ? "color:" + c.color : ""}">${c.v}</div></div>`
+    )).join("");
+  }
+
+  function renderCaseTable() {
+    const tbody = $("casesBody");
+    tbody.innerHTML = "";
+    replayData.cases.forEach((c, idx) => {
+      const tr = document.createElement("tr");
+      tr.className = "selectable" + (idx === activeCaseIdx ? " active" : "");
+      const ok = c.verdict === "AC";
+      tr.innerHTML = `
+        <td class="mono">${c.name || ("case_" + idx)}</td>
+        <td>${c.family || "-"}</td>
+        <td><span class="pill ${ok ? "ac" : "err"}">${c.verdict || "?"}</span></td>
+        <td class="mono">${fmtNum(c.target_len)}</td>
+        <td class="mono">${fmtNum(c.prog_len)}</td>
+        <td class="mono">${fmtNum(c.b_ref_bits)}</td>
+        <td class="mono">${Number(c.raw_score || 0).toFixed(2)}</td>
+        <td class="mono">${Number(c.norm_score || 0).toFixed(2)}</td>
+        <td class="mono">${fmtNum(c.steps)}</td>
+        <td class="mono">[${c.p_min ?? 0}, ${c.p_max ?? 0}]</td>
+        <td class="mono">${Number(c.vm_ms || 0).toFixed(1)}</td>
+      `;
+      tr.addEventListener("click", () => selectCase(idx));
+      tbody.appendChild(tr);
+    });
+  }
+
+  function selectCase(idx) {
+    stopPlay();
+    activeCaseIdx = idx;
+    activeFrameIdx = 0;
+    renderCaseTable();
+    const c = replayData.cases[idx];
+    const tr = Array.isArray(c.trace) ? c.trace : [];
+    const maxIdx = Math.max(0, tr.length - 1);
+    frameSlider.min = "0";
+    frameSlider.max = String(maxIdx);
+    frameSlider.value = "0";
+    playBtn.disabled = tr.length <= 1;
+    stepBackBtn.disabled = tr.length <= 1;
+    stepFwdBtn.disabled = tr.length <= 1;
+    $("traceTitle").textContent = `虚拟机轨迹 · ${c.name} (${c.verdict})`;
+    renderOpBars(c);
+    $("progPreview").textContent = c.program_preview || "(未记录程序正文预览，仅含统计与轨迹)";
+    drawChart(c, 0);
+    renderFrame(c, 0);
+  }
+
+  function renderOpBars(c) {
+    const ops = [">", "<", "+", ".", "[", "]"];
+    const counts = c.op_counts || {};
+    const total = Math.max(1, ops.reduce((a, k) => a + Number(counts[k] || 0), 0));
+    $("opBars").innerHTML = ops.map((sym) => {
+      const cnt = Number(counts[sym] || 0);
+      const pct = (100 * cnt / total).toFixed(1);
+      const esc = sym.replace("<", "&lt;").replace(">", "&gt;");
+      return `<div class="op-item"><div class="sym mono">${esc}</div>` +
+             `<div class="cnt mono">${fmtNum(cnt)}</div><div class="pct">${pct}%</div></div>`;
+    }).join("");
+  }
+
+  function drawChart(c, curIdx) {
+    const canvas = $("chartCanvas");
+    const ctx = canvas.getContext("2d");
+    const W = canvas.width;
+    const H = canvas.height;
+    ctx.clearRect(0, 0, W, H);
+    const tr = Array.isArray(c.trace) ? c.trace : [];
+    if (tr.length < 2) {
+      ctx.fillStyle = "#8ea0c2";
+      ctx.font = "13px sans-serif";
+      ctx.fillText("无足够轨迹采样点（请使用 --trace-points > 0 录制）", 20, H / 2);
+      return;
+    }
+    const padL = 48, padR = 16, padT = 18, padB = 26;
+    const pw = W - padL - padR;
+    const ph = H - padT - padB;
+    const maxStep = Math.max(1, tr[tr.length - 1].step);
+    const maxOut = Math.max(1, c.target_len || tr[tr.length - 1].out_pos || 1);
+    let minP = 0, maxP = 0;
+    for (const s of tr) {
+      if (s.p < minP) minP = s.p;
+      if (s.p > maxP) maxP = s.p;
+    }
+    const spanP = Math.max(1, maxP - minP);
+
+    ctx.strokeStyle = "#223052";
+    ctx.lineWidth = 1;
+    for (let g = 0; g <= 4; g++) {
+      const y = padT + (ph * g) / 4;
+      ctx.beginPath();
+      ctx.moveTo(padL, y);
+      ctx.lineTo(W - padR, y);
+      ctx.stroke();
+    }
+
+    // Output progress curve (green)
+    ctx.strokeStyle = "#34d399";
+    ctx.lineWidth = 2;
+    ctx.beginPath();
+    tr.forEach((s, i) => {
+      const x = padL + (s.step / maxStep) * pw;
+      const y = padT + ph - (s.out_pos / maxOut) * ph;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    // Head position curve (cyan)
+    ctx.strokeStyle = "#38bdf8";
+    ctx.lineWidth = 1.6;
+    ctx.beginPath();
+    tr.forEach((s, i) => {
+      const x = padL + (s.step / maxStep) * pw;
+      const y = padT + ph - ((s.p - minP) / spanP) * ph;
+      if (i === 0) ctx.moveTo(x, y);
+      else ctx.lineTo(x, y);
+    });
+    ctx.stroke();
+
+    // Current cursor
+    const cur = tr[Math.min(curIdx, tr.length - 1)];
+    const cx = padL + (cur.step / maxStep) * pw;
+    ctx.strokeStyle = "#fbbf24";
+    ctx.lineWidth = 1.5;
+    ctx.beginPath();
+    ctx.moveTo(cx, padT);
+    ctx.lineTo(cx, padT + ph);
+    ctx.stroke();
+
+    ctx.fillStyle = "#8ea0c2";
+    ctx.font = "11px monospace";
+    ctx.fillText("绿=输出进度  蓝=读写头 p  黄=当前帧", padL + 4, 13);
+    ctx.fillText("0", 8, padT + ph + 4);
+    ctx.fillText("100%", 8, padT + 6);
+    ctx.fillText(`t=${fmtNum(maxStep)}`, W - 120, H - 7);
+  }
+
+  function renderFrame(c, idx) {
+    const tr = Array.isArray(c.trace) ? c.trace : [];
+    if (tr.length === 0) {
+      $("frameLabel").textContent = "0 / 0";
+      $("frameStats").textContent = "无轨迹采样数据";
+      $("tapeRow").innerHTML = "";
+      return;
+    }
+    const clamped = Math.max(0, Math.min(idx, tr.length - 1));
+    activeFrameIdx = clamped;
+    frameSlider.value = String(clamped);
+    const f = tr[clamped];
+    $("frameLabel").textContent = `${clamped + 1} / ${tr.length}`;
+    $("frameStats").textContent =
+      `t=${fmtNum(f.step)} | out=${fmtNum(f.out_pos)}/${fmtNum(c.target_len)} | ` +
+      `p=${f.p} (span [${f.p_min}, ${f.p_max}]) | active_1s≈${fmtNum(f.ones)}`;
+    const win = String(f.win || "");
+    const mid = Math.floor(win.length / 2);
+    const cells = [];
+    for (let i = 0; i < win.length; i++) {
+      const ch = win[i];
+      const cls = ch === "1" ? "b1" : (ch === "0" ? "b0" : "oob");
+      const hd = i === mid ? " head" : "";
+      cells.push(`<div class="cell ${cls}${hd}" title="p=${f.p + (i - mid)}">${ch}</div>`);
+    }
+    $("tapeRow").innerHTML = cells.join("");
+    drawChart(c, clamped);
+  }
+
+  fileInput.addEventListener("change", (e) => {
+    const f = e.target.files && e.target.files[0];
+    if (!f) return;
+    f.text().then((txt) => loadReplayObj(JSON.parse(txt))).catch((err) => alert("解析失败: " + err));
+  });
+
+  dropzone.addEventListener("dragover", (e) => { e.preventDefault(); dropzone.classList.add("drag"); });
+  dropzone.addEventListener("dragleave", () => dropzone.classList.remove("drag"));
+  dropzone.addEventListener("drop", (e) => {
+    e.preventDefault();
+    dropzone.classList.remove("drag");
+    const f = e.dataTransfer.files && e.dataTransfer.files[0];
+    if (!f) return;
+    f.text().then((txt) => loadReplayObj(JSON.parse(txt))).catch((err) => alert("解析失败: " + err));
+  });
+
+  frameSlider.addEventListener("input", () => {
+    if (!replayData) return;
+    renderFrame(replayData.cases[activeCaseIdx], Number(frameSlider.value));
+  });
+
+  stepBackBtn.addEventListener("click", () => {
+    if (!replayData) return;
+    stopPlay();
+    renderFrame(replayData.cases[activeCaseIdx], activeFrameIdx - 1);
+  });
+
+  stepFwdBtn.addEventListener("click", () => {
+    if (!replayData) return;
+    stopPlay();
+    renderFrame(replayData.cases[activeCaseIdx], activeFrameIdx + 1);
+  });
+
+  playBtn.addEventListener("click", () => {
+    if (!replayData) return;
+    const c = replayData.cases[activeCaseIdx];
+    const tr = Array.isArray(c.trace) ? c.trace : [];
+    if (tr.length <= 1) return;
+    if (playTimer !== null) {
+      stopPlay();
+      return;
+    }
+    playBtn.textContent = "暂停";
+    playTimer = setInterval(() => {
+      if (activeFrameIdx >= tr.length - 1) {
+        stopPlay();
+        return;
+      }
+      renderFrame(c, activeFrameIdx + 1);
+    }, 80);
+  });
+})();
+</script>
+</body>
+</html>

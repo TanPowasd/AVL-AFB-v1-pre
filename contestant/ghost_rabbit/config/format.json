@@ -1,0 +1,45 @@
+{
+  "problem": "ghost_rabbit",
+  "title": "天翼幽灵兔：四重奇点追截战（The Winged Ghost Rabbit）",
+  "language": "C++20",
+  "submission_ext": ".cpp",
+  "compiler_flags": [
+    "-std=gnu++20",
+    "-O2",
+    "-pipe"
+  ],
+  "evaluation_protocol": "online_interactive_dynamic_adversary",
+  "solver_time_limit_ms": 5000,
+  "solver_memory_limit_mb": 512,
+  "limits": {
+    "max_turns": 5000,
+    "max_traps": 4000,
+    "coord_limit": 100000,
+    "max_q_denom": 1000000,
+    "max_k_per_turn": 2,
+    "max_line_bytes": 1024
+  },
+  "geometry": {
+    "graph": "Eisenstein honeycomb H_omega = {(a,b) in Z^2 : (a+b) mod 3 in {1, 2}}",
+    "start_vertex": [1, 0],
+    "prime_jump_power": 2,
+    "fourth_constraint": "local_3ap_free (forbid u+w=2v with dist(u,w)<=6, equivalently v-d, v, v+d in F for d in N_2(0,0))"
+  },
+  "protocol": {
+    "stage_1_output": "P Q",
+    "stage_2_output": "k_t a_1 b_1 ... a_{k_t} b_{k_t} pa pb",
+    "stage_2_input_continue": "0 dist flash bounce_idx",
+    "stage_2_input_captured": "1 0 0 0"
+  },
+  "scoring": {
+    "raw_formula": "100 * (4*Q' - 2*P') / (2*P' - Q') for 1/2 < P'/Q' < 2; singularity (+inf) for P'/Q' <= 1/2; 0 for P'/Q' >= 2",
+    "norm_formula": "100 * r / (r + 200) = 100 * (2*Q' - P') / (P' + Q') clamped to [0, 100]",
+    "suite_aggregation": "mean of per-case norm_score across 32 official matches",
+    "raw_aggregation": "minimum per-case raw_score if all matches AC else 0",
+    "max_score": 100,
+    "official_cases": 32,
+    "official_families": 4,
+    "cases_per_family": 8,
+    "practice_opponents": ["P1_BasicEscape", "P2_PrimeGreedy", "P3_LiteBelief"]
+  }
+}

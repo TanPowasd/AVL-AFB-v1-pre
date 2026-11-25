@@ -1,0 +1,693 @@
+{
+  "purpose": "Independent full-length baseline & scoring-pool calibration; official seeds are disjoint",
+  "seeds": [
+    101,
+    102,
+    103,
+    104
+  ],
+  "ticks": 26280,
+  "opponent_ids": [
+    "scaling_hegemon",
+    "capital_arbitrageur",
+    "adaptive_tactician",
+    "frontier_control"
+  ],
+  "games_count": 112,
+  "median_gap": 8810.06,
+  "margin_scale": 12710.23,
+  "games": [
+    {
+      "seed": 101,
+      "A": "adaptive_tactician.py",
+      "B": "capital_arbitrageur.py",
+      "gap": -3229.42
+    },
+    {
+      "seed": 101,
+      "A": "adaptive_tactician.py",
+      "B": "frontier_control.zip",
+      "gap": 154.92
+    },
+    {
+      "seed": 101,
+      "A": "adaptive_tactician.py",
+      "B": "merchant.py",
+      "gap": 18787.83
+    },
+    {
+      "seed": 101,
+      "A": "adaptive_tactician.py",
+      "B": "scaling.py",
+      "gap": 27572.72
+    },
+    {
+      "seed": 101,
+      "A": "adaptive_tactician.py",
+      "B": "scaling_hegemon.py",
+      "gap": -3434.49
+    },
+    {
+      "seed": 101,
+      "A": "capital_arbitrageur.py",
+      "B": "adaptive_tactician.py",
+      "gap": 3229.42
+    },
+    {
+      "seed": 101,
+      "A": "capital_arbitrageur.py",
+      "B": "frontier_control.zip",
+      "gap": 585.59
+    },
+    {
+      "seed": 101,
+      "A": "capital_arbitrageur.py",
+      "B": "merchant.py",
+      "gap": 16433.81
+    },
+    {
+      "seed": 101,
+      "A": "capital_arbitrageur.py",
+      "B": "scaling.py",
+      "gap": 26234.44
+    },
+    {
+      "seed": 101,
+      "A": "capital_arbitrageur.py",
+      "B": "scaling_hegemon.py",
+      "gap": -290.84
+    },
+    {
+      "seed": 101,
+      "A": "frontier_control.zip",
+      "B": "adaptive_tactician.py",
+      "gap": -154.92
+    },
+    {
+      "seed": 101,
+      "A": "frontier_control.zip",
+      "B": "capital_arbitrageur.py",
+      "gap": -585.59
+    },
+    {
+      "seed": 101,
+      "A": "frontier_control.zip",
+      "B": "merchant.py",
+      "gap": 23725.8
+    },
+    {
+      "seed": 101,
+      "A": "frontier_control.zip",
+      "B": "scaling.py",
+      "gap": 24697.86
+    },
+    {
+      "seed": 101,
+      "A": "frontier_control.zip",
+      "B": "scaling_hegemon.py",
+      "gap": -2220.1
+    },
+    {
+      "seed": 101,
+      "A": "merchant.py",
+      "B": "adaptive_tactician.py",
+      "gap": -18787.83
+    },
+    {
+      "seed": 101,
+      "A": "merchant.py",
+      "B": "capital_arbitrageur.py",
+      "gap": -16433.81
+    },
+    {
+      "seed": 101,
+      "A": "merchant.py",
+      "B": "frontier_control.zip",
+      "gap": -23725.8
+    },
+    {
+      "seed": 101,
+      "A": "merchant.py",
+      "B": "scaling_hegemon.py",
+      "gap": -19749.99
+    },
+    {
+      "seed": 101,
+      "A": "scaling.py",
+      "B": "adaptive_tactician.py",
+      "gap": -27572.72
+    },
+    {
+      "seed": 101,
+      "A": "scaling.py",
+      "B": "capital_arbitrageur.py",
+      "gap": -26234.44
+    },
+    {
+      "seed": 101,
+      "A": "scaling.py",
+      "B": "frontier_control.zip",
+      "gap": -24697.86
+    },
+    {
+      "seed": 101,
+      "A": "scaling.py",
+      "B": "scaling_hegemon.py",
+      "gap": -30844.64
+    },
+    {
+      "seed": 101,
+      "A": "scaling_hegemon.py",
+      "B": "adaptive_tactician.py",
+      "gap": 3434.49
+    },
+    {
+      "seed": 101,
+      "A": "scaling_hegemon.py",
+      "B": "capital_arbitrageur.py",
+      "gap": 290.84
+    },
+    {
+      "seed": 101,
+      "A": "scaling_hegemon.py",
+      "B": "frontier_control.zip",
+      "gap": 2220.1
+    },
+    {
+      "seed": 101,
+      "A": "scaling_hegemon.py",
+      "B": "merchant.py",
+      "gap": 19749.99
+    },
+    {
+      "seed": 101,
+      "A": "scaling_hegemon.py",
+      "B": "scaling.py",
+      "gap": 30844.64
+    },
+    {
+      "seed": 102,
+      "A": "adaptive_tactician.py",
+      "B": "capital_arbitrageur.py",
+      "gap": -1681.02
+    },
+    {
+      "seed": 102,
+      "A": "adaptive_tactician.py",
+      "B": "frontier_control.zip",
+      "gap": 1360.7
+    },
+    {
+      "seed": 102,
+      "A": "adaptive_tactician.py",
+      "B": "merchant.py",
+      "gap": 9740.57
+    },
+    {
+      "seed": 102,
+      "A": "adaptive_tactician.py",
+      "B": "scaling.py",
+      "gap": 12768.5
+    },
+    {
+      "seed": 102,
+      "A": "adaptive_tactician.py",
+      "B": "scaling_hegemon.py",
+      "gap": -1701.28
+    },
+    {
+      "seed": 102,
+      "A": "capital_arbitrageur.py",
+      "B": "adaptive_tactician.py",
+      "gap": 1681.02
+    },
+    {
+      "seed": 102,
+      "A": "capital_arbitrageur.py",
+      "B": "frontier_control.zip",
+      "gap": 503.08
+    },
+    {
+      "seed": 102,
+      "A": "capital_arbitrageur.py",
+      "B": "merchant.py",
+      "gap": 6764.43
+    },
+    {
+      "seed": 102,
+      "A": "capital_arbitrageur.py",
+      "B": "scaling.py",
+      "gap": 12611.25
+    },
+    {
+      "seed": 102,
+      "A": "capital_arbitrageur.py",
+      "B": "scaling_hegemon.py",
+      "gap": -1280.18
+    },
+    {
+      "seed": 102,
+      "A": "frontier_control.zip",
+      "B": "adaptive_tactician.py",
+      "gap": -1360.7
+    },
+    {
+      "seed": 102,
+      "A": "frontier_control.zip",
+      "B": "capital_arbitrageur.py",
+      "gap": -503.08
+    },
+    {
+      "seed": 102,
+      "A": "frontier_control.zip",
+      "B": "merchant.py",
+      "gap": 10280.74
+    },
+    {
+      "seed": 102,
+      "A": "frontier_control.zip",
+      "B": "scaling.py",
+      "gap": 11836.32
+    },
+    {
+      "seed": 102,
+      "A": "frontier_control.zip",
+      "B": "scaling_hegemon.py",
+      "gap": -2070.26
+    },
+    {
+      "seed": 102,
+      "A": "merchant.py",
+      "B": "adaptive_tactician.py",
+      "gap": -9740.57
+    },
+    {
+      "seed": 102,
+      "A": "merchant.py",
+      "B": "capital_arbitrageur.py",
+      "gap": -6764.43
+    },
+    {
+      "seed": 102,
+      "A": "merchant.py",
+      "B": "frontier_control.zip",
+      "gap": -10280.74
+    },
+    {
+      "seed": 102,
+      "A": "merchant.py",
+      "B": "scaling_hegemon.py",
+      "gap": -12106.62
+    },
+    {
+      "seed": 102,
+      "A": "scaling.py",
+      "B": "adaptive_tactician.py",
+      "gap": -12768.5
+    },
+    {
+      "seed": 102,
+      "A": "scaling.py",
+      "B": "capital_arbitrageur.py",
+      "gap": -12611.25
+    },
+    {
+      "seed": 102,
+      "A": "scaling.py",
+      "B": "frontier_control.zip",
+      "gap": -11836.32
+    },
+    {
+      "seed": 102,
+      "A": "scaling.py",
+      "B": "scaling_hegemon.py",
+      "gap": -14856.02
+    },
+    {
+      "seed": 102,
+      "A": "scaling_hegemon.py",
+      "B": "adaptive_tactician.py",
+      "gap": 1701.28
+    },
+    {
+      "seed": 102,
+      "A": "scaling_hegemon.py",
+      "B": "capital_arbitrageur.py",
+      "gap": 1280.18
+    },
+    {
+      "seed": 102,
+      "A": "scaling_hegemon.py",
+      "B": "frontier_control.zip",
+      "gap": 2070.26
+    },
+    {
+      "seed": 102,
+      "A": "scaling_hegemon.py",
+      "B": "merchant.py",
+      "gap": 12106.62
+    },
+    {
+      "seed": 102,
+      "A": "scaling_hegemon.py",
+      "B": "scaling.py",
+      "gap": 14856.02
+    },
+    {
+      "seed": 103,
+      "A": "adaptive_tactician.py",
+      "B": "capital_arbitrageur.py",
+      "gap": -29.94
+    },
+    {
+      "seed": 103,
+      "A": "adaptive_tactician.py",
+      "B": "frontier_control.zip",
+      "gap": 1483.67
+    },
+    {
+      "seed": 103,
+      "A": "adaptive_tactician.py",
+      "B": "merchant.py",
+      "gap": 6589.27
+    },
+    {
+      "seed": 103,
+      "A": "adaptive_tactician.py",
+      "B": "scaling.py",
+      "gap": 9166.83
+    },
+    {
+      "seed": 103,
+      "A": "adaptive_tactician.py",
+      "B": "scaling_hegemon.py",
+      "gap": -1762.2
+    },
+    {
+      "seed": 103,
+      "A": "capital_arbitrageur.py",
+      "B": "adaptive_tactician.py",
+      "gap": 29.94
+    },
+    {
+      "seed": 103,
+      "A": "capital_arbitrageur.py",
+      "B": "frontier_control.zip",
+      "gap": 1152.79
+    },
+    {
+      "seed": 103,
+      "A": "capital_arbitrageur.py",
+      "B": "merchant.py",
+      "gap": 4715.8
+    },
+    {
+      "seed": 103,
+      "A": "capital_arbitrageur.py",
+      "B": "scaling.py",
+      "gap": 9041.83
+    },
+    {
+      "seed": 103,
+      "A": "capital_arbitrageur.py",
+      "B": "scaling_hegemon.py",
+      "gap": -824.42
+    },
+    {
+      "seed": 103,
+      "A": "frontier_control.zip",
+      "B": "adaptive_tactician.py",
+      "gap": -1483.67
+    },
+    {
+      "seed": 103,
+      "A": "frontier_control.zip",
+      "B": "capital_arbitrageur.py",
+      "gap": -1152.79
+    },
+    {
+      "seed": 103,
+      "A": "frontier_control.zip",
+      "B": "merchant.py",
+      "gap": 8894.53
+    },
+    {
+      "seed": 103,
+      "A": "frontier_control.zip",
+      "B": "scaling.py",
+      "gap": 8994.76
+    },
+    {
+      "seed": 103,
+      "A": "frontier_control.zip",
+      "B": "scaling_hegemon.py",
+      "gap": -2852.07
+    },
+    {
+      "seed": 103,
+      "A": "merchant.py",
+      "B": "adaptive_tactician.py",
+      "gap": -6589.27
+    },
+    {
+      "seed": 103,
+      "A": "merchant.py",
+      "B": "capital_arbitrageur.py",
+      "gap": -4715.8
+    },
+    {
+      "seed": 103,
+      "A": "merchant.py",
+      "B": "frontier_control.zip",
+      "gap": -8894.53
+    },
+    {
+      "seed": 103,
+      "A": "merchant.py",
+      "B": "scaling_hegemon.py",
+      "gap": -8725.59
+    },
+    {
+      "seed": 103,
+      "A": "scaling.py",
+      "B": "adaptive_tactician.py",
+      "gap": -9166.83
+    },
+    {
+      "seed": 103,
+      "A": "scaling.py",
+      "B": "capital_arbitrageur.py",
+      "gap": -9041.83
+    },
+    {
+      "seed": 103,
+      "A": "scaling.py",
+      "B": "frontier_control.zip",
+      "gap": -8994.76
+    },
+    {
+      "seed": 103,
+      "A": "scaling.py",
+      "B": "scaling_hegemon.py",
+      "gap": -11083.86
+    },
+    {
+      "seed": 103,
+      "A": "scaling_hegemon.py",
+      "B": "adaptive_tactician.py",
+      "gap": 1762.2
+    },
+    {
+      "seed": 103,
+      "A": "scaling_hegemon.py",
+      "B": "capital_arbitrageur.py",
+      "gap": 824.42
+    },
+    {
+      "seed": 103,
+      "A": "scaling_hegemon.py",
+      "B": "frontier_control.zip",
+      "gap": 2852.07
+    },
+    {
+      "seed": 103,
+      "A": "scaling_hegemon.py",
+      "B": "merchant.py",
+      "gap": 8725.59
+    },
+    {
+      "seed": 103,
+      "A": "scaling_hegemon.py",
+      "B": "scaling.py",
+      "gap": 11083.86
+    },
+    {
+      "seed": 104,
+      "A": "adaptive_tactician.py",
+      "B": "capital_arbitrageur.py",
+      "gap": -341.69
+    },
+    {
+      "seed": 104,
+      "A": "adaptive_tactician.py",
+      "B": "frontier_control.zip",
+      "gap": 1876.1
+    },
+    {
+      "seed": 104,
+      "A": "adaptive_tactician.py",
+      "B": "merchant.py",
+      "gap": 22525.21
+    },
+    {
+      "seed": 104,
+      "A": "adaptive_tactician.py",
+      "B": "scaling.py",
+      "gap": 34828.97
+    },
+    {
+      "seed": 104,
+      "A": "adaptive_tactician.py",
+      "B": "scaling_hegemon.py",
+      "gap": -3958.68
+    },
+    {
+      "seed": 104,
+      "A": "capital_arbitrageur.py",
+      "B": "adaptive_tactician.py",
+      "gap": 341.69
+    },
+    {
+      "seed": 104,
+      "A": "capital_arbitrageur.py",
+      "B": "frontier_control.zip",
+      "gap": 529.47
+    },
+    {
+      "seed": 104,
+      "A": "capital_arbitrageur.py",
+      "B": "merchant.py",
+      "gap": 14110.54
+    },
+    {
+      "seed": 104,
+      "A": "capital_arbitrageur.py",
+      "B": "scaling.py",
+      "gap": 31004.77
+    },
+    {
+      "seed": 104,
+      "A": "capital_arbitrageur.py",
+      "B": "scaling_hegemon.py",
+      "gap": -1237.1
+    },
+    {
+      "seed": 104,
+      "A": "frontier_control.zip",
+      "B": "adaptive_tactician.py",
+      "gap": -1886.15
+    },
+    {
+      "seed": 104,
+      "A": "frontier_control.zip",
+      "B": "capital_arbitrageur.py",
+      "gap": -529.47
+    },
+    {
+      "seed": 104,
+      "A": "frontier_control.zip",
+      "B": "merchant.py",
+      "gap": 19217.3
+    },
+    {
+      "seed": 104,
+      "A": "frontier_control.zip",
+      "B": "scaling.py",
+      "gap": 28010.67
+    },
+    {
+      "seed": 104,
+      "A": "frontier_control.zip",
+      "B": "scaling_hegemon.py",
+      "gap": -2484.79
+    },
+    {
+      "seed": 104,
+      "A": "merchant.py",
+      "B": "adaptive_tactician.py",
+      "gap": -22525.21
+    },
+    {
+      "seed": 104,
+      "A": "merchant.py",
+      "B": "capital_arbitrageur.py",
+      "gap": -14110.54
+    },
+    {
+      "seed": 104,
+      "A": "merchant.py",
+      "B": "frontier_control.zip",
+      "gap": -19217.3
+    },
+    {
+      "seed": 104,
+      "A": "merchant.py",
+      "B": "scaling_hegemon.py",
+      "gap": -27512.09
+    },
+    {
+      "seed": 104,
+      "A": "scaling.py",
+      "B": "adaptive_tactician.py",
+      "gap": -34828.97
+    },
+    {
+      "seed": 104,
+      "A": "scaling.py",
+      "B": "capital_arbitrageur.py",
+      "gap": -31004.77
+    },
+    {
+      "seed": 104,
+      "A": "scaling.py",
+      "B": "frontier_control.zip",
+      "gap": -28010.67
+    },
+    {
+      "seed": 104,
+      "A": "scaling.py",
+      "B": "scaling_hegemon.py",
+      "gap": -35727.65
+    },
+    {
+      "seed": 104,
+      "A": "scaling_hegemon.py",
+      "B": "adaptive_tactician.py",
+      "gap": 3958.68
+    },
+    {
+      "seed": 104,
+      "A": "scaling_hegemon.py",
+      "B": "capital_arbitrageur.py",
+      "gap": 1117.21
+    },
+    {
+      "seed": 104,
+      "A": "scaling_hegemon.py",
+      "B": "frontier_control.zip",
+      "gap": 2484.79
+    },
+    {
+      "seed": 104,
+      "A": "scaling_hegemon.py",
+      "B": "merchant.py",
+      "gap": 27512.09
+    },
+    {
+      "seed": 104,
+      "A": "scaling_hegemon.py",
+      "B": "scaling.py",
+      "gap": 35727.65
+    }
+  ]
+}

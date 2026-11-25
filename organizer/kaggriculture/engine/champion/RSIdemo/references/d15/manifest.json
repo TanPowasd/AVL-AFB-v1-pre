@@ -1,0 +1,66 @@
+{
+  "source": "ramp\\opponents\\joint_adaptive_fast_d15\\submission.tar.gz",
+  "archive_sha256": "4ba85d68f338f8286bbd3a3cde6850722b8b16c168acd41361d82bc404827d43",
+  "files": {
+    "gpt6_rules.py": {
+      "bytes": 29738,
+      "sha256": "5cf40fecd673f9ac94bb49025ee79d5ad512d7ce20359de4987750f7f13af379"
+    },
+    "gpt6_math_routes.py": {
+      "bytes": 10067,
+      "sha256": "dfed3aa098509f5bfe236874d6ea43414580ce1286a0b00bd4b5e49955da9e6b"
+    },
+    "gpt6_policy.py": {
+      "bytes": 25436,
+      "sha256": "ec8b582fa5f2394c556d894fdb9770b50c215af5b0f502d1528b91129c804262"
+    },
+    "project_model.py": {
+      "bytes": 11407,
+      "sha256": "f28e9717ac8c106bf9fd86685be3aa1453e362a7779f9c827ac066a3e2ef5aef"
+    },
+    "supply_bank.py": {
+      "bytes": 240895,
+      "sha256": "762a9671edccab30a859c5ec4b3db8f72ef3eb887d1f94b6445a568a563df664"
+    },
+    "market_model.py": {
+      "bytes": 8200,
+      "sha256": "5b2ae9d1113ca99701436f8dc2bda61fc34182d33563592037db0b97ff41b862"
+    },
+    "exact_market_model.py": {
+      "bytes": 7067,
+      "sha256": "ed9f3b64cb719167537b37960d796a6ffa899dd189ecf723442c72a467737733"
+    },
+    "portfolio.py": {
+      "bytes": 9755,
+      "sha256": "d2bdfd112502161f4349350609a95f179a404072383fd7845d87ce615d750c9f"
+    },
+    "route_columns.py": {
+      "bytes": 19303,
+      "sha256": "60785202863bf8d68cedb94ef280e9fccaf4815e9b4637bda4d1296bd4fc3faa"
+    },
+    "joint_policy.py": {
+      "bytes": 660552,
+      "sha256": "fd8f0cc00e86e0fc0730cc487d6c0a94e8b55d17a20ebc3d55c093d48b7f3b12"
+    },
+    "joint_v2.py": {
+      "bytes": 12591,
+      "sha256": "4a387e0491a1e71a3c8bbbe3c9f3866a1138eacb8cc758eeb3f9d8cf2de05467"
+    },
+    "converged_portfolio.py": {
+      "bytes": 764,
+      "sha256": "ab40af73c3de21acf19d16e1b81e18e1aa9b9fedf6cf2445140985a0ff5faca3"
+    },
+    "inventory_belief.py": {
+      "bytes": 5343,
+      "sha256": "94bc2ea935bca79040cb7e366f0aa72cb3e031656c517cde927d015612cab6d1"
+    },
+    "inventory_bank.py": {
+      "bytes": 260962,
+      "sha256": "0e09c3da2a82dcab70c2c8ff2db25046fed7242e19481a00c0d0cf745c8fe84f"
+    },
+    "joint_adaptive.py": {
+      "bytes": 1376,
+      "sha256": "b266b05bcffeb17a3bb3e353f28edef2889cc0cc1739c5c6a5a393eefb5d3724"
+    }
+  }
+}

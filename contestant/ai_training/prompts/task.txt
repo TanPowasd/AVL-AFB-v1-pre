@@ -1,0 +1,510 @@
+这是前沿实验室（Frontier Lab / ai_training）聊天模式自包含参赛题面。所有必读资料已在下方展开，无须访问外部文件路径。
+注：文件夹模式推荐打包多文件 .zip（根目录含 main.py）；当前为聊天模式，请基于这些资料直接编写参赛策略，只返回一个包含完整单文件 Python 3.10+ 策略代码的代码块（可作为 main.py 运行）；仅使用 Python 标准库，不要省略逻辑、不要留 TODO，也不要声称已写入文件或运行本地测试。
+
+# 给 AI 的入口：前沿实验室（Frontier Lab）
+
+你是参赛模型。读完本文件与下表中的必读资料后，直接编写、打包、自测并交付参赛策略。常规实现细节请自行决策，不要停留在方案说明或空模板。
+
+- **文件夹模式（默认）**：具备文件读写与终端工具时，推荐在 `agents/submissions/<目录>/` 以多文件 Python 包开发（根目录含 `main.py`，可拆分模块与只读数据文件），用 `scripts/make_submission.py` 打包到 `../submissions/ai_training.zip`，运行本地陪练与回放校验、修复问题后交付，最后简短汇报提交路径与实测成绩。
+- **聊天模式**：无文件工具时，使用自包含题面 `prompts/task.txt`，只返回一个包含完整策略代码的 Python 代码块，不要声称已写入文件或运行测试。
+
+---
+
+## 0. 你的交付物
+
+| 项目 | 要求 |
+|---|---|
+| 文件形式 | `.zip` 多文件压缩包（根目录含 `main.py`，可附带任意子模块 `.py` 与只读数据文件；压缩 `<= 64 MiB`，解压 `<= 256 MiB`，条目 `<= 2048`） |
+| 统一提交路径（必交） | `../submissions/ai_training.zip`（全题套件顶层 `submissions/` 目录；正式评测由此读取） |
+| 题内开发路径（可选） | `agents/submissions/my_agent/` 或 `agents/submissions/my_agent.zip`（`spar.py`、`run_match.py`、`record_replay.py` 同时支持 `.zip`、目录与单文件 `.py`） |
+| 打包校验命令 | `python scripts/make_submission.py <策略目录或.py> --out ../submissions/ai_training.zip` |
+| 通信入口 | 子进程经 `engine/pkg_entry.py` 运行 `main.py`，通过 `stdin / stdout` 逐行交互 UTF-8 JSON（参考 `agents/template/` 与 `agents/starter.py`） |
+| 依赖限制 | **仅限 Python 3.10+ 标准库**；禁止联网、禁止读写包外文件、禁止读取对手代码 |
+
+---
+
+## 1. 推荐阅读顺序
+
+| 顺序 | 文件 | 作用 |
+|---|---|---|
+| 1 | `handbook/player-guide.md` | 通信协议、观测字段、动作字典、回执/事件与提交自检清单 |
+| 2 | `handbook/game-facts.md` | GPU、机房电力、科技树、数据池、缩放律、API 市场与估值精确数值表 |
+| 3 | `agents/template/`（及 `agents/starter.py`） | 多文件 `.zip` 起步模板（`main.py` / `planner.py` / `params.json`）与单文件最小骨架 |
+| 4 | `engine/engine.py`、`engine/world.py`、`engine/archive.py` | 唯一权威规则与打包安全实现；任何文档有疑问时以引擎源码为准 |
+| 参考 | `FORMAT.md`（同 `handbook/contest-rules.md`） | 双赛制 `scoring_v2` 公开计分口径与红线说明 |
+| 参考 | `README.md` | 单题完整中文规则说明 |
+
+---
+
+## 2. 一句话规则与正式计分标准
+
+模拟 `3` 年（`26280` tick = `1095` 天 × `24` 小时）的前沿 AI 实验室研发与商业化博弈：在每个随机种子独立生成的**隐藏缩放律与隐藏数据域质量/污染参数**下，竞拍/租用 5 代 GPU、建设机房与电力、招人研发科技树、获取/合成/蒸馏数据、调度训练任务并发布模型争夺 API 市场。同一份提交同时参加**单人赛（50%）**与**对抗赛（50%）**（协议不区分赛制）：
+
+- **单人赛（50%）**：固定坐 `0` 号位与内置 `engine/solo_npc.py` 同场，每局得分 `100 * C`（`C` 为三年内符合在线资格的最高已上线模型真实能力），取 `64` 个随机种子均值 `solo`；
+- **对抗赛（50%）**：对阵 `4` 个固定参考对手 × `64` 个随机种子 × 交换座位（`512` 局），每局按终局股权价值 `Value` 计算 $s = 50 + 50\tanh\big((Value_T - Value_R)/12710.23\big)$ 并等权平均得 `adv`；
+- **正式总分（`scoring_v2`，满分 `100`）**：`0.5 * solo + 0.5 * adv`（共 `576` 局，非有限数值局计 `0` 分，完整 `Value` 定义见 `README.md` 第 4 节）。
+
+---
+
+## 3. 硬约束（违反将触发判罚或被拒）
+
+- **压缩包安全与标准库限定**：仅可使用 Python 标准库；包内只读数据请使用 `Path(__file__).resolve().parent / "..."` 读取；禁止路径穿越、加密条目、符号链接、Windows 保留名及非法字符；子进程工作目录为解压后的包目录，`stderr` 被丢弃，`PYTHONHASHSEED=0`、`PYTHONUTF8=1`。
+- **交互时限与输出配额**：
+  - `init` 握手限时 `10.0` 秒；
+  - 每 tick 基础墙钟时限 `2.0` 秒，另有整局共享、不回补的 `120.0` 秒时间池（余额见 `obs["time_pool"]`），超出单 tick 2.0 秒的部分从池中扣除；池空后恢复单 tick 硬时限；
+  - 单局累计思考总预算 `2400` 秒（40 分钟）；终局 `end` 消息限时 `1.0` 秒；
+  - 单行输出上限 `1 MiB`，未读行队列上限 `64`，超限即终止子进程。
+- **容错与非法动作**：
+  - 超时或输出非 JSON 对象按空动作 `{}` 处理，迟到回复会被丢弃（累计见 `obs["missed"]`）；未答积压达到 `50` 条、进程崩溃或总预算耗尽后，剩余 tick 全按 `{}` 处理。
+  - 动作中出现 `NaN`、`Infinity` 或绝对值 `> 1e15` 的数值，本 tick 整个动作作废；单 tick 每个列表型动作上限 `64` 条（`fire` 上限 `300` 条）；某字段类型错误引发异常时，该项及后续动作作废。
+  - 协议中**没有**单人赛/对抗赛标记，同一份程序必须在两种赛制下稳健运行（在单人赛里对手位为内置 `engine/solo_npc.py`，最终只看你的最高有效真实能力 `C`）。
+- **赛制与工作区红线**：
+  - 仅可使用公开陪练（`blank`、`scaling`、`merchant`、`--solo`）或自身镜像自测；禁止读取其他选手文件或与其他提交互测。
+  - 产出仅保存在当前工作区的 `results/`、`replays/`、`logs/` 目录；打包输出仅限 `agents/submissions/` 或 `../submissions/ai_training.zip`。
+  - 禁止修改引擎、公开基线、`config/format.json` 和 `config/workspace.json`；禁止使用 `--unrestricted` 或 `--serve`。
+  - 本地工具固定使用世界盐值 `practice`，正式评测使用独立私有盐值且每次从操作系统随机源抽取新种子，切勿针对特定种子硬编码。
+
+---
+
+## 4. 编写、打包、验证、回放与改进
+
+```bash
+# 查看公开陪练
+python scripts/spar.py --list
+
+# 将多文件策略目录（根目录含 main.py）打包并做安全 + 24 tick 冒烟校验
+python scripts/make_submission.py agents/submissions/my_agent --out ../submissions/ai_training.zip
+
+# 快速接口与早期策略冒烟（2000 tick ≈ 2.7 个月）
+python scripts/spar.py ../submissions/ai_training.zip merchant --seeds 1 --ticks 2000
+
+# 单人赛与对抗赛完整自测（先 1-2 种子验证，再扩大 --seed-count）
+python scripts/spar.py ../submissions/ai_training.zip --solo --seed-count 2
+python scripts/spar.py ../submissions/ai_training.zip --all --seed-count 2
+
+# 单局逐月日志追踪
+python scripts/run_match.py ../submissions/ai_training.zip agents/baselines/merchant.py --seed 1 --ticks 4380
+
+# 录制标准回放并校验确定性（默认同时做结构自校验与同种子复算校验）
+python scripts/record_replay.py --a ../submissions/ai_training.zip --b merchant --seed 1 --ticks 4380
+python scripts/record_replay.py --a ../submissions/ai_training.zip --solo --seed 1 --ticks 4380
+```
+
+录制完成后，直接用本地浏览器打开 `viz/player.html` 并将 `replays/replay_*.json` 拖入页面，即可离线查看双方股权估值、现金流、能力 `C`、算力爬坡、API 市场份额堆叠图以及关键事件时间线（无须启动 HTTP 服务，选手工作区已禁用 `--serve`）。
+
+每次测试后务必检查 `faults` 中的 `timeouts`、`bad_json`、`dead`、`illegal` 是否全为 `0`，并同时关注对抗分与单人赛 `C`。
+
+---
+
+## 5. 八个必踩的坑
+
+1. **显式 `serve` 与自动服务互斥**：一旦发送非空 `serve`，引擎**只**用留出的卡服务 API，不再拿闲置训练卡补足！一旦留卡不足，丢单率 `drop` 飙升，声誉 `rep` 暴跌（最低 `-3.0`）且份额雪崩。没有主训练在跑或想用剩余卡自动兜底时，务必发 `serve: []` 恢复自动分配。
+2. **默认学习率偏低、过高则尖峰/发散；手动 `ckpt` 同样扣 `20%` 吞吐**：默认 `lr = 0.0010 * N^-0.3` 低于真实最优 $\eta^* \in [0.0012, 0.0028] \cdot N^{-0.3}$ 会吃二次惩罚；但 $\eta > \eta^*$ 会触发指数级尖峰（每次 `×1.02` loss，10% 概率 `diverged`）。开局做小算力 LR/缩放律探针收益极高；训练中收到 `spike`/`diverged` 立即 `rollback`，收到 `slow_node` 立即 `diagnose`，并按卡数动态调整 `ckpt_every`（约 $\sqrt{0.4 / (\text{cards}/50000)}$）和 `batch`。不要每 tick 刷手动 `ckpt`（同样扣 20% 吞吐）。
+3. **机房电力卡脖子导致买卡变库存**：装机硬约束 `sum(cards * kW) * PUE <= MW * 1000`。GPU 拍卖交付需 `4..10` 周，而机房扩容需 `8` 周、新建需 `8..20` 周！必须在买卡前提前扩容 `0` 号机房并择优新建低电价/大容量地区机房，同时早研 `cooling`（PUE `1.30 → 1.15`）直接释放 13% 装机空间。注意拍卖出清前会按 `cash / (price * 256)` 裁剪虚高报价。
+4. **监管停审（`20,000,000 G1·h`）白白停机 2–3 周**：单任务累计算力越过 `20M G1·h` 且未获批时强制停审 `336 * reg` tick。正确做法是在上一代结束前提前新建下一代任务（`paused: true`）并提交 `audit_request`，让审核期与当前训练并行重叠！
+5. **数据重复衰减与污染复测处罚**：单个数据池反复训练按 $4U(1 - e^{-S/(4U)})$ 衰减；各真实域存在 `0..12%` 隐藏污染，若发布模型 `pub - C > 0.05`，月度复测直接扣 `rep -= 0.3` 并打回 `pub = C`。早研高权重域的 `filter:<domain>` 可揭示真实 `q`/`c` 并将此后该域污染减半。
+6. **商业 API 能力门槛与反价格震荡**：玩家模型须达到 `C >= 0.15` 才可参与 API 竞争，效用权重为 `6.0 * pub - 1.5 * ln(max(price, 1.0))`；周内突然无能力提升提价超过 `1.5×` 会立即流失份额，且周结算按周内最差挂牌效用与峰值价计算，低价拉份额再暴涨套利已完全失效。同时融资投前估值封顶于真实 `value()`，融资只用于高 ROI 投资而非套利。
+7. **终局有效能力门槛与精确发布时点**：模型计入 `best_c()` 必须满足**累计在线满 730 tick（1 个月）**，或者**终局未下架且在线满 72 tick**（另加 24 tick 发布延迟，故最晚须在 **`t = 26183`** 的观测后提交 `release` 才够 72 tick，切勿秒下架刚发布的高分模型！）。若使用 `wsd` 退火，须在进入最后 `15%` 后实际训练完 `0.15 * target` token，下调目标触发退火后将永久锁定不得回调。
+8. **破产线、合成/蒸馏红线与挖角/解雇成本**：现金连续 `720` tick（30 天）`< 0` 直接不可逆破产清算（含取消待上线模型）；单任务合成占比 `> 0.30` 触发坍缩惩罚；存档蒸馏占比 `>= 0.10` 封顶真实能力 `C` 为 `最强老师 C - 0.03`，凡本周推进过训练或周一在跑/暂停/审核中且蒸馏占比 `> 0.20` 者，每周一 `10%` 概率被诉罚没 `15%` 现金且 `rep -= 0.2`；挖对手限每周 `2` 次、成功后 `2` 周冷却并扣 `336×` 薪资签约金，解雇扣 `168×` 薪资遣散费。
+
+---
+
+## 6. 目录地图
+
+```text
+README.md               单题完整规则说明
+AGENTS.md               编码 AI 自动读取的参赛工作流
+AI_README.md            本文件（AI 快速上手指南）
+FORMAT.md               公开赛制与计分规则（同 handbook/contest-rules.md）
+handbook/
+  contest-rules.md      公开赛制与判罚口径
+  player-guide.md       通信协议、观测/动作字段与自检清单
+  game-facts.md         全量精确数值与公式速查卡
+engine/
+  archive.py            .zip 压缩包安全校验、流式解压与哈希工具
+  pkg_entry.py          多文件策略包入口启动器
+  engine.py             官方仿真引擎与子进程协议（唯一权威）
+  world.py              按种子生成隐藏缩放律、数据与全局事件
+  solo_npc.py           单人赛内置固定背景实验室
+  policy.py             工作区边界守卫
+  replay.py             回放构建与一致性校验（afb-ai-training-replay/1）
+agents/
+  template/             多文件 .zip 起步模板（main.py / planner.py / params.json）
+  starter.py            最小单文件协议起步模板
+  baselines/            公开基线：blank / scaling / merchant
+  submissions/          题内开发目录（统一交卷打包至 ../submissions/ai_training.zip）
+scripts/
+  make_submission.py    打包并校验 .zip 提交压缩包（含 24 tick 冒烟测试）
+  spar.py               公开陪练自测（支持 --solo / --all）
+  run_match.py          单局对局与逐月日志
+  record_replay.py      标准回放录制与复算校验
+viz/
+  player.html           单文件离线交互式回放播放器
+config/
+  format.json           默认局长、提交压缩包限制、估值尺度与计分参数
+  workspace.json        选手工作区标记（禁止修改）
+prompts/
+  task.txt              聊天模式自包含完整题面
+results/                本地自测结果输出目录
+replays/                本地回放输出目录
+logs/                   本地调试日志目录
+```
+
+---
+
+## 7. 交付前自检
+
+- [ ] 仅使用 Python 标准库；无联网、无读写包外文件；包内数据用 `Path(__file__).resolve().parent` 相对读取
+- [ ] 已使用 `python scripts/make_submission.py <dir> --out ../submissions/ai_training.zip` 打包并通过安全与 24 tick 冒烟校验（独立单题包可输出至 `agents/submissions/my_agent.zip`）
+- [ ] `spar.py --all` 与 `spar.py --solo` 均完成零故障运行（`timeouts=0, bad_json=0, dead=False, illegal=0`）
+- [ ] 终局发布模型满足 `online_ticks >= 72`（最晚 `t <= 26183` 提交 `release` 且未下架）或 `>= 730`，未触发破产或高丢单崩盘
+- [ ] 在对抗赛稳定战胜 `blank`、`scaling`、`merchant`，且在单人赛取得有竞争力的真实能力 `C`
+
+============================ 公开赛制与计分 ============================
+
+# 前沿实验室（Frontier Lab）公开赛制与评分规则
+
+本文件仅包含公开赛制与评分口径，权威实现以 `engine/engine.py`、`engine/world.py` 与 `engine/archive.py` 为准。
+
+## 1. 比赛形式与胜负目标
+
+- **模拟周期**：一局共 `26280` tick（`3` 年 = `1095` 天 × `24` 小时，`1` tick = `1` 小时）。
+- **隐藏世界**：每个场景种子独立生成缩放律常数、跨域迁移矩阵、域质量与污染率、最优学习率常数、临界批大小、地区机房参数及全局事件序列。对抗双方共享同一世界序列与对称公共随机数，且同 tick 动作执行顺序按 `(t + seed) % 2` 交替，交换座位公平对称。
+- **双赛制同卷评测**：同一份提交同时参加单人赛与对抗赛，协议中不提供赛制标记。
+  1. **单人赛（占 50%）**：你固定坐 `0` 号座位，背景对手为内置固定脚本 `engine/solo_npc.py`。每局得分为 `100 * C`，其中 `C` 为三年内符合资格的最高已上线模型真实能力；取各种子平均得 `solo`。
+  2. **对抗赛（占 50%）**：与 `4` 个固定参考对手逐一在每个种子下交换座位对局。每局比较双方终局创始人股权估值 `Value`，按冻结映射尺度 `12710.23 M` 计算：
+     $$s = 50 + 50\tanh\left(\frac{Value_T - Value_R}{12710.23}\right)$$
+     对全部对手、种子与座位等权平均得 `adv`（持平为 `50` 分）。
+  3. **总分（满分 100）**：`score = 0.5 * solo + 0.5 * adv`（`scoring_version = "scoring_v2"`）。
+- **默认样本量**：正式评测默认每次从操作系统安全随机源抽取 `N = 64` 个不重复场景种子（单人赛 `64` 局 + 对抗赛 `4 × 64 × 2 = 512` 局，共 `576` 局），报告附带 95% 种子块 bootstrap 区间。
+- **世界盐值**：本地练习工具固定使用 `practice` 盐值，正式评测使用私有盐值；同一整数种子在本地与正式环境中生成的世界不同。
+
+## 2. 交付格式与运行限制
+
+- **提交路径**：统一提交至 `../submissions/ai_training.zip`（根目录含 `main.py`，推荐使用 `python scripts/make_submission.py <目录> --out ../submissions/ai_training.zip` 打包校验；独立单题开发可暂存于 `agents/submissions/my_agent.zip` 或目录）。
+- **压缩包配额与安全**：压缩后 `<= 64 MiB`、解压后 `<= 256 MiB`、条目 `<= 2048`、单文件压缩比 `<= 100×`；禁止加密条目、符号链接/非常规文件、路径穿越、Windows 保留名及非法字符、大小写冲突路径或文件遮蔽目录。损坏或不合规压缩包将在加载阶段判故障并得 `0` 分。
+- **语言与依赖**：UTF-8 Python 3.10+，仅允许使用 Python 标准库；禁止联网、禁止读写包外文件、禁止读取对手源码。包内只读数据请相对 `Path(__file__).resolve().parent` 读取。
+- **进程通信**：独立子进程由 `engine/pkg_entry.py` 启动根目录 `main.py`，工作目录为包目录，`stderr` 被丢弃，`PYTHONHASHSEED=0`、`PYTHONUTF8=1`，经 `stdin / stdout` 逐行交互 UTF-8 JSON。
+- **时限、输出上限与容错**：
+  - `init` 握手限时 `10.0` 秒；
+  - 单 tick 基础限时 `2.0` 秒 + 整局共享不回补时间池 `120.0` 秒（余额见 `obs["time_pool"]`）；
+  - 整局累计思考预算 `2400` 秒（40 分钟）；终局 `end` 回复限时 `1.0` 秒；
+  - 单行输出上限 `1 MiB`，未消费行缓冲上限 `64` 行，超限立即终止进程；
+  - 单 tick 超时或非法 JSON 按 `{}` 处理并记录 `missed`；未回复消息积压满 `50` 条、崩溃或总预算耗尽后，后续全按 `{}` 处理；
+  - 动作含 `NaN`、`Infinity` 或绝对值 `> 1e15` 的数字时整步作废；列表型动作单 tick 上限 `64` 条（`fire` 上限 `300` 条）；字段异常时该项及后续动作作废。
+
+## 3. 自测与工作区红线
+
+- 本地自测仅允许使用公开陪练（`blank`、`scaling`、`merchant`、`--solo`）或自身镜像对局，严禁与其他参赛提交互测或读取其他选手工作区、成绩、回放与日志。
+- 自测产物须保存在当前工作区的 `results/`、`replays/`、`logs/` 目录；打包输出仅限 `agents/submissions/` 或 `../submissions/ai_training.zip`。
+- 严禁修改引擎、`config/format.json`、`config/workspace.json` 或公开基线；选手工作区禁止 `--unrestricted` 与 `--serve`。
+- 正式评测由裁判方在正式评测环境中统一执行。
+
+============================ 选手手册（协议与动作） ============================
+
+# 选手手册：通信协议、观测、动作与自检
+
+你的任务是编写一个 Python 3.10+ 策略包（打包为 `.zip`，根目录含 `main.py`，可拆分多模块并携带只读数据文件），通过 `stdin / stdout` 逐行 JSON 协议控制前沿 AI 实验室运行 `26280` tick（3 年），兼顾**单人赛最高真实能力 `C`**与**对抗赛终局创始人股权估值 `Value`**。
+
+---
+
+## 1. 子进程生命周期与打包方式
+
+1. 推荐在 `agents/submissions/<name>/` 下组织代码（入口 `main.py`，辅以任意子模块和只读数据文件，参考 `agents/template/`），然后打包并校验：
+   ```bash
+   python scripts/make_submission.py agents/submissions/<name> --out ../submissions/ai_training.zip
+   ```
+2. 裁判将 `.zip` 安全解压至临时包目录并启动 `python -u engine/pkg_entry.py <pkg_dir>`（将 `<pkg_dir>` 置入 `sys.path[0]`、切换 `cwd=<pkg_dir>`、`PYTHONHASHSEED=0`、`PYTHONUTF8=1`、`stderr` 丢弃，再执行 `main.py`）。单文件 `.py` 亦兼容用于本地调试。
+3. 从 `stdin` 读取第 1 行 `init` JSON，在 `10.0s` 内向 `stdout` 输出 `{}` 并 `flush`。
+4. 随后循环读取每 tick 的观测 JSON（`t = 0 .. ticks - 1`），每次输出一行紧凑动作 JSON（`<= 1 MiB`）并 `flush`（第 `t` tick 输出的动作在第 `t + 1` tick 生效；`t = 0` 前双方均为空动作 `{}`）。
+5. 收到 `{"type": "end", "t": ...}` 后在 `1.0s` 内输出 `{}` 并正常退出。
+
+起步多文件模板见 `agents/template/`，最小单文件骨架见 `agents/starter.py`。注意：程序内部任何未捕获异常、输出超长行（`> 1 MiB`）或无节制刷写 `stdout`（未消费行 `> 64`）都会导致进程被终止并判为 `dead`，务必在主循环外层做好异常兜底。
+
+---
+
+## 2. `init` 握手消息字段
+
+```json
+{
+  "type": "init",
+  "seat": 0,
+  "ticks": 26280,
+  "rules": {"DAY": 24, "WEEK": 168, "KC": 300.0, "SK": 25.0, "MTBF": 50000.0, "API_MIN_C": 0.15, "U_PUB": 6.0, "...": "..."},
+  "gpus": [{"model": "G1", "power": 1.0, "kw": 0.7, "launch_q": 0, "supply_q": 8192, "price": 0.05}],
+  "regions": [{"id": 0, "price": 0.0006, "cap_mw": 12.0, "build_weeks": 12, "build_cost": 25.0, "reg": 1.1}],
+  "domains": [{"name": "web", "public_b": 1824.7, "q_hint": 1.42}],
+  "pools": ["web", "code", "math", "books", "science", "dialog", "multiling", "synth", "distill"],
+  "real": ["web", "code", "math", "books", "science", "dialog", "multiling"],
+  "techs": {"algo_eff_1": {"cost": 20000, "pre": null}},
+  "start": {"cash": 200, "gpus": {"G1": 512}, "site": {"region": 0, "mw": 2}, "staff": [{"id": 0, "ab": 2, "sal": 0.00016}]},
+  "npcs": ["N1", "N2"],
+  "models": [{"id": "N1-1", "owner": "N1", "pub": 0.412, "price": 9.12, "N": null}]
+}
+```
+
+- `seat = 0` 对应实验室标签 `"A"`（发布模型 `A1, A2, ...`）；`seat = 1` 对应 `"B"`（`B1, B2, ...`）。
+- `rules` 字典给出全部公开规则常量，推荐直接读取而非硬编码。
+
+---
+
+## 3. 每 tick 观测 `obs` 字段
+
+### 3.1 每 tick 必含字段
+| 字段 | 类型与含义 |
+|---|---|
+| `t` | `int`，当前 tick（`0 .. 26279`） |
+| `cash` | `float`，当前现金（M，可为负；连续 `720` tick `< 0` 破产） |
+| `eq` | `float`，创始人当前股权比例（初始 `1.0`） |
+| `rep` | `float`，声誉（范围 `[-3.0, 0.0]`） |
+| `bk` | `bool`，是否已破产 |
+| `gpu` | `{model: [usable_own, broken, inv_uninstalled, rented, used]}`（全为 0 的型号不列出） |
+| `runs` | `[[name, status, trained_b, target_b, tok_per_tick, eff, last_ckpt_id, cards], ...]` |
+| `api` | `[demand_b, served_b, revenue_m]`，本 tick 需求、送达量与 API 收入 |
+| `missed` | `int`，累计超时与坏 JSON 次数 |
+| `time_pool` | `float`，剩余共享时间池秒数（初始 `120.0`） |
+
+`runs` 状态取值为 `running` / `paused` / `review` / `diverged` / `done` / `stopped`；`done` 与 `stopped` 任务仅在产生关联事件的那个 tick 出现一次。
+
+### 3.2 按需附带字段（用 `obs.get(...)` 读取）
+- `ev`：本 tick 公共事件与己方私有事件列表：
+  - 公共：`release`、`open_source`、`export_ctrl`、`curtail`、`raise`、`audit_fail`、`bankrupt`（仅记入回放/私有通知）
+  - 私有：`done`（含 `run, ckpt, loss`）、`failure`、`preempt`（训练任务因抢占回退）、`preempted`（`spot` 租约被抢占结束）、`spike`、`diverged`、`slow_node`、`review`（含 `until`）、`review_done`、`delivered`、`expanded`、`site_ready`、`tech`（`filter:*` 附带真实 `q` 与减半后 `c`）、`quit`、`poached`、`lawsuit`（`kind: "distill"|"copyright"`）、`bankrupt`
+- `res`：本 tick 执行动作的回执列表（`{"act": ..., "ok": true/false, ...}`），其中 `rent` 返回租约 `id`，`release` 返回模型 `id` 与上线时刻 `live`，`poach` 成功返回 `signing_bonus`。
+
+### 3.3 每日附带字段（`t % 24 == 23`）
+- `loss`：`{run_name: [L_0, ..., L_6]}`，所有处于 `running`/`paused`/`diverged` 且已训量 `> 0` 任务的 7 个真实域带噪 loss（独立乘 `1 + 0.01 * N(0, 1)`）。
+- `rent`：`{model: ondemand_price}`，已上市型号的当前按需租价（M / 卡·tick）。
+- `elec`：`[p0, p1, p2, p3, p4]`，5 个地区当前电价（M / MWh）。
+- `pts`：`{tech: accumulated_pts}`，尚未完成但已有进度的科技累计研究点数。
+
+### 3.4 每周附带字段（`t % 168 == 0`）
+`obs["wk"]` 包含：
+- `week`、`heat`（AI 热度）、`demand`（当前全市场需求 B token/tick）；
+- `auction`（上周拍卖出清价与中标者）、`deal_results`（上周数据招标结果）、`hires`（上周招聘结果）；
+- `offer`（本周 GPU 拍卖 `{model: {lots, reserve, early}}`）；
+- `deals`（本周独家数据合同 `[{id, domain, tokens_b, q_hint, reserve}]`）；
+- `talent`（本周人才池 `[{id, lo, hi, ask}]`）；
+- `shares`（各方 API 市场份额）；
+- `models`（全市场未下架模型 `[{id, owner, pub, price, N}]`）；
+- `staff`（`{opp, N1, N2}` 各方人数）；
+- `my`：`staff`（`[[id, ab, sal], ...]`）、`sites`（`[{id, region, mw, ready, pend_mw, cards}]`）、`data`（各池去重量 `U`）、`tech`（已解锁列表）、`share`、`drop`（上周丢单率）、`deliv`（在途卡 `[[arrive_t, model, n], ...]`）。
+
+---
+
+## 4. 动作字典与执行顺序
+
+引擎按下列**固定顺序**逐项执行动作（全部键可选；列表型动作单 tick 上限 `64` 条，`fire` 上限 `300` 条；任一数字非法导致整步作废，类型异常导致当前及后续项作废）：
+
+1. `bid_gpu`: `[{"model": "G2", "lots": 2, "price": 0.14}]` —— 同型号覆盖旧报价，`lots == 0` 撤单，`lots < 0` 或 `price <= 0` 记非法；周一结算前按 `cash / (price * 256)` 截断可参与批数，结算后清空。
+2. `rent`: `[{"model": "G1", "n": 256, "kind": "ondemand"|"spot", "ticks": 168}]` —— 超出池余量时截断。
+3. `end_rent`: `[rent_id, ...]` —— 提前结束租约。
+4. `sell_gpu`: `[{"model": "G1", "n": 256}]` —— 优先卖库存再卖已装机好卡，`48` tick 后回款；单卡回款受市场热度折价与剩余硬件账面双重封顶。
+5. `build_site`: `[{"region": 3}]` —— 每方最多 `8` 座，同一地区可重复建设。
+6. `expand_site`: `[{"site": 0, "mw": 4.0}]` —— `2 M/MW`，`8` 周生效，单座上限 `cap_mw`。
+7. `ppa`: `[{"site": 0, "mwh": 20000}]` —— 锁当前电价 `×0.8` 持续 `8760` tick，照付不议，单座机房同时生效上限 `64` 份。
+8. `hire`: `[{"cand": 17, "salary": 0.0003}]` —— 单位 M/tick，须 `> 0` 且不低于 `ask`，周一密封最高薪得人。
+9. `poach`: `[{"target": "opp"|"N1"|"N2", "idx": 0, "salary": 0.0006}]` —— 每周最多处理前 `5` 条，`salary <= 0` 记非法；挖对手每周最多 `2` 次且成功后冷却 `2` 周；成功挖走须现金支付签约金（对手 `336×` / NPC `168×`）；受 `MAX_STAFF = 300` 约束。
+10. `fire`: `[staff_id, ...]` —— 解雇己方研究员，每人立即扣除 `168 * sal` 遣散费。
+11. `research`: `[{"tech": "algo_eff_1", "share": 0.6}, ...]` —— 持续生效、整体覆盖，自动在可研项间归一化。
+12. `bid_data`: `[{"deal": 9, "price": 12.0}]` —— 周一密封首价开标，中标独享 1 年。
+13. `synth`: `[{"tokens_b": 20.0}]` —— 需解锁 `synth` 且有已上线模型，`24` tick 后入库。
+14. `distill`: `[{"model": "N1-1", "tokens_b": 15.0}]` —— 立即进入 `distill` 池，不可蒸馏己方或已下架模型。
+15. `run`: `[{"name": "r1", "params_b": 20, "tokens_b": 400, "gpus": {...}, "lr": ..., "batch": 512, "sched": "cosine"|"wsd"|"const", "mix": {...}, "ckpt_every": 24, "paused": false}]` —— 最多 `12` 个未完成任务，整局上限 `400` 个，不可重名（名截断至 32 字符）。
+16. `run_ctl`: `[{"name": "r1", "op": "...", "arg": ...}]` —— 支持 `pause`、`resume`、`stop`、`rollback`（arg 可省=最新存档）、`set_lr`、`set_mix`、`ckpt`（立即存档，并在下次训练推进时扣除 `20%` 吞吐开销）、`diagnose`（清除慢节点，停 1 tick）、`set_gpus`、`set_tokens`（仅非 `done`/`stopped` 任务，须 `trained_b < arg <= 1e6`，`wsd` 退火锁定后禁止上调，`cosine` 接近完成 `>=98%` 时禁止上调超 5%）、`set_batch`、`set_ckpt`。
+17. `audit_request`: `[{"run": "r1"}]` —— 提前申请监管审核，审核期间不占 GPU。
+18. `release`: `[{"run": "r1", "ckpt": 16, "price": 10.0}]` —— `24` tick 后正式上线；`ckpt` 省略取最新存档。
+19. `price`: `[{"model": "A1", "value": 12.0}]` —— 截断至 `[0.5, 100]`，每个模型每天限改 1 次；无能力提升提价超 `1.5×` 将即时流失份额。
+20. `delist`: `["A1"]` —— 下架己方已上线模型（注意 `online_ticks < 730` 时下架将失去 `best_c()` 资格！）。
+21. `serve`: `[{"gpus": {"G1": 256}}]` —— 显式留卡服务（持续生效，与自动分配互斥；传 `[]` 或 `null` 恢复自动分配）。
+22. `raise`: `[{"amount": 300.0}]` —— 每季度（`2190` tick）限 `1` 次，投前估值与真实 `value()` 对齐且不超过 `V_true`，超投前估值时截断至 `V_pre`。
+
+---
+
+## 5. 每 tick 结算顺序（9 步）
+
+1. 全局事件（NPC 发布、开源、出口管制预告、限电、满 24 tick 玩家模型上线、在线时长 `+1`）；
+2. 执行上一 tick 提交的动作（双方执行顺序按 `(t + seed) % 2` 交替）；
+3. **每周一（`t % 168 == 0`）**：GPU 拍卖（资金预检后出清）→ 数据招标 → 招聘 → 挖角 → API 份额迁移 → 刷新本周供给/合同/人才 → 独家数据到期公开 → 蒸馏诉讼（覆盖本周实际训练过或仍活跃任务，双座位对称随机）；
+4. 到货与基建完工（中标卡到货、机房扩容/新建完工、坏卡修复、卖卡回款、合成入库、自动装机、到期租约清理）；
+5. 显式 `serve` 预留卡 → 云租 `spot` 抢占 → 累加研究点 → 按创建序给在跑任务分卡 → 抢占中断 → 推进训练（故障、重启、慢节点、吞吐、审核触发、存档、尖峰/发散、完成）；
+6. 价格/效用跳水即时份额流失判定 → API 请求服务与收入结算（未设 `serve` 时用训练剩余卡从最旧型号自动服务）；
+7. 扣工资、云租费、电费，记录毛利滑动窗口与破产计数（破产时同步清空 `pending_models`）；
+8. **每月（`t % 730 == 0` 且 `t > 0`）**：污染独立复测、核心研究员离职抽签、版权诉讼；
+9. 生成并发送 `obs`。
+
+---
+
+## 6. 提交前自检清单
+
+1. **压缩包合规**：已通过 `python scripts/make_submission.py <dir> --out ../submissions/ai_training.zip` 打包与 24 tick 冒烟测试；包内数据用 `Path(__file__).resolve().parent` 加载。
+2. **协议健壮性**：任何分支返回合法 `dict`，所有数值均为有限浮点数或整数且 `abs(x) <= 1e15`；捕获异常不崩溃；单行输出远小于 `1 MiB`。
+3. **零违规动作**：运行 `spar.py` 和 `record_replay.py` 后检查 `faults` 中 `timeouts == 0, bad_json == 0, dead == False, illegal == 0`。
+4. **双赛制兼容**：未对对手名或种子硬编码；既能在单人赛推高 `C`，也能在对抗赛优化 `equity * V`（含末季 API 毛利）。
+5. **终局时点安全**：最后一代旗舰模型最晚于 **`t = 26183`** 观测后提交 `release`（保证上线后在线满 `72` tick），且不轻易下架在线未满 `730` tick 的最高能力模型。
+6. **性能余量**：单步平均耗时远小于 `10ms`，完整 26280 tick 总思考时间控制在数秒内，远离 `120s` 时间池与 `2400s` 总预算。
+
+============================ 游戏事实卡（精确数值与公式） ============================
+
+# 游戏事实卡（前沿实验室精确数值与公式）
+
+全部数值直接核自 `engine/engine.py`、`engine/world.py` 与 `engine/archive.py`。量纲：资金 `M`（百万美元）、参数量 `N` 与数据量 `D` 为 `B`（十亿）、算力 `G1·h`、API 价格为「美元 / 百万 token」（送达 `x` B token 收入为 `x * price / 1000` M）。
+
+---
+
+## 1. 时间、起始状态与通信配额
+
+- **时间单位**：`DAY = 24`、`WEEK = 168`、`MONTH = 730`、`QUARTER = 2190`、`YEAR = 8760`、`TICKS = 26280`（`t = 0 .. 26279`，共 `1095` 天、`157` 周）。
+- **开局配置（双方完全对称）**：
+  - 现金 `START_CASH = 200.0 M`，创始人股权 `equity = 1.0`，声誉 `rep = 0.0`（范围 `[-3.0, 0.0]`）；
+  - 0 号地区机房 `1` 座（初始 `2.0 MW`，该地区 `cap_mw >= 8.0 MW`），自有已装机 `G1` `512` 张；
+  - 初始研究员 `20` 人（能力 `1..4` 按 `0.3/0.4/0.2/0.1` 抽样，薪资 `0.0001 * (0.5 + 0.5 * ab) * U(0.9, 1.2)` M/tick）；
+  - 仅持有初始公共数据；开局 API 份额 `N1 = 0.5`、`N2 = 0.5`，双方为 `0`。
+- **破产**：连续 `BANKRUPT_TICKS = 720` tick（30 天）`cash < 0` 触发破产，清空任务/租约/员工/待结算竞标、下架已上线模型并**清除 `pending_models`**，终局估值锁定为清算价 `equity * max(0, cash + 0.3 * hw)`。
+- **提交与进程限额**：`.zip` 压缩 `<= 64 MiB`、解压 `<= 256 MiB`、条目 `<= 2048`、压缩比 `<= 100×`；单行输出 `MAX_LINE_BYTES = 1 MiB`、队列 `MAX_QUEUE_SIZE = 64`；每 tick 列表型动作 `MAX_ACT_ITEMS = 64`（`fire` 上限 `300`）；同 tick 双方动作按 `(t + seed) % 2` 交替执行。
+
+---
+
+## 2. 五代 GPU、拍卖、云租与二手出售
+
+| 型号 | 单卡算力 (`power`) | 单卡功耗 (`kw`) | 上市季度 (`launch_q`) | 每季供给 (`supply_q`) | 基准单价 (`price`, M) | 算力/价 | 算力/kW |
+|:---:|---:|---:|---:|---:|---:|---:|---:|
+| `G1` | 1.0 | 0.7 | 0 (t=0) | 8192 | 0.05 | 20.0 | 1.43 |
+| `G2` | 2.2 | 1.0 | 1 (t=2190) | 6144 | 0.09 | 24.4 | 2.20 |
+| `G3` | 5.0 | 1.4 | 3 (t=6570) | 4096 | 0.17 | 29.4 | 3.57 |
+| `G4` | 11.0 | 1.8 | 6 (t=13140) | 3072 | 0.32 | 34.4 | 6.11 |
+| `G5` | 24.0 | 2.4 | 10 (t=21900) | 2048 | 0.60 | 40.0 | 10.00 |
+
+- **每周拍卖**：每批 `LOT = 256` 张（单次上限 `64` 批；`lots == 0` 撤单，`lots < 0` 或 `price <= 0` 记非法），每周放出季度供给的 `1/13`（累积取整）；保留价 `reserve = 0.8 * price * heat`。**出清前资金预检**：各玩家可参与批数截断为 `min(lots, floor(max(0, cash) / (price * 256)))`，无现金支撑的报价不参与出清也不影响出清价。统一出清价 `clear = max(reserve, 最高未完全成交报价)`；同价余额不足平分时每家分 `floor(left / 同价人数)`，余数流拍。交付延迟 `4..10` 周。解锁 `early_supply` 后，`G3/G4/G5` 可在上市前 `1` 个季度参与 `25%` 提前配额拍卖（NPC 不参与）。
+- **云租**：不占机房电力、不计电费。池容量 `pool = 2 * supply_q`；占用率 `u = clip(clip(0.3 + 0.6 * (heat - 0.75), 0.15, 0.85) + 双方在租 / pool, 0, 1)`；按需单价 `price / 8000 * (1 + 2 * u)` M/(卡·tick)；`spot` 现货为按需的 `0.4` 倍，但每 tick 有 `0.02 + 0.08 * u` 概率整体被抢占（发 `preempted` 事件）并中断创建最晚的、用到该型号的在跑任务（发 `preempt` 事件，回退至最近存档、停 `2` tick、不坏卡）。
+- **二手出售**：市场折价上限 `mkt_unit = price * SELL_RATE[behind] * min(1.0, heat)`（当代 `0.65`、落后 1 代 `0.50`、落后 `>= 2` 代 `0.30`），按出库批次结算每张卡回款 `min(mkt_unit, batch_unit_cost) * max(0, 1 - (t - arrival_t) / HW_LIFE)`，`SELL_DELAY = 48` tick 到账（恒低于拍卖保留价且不超过剩余硬件账面）。
+
+---
+
+## 3. 机房、电力与 PPA
+
+- `5` 个地区：基础电价 `U(0.0004, 0.0012)` M/MWh，单座容量上限 `cap_mw` `U(5, 40)` MW（0 号地区 `>= 8` MW），建站工期 `8..20` 周，监管系数 `reg` `U(0.8, 1.5)`。
+- 机房数量上限 `8` 座（同地区可重复建）；`build_site` 完工直接获得全部 `cap_mw`；`expand_site` 花费 `2.0 M/MW`、`8` 周（`1344` tick）完工。
+- **装机硬约束**：`sum(cards * kw) * PUE <= site_mw * 1000`（默认 `PUE = 1.30`，解锁 `cooling` 后 `1.15`；地区限电期间上限 `×0.7`，超限按比例不可用）。
+- **电价曲线**：`base_price * (1 + 0.12 * t / 8760) * (1 + 0.1 * sin(2π * t / 8760 + phase))`。
+- **用电量**：训练卡按满功率，服务卡按 `0.3 + 0.7 * 利用率`。
+- **PPA 锁电**：锁定签约时该地区电价 `×0.8`，持续 `8760` tick，每 tick 照付不议扣 `(mwh / 8760) * 锁定价`；单座机房同时生效上限 `MAX_PPA_PER_SITE = 64` 份。
+
+---
+
+## 4. 研究员与科技树（共 18 项）
+
+- 每周人才池 `10..30` 人，能力 `1..5`（概率 `0.30/0.30/0.20/0.13/0.07`），显示 `[lo, lo+2]` 与 `ask`，约 `12%` 有 NPC 竞价。在职员工上限 `MAX_STAFF = 300` 人，每 tick 产出等于其能力值 `ab` 的研究点。
+- **挖角 `poach`**：每周处理前 `5` 条，`salary <= 0` 记非法，受 `MAX_STAFF = 300` 限制。
+  - 挖对手（`opp`）：每周上限 `POACH_OPP_MAX = 2` 次（同 `idx` 去重），成功挖走后进入 `POACH_OPP_COOLDOWN = 2` 周冷却；成功须现金支付 `POACH_OPP_SIGNING = 336` tick 薪资签约金（现金不足失败）。成功率 `sigmoid(3 * (sal / 现薪 - 1.3) - (0.5 + 在职年数))`。
+  - 挖 NPC（`N1`/`N2`）：成功须现金支付 `POACH_NPC_SIGNING = 168` tick 薪资签约金；成功率 `sigmoid(3 * (sal / 0.0003 - 1.3) - 1.0)`，能力按次独立随机 `1..5`。
+- **解雇 `fire`**：每人立即扣除 `FIRE_SEVERANCE = 168` tick 薪资遣散费。
+- 核心研究员离职：每月公共随机数 `< 0.02` 时双方各离职能力最高的一人。
+
+| 科技 ID | 研究点 | 前置 | 效果 |
+|---|---:|---|---|
+| `algo_eff_1` / `2` / `3` | 20k / 60k / 150k | 依次前置 | 新建训练任务有效参数 `N_eff = N × 1.15 / 1.30 / 1.50` |
+| `stable` | 30k | 无 | 超学习率尖峰触发概率减半 |
+| `curriculum` | 40k | 无 | `set_mix` 不再触发每次 `×0.95` 的数据效率惩罚 |
+| `infer_opt_1` / `2` | 25k / 70k | 依次前置 | API 推理算力消耗 `×0.80` / `×0.60` |
+| `synth` | 35k | 无 | 解锁 `synth` 合成数据生成 |
+| `early_supply` | 50k | 无 | `G3/G4/G5` 提前 1 季度参与 `25%` 拍卖配额 |
+| `cooling` | 20k | 无 | 全部机房 `PUE` 由 `1.30` 降至 `1.15` 并立即触发装机 |
+| `filter:<domain>`（8 个域） | 各 25k | 无 | 揭示该域真实 `q` 与减半后 `c`，并将此后训练污染减半 |
+
+---
+
+## 5. 数据池、合成与蒸馏
+
+- **9 个训练数据池**：7 个真实评测域（`web, code, math, books, science, dialog, multiling`）+ `synth` + `distill`。
+- **公共初始去重量 `PUBLIC_B`（每种子乘 `U(0.6, 1.4)`）**：`web 2000`, `code 400`, `math 60`, `books 300`, `science 150`, `dialog 100`, `multiling 800`, `synth 10`（单位 B）。
+- **质量与污染**：真实域 `q in [0.5, 1.5]`、`c in [0, 0.12]`；`synth` 初始 `q in [0.6, 0.9]`、`c = 0`；`init` 给出带 `U(-0.3, 0.3)` 误差的 `q_hint`。
+- **有效 token 衰减**：$E_k = 4 U_k (1 - \exp(-S_k / (4 U_k))) \cdot \bar{q}_k$（训练 4 轮约得 `2.53 U`）。
+- **迁移矩阵 $T_{d,k}$**：同域 `1.0`；强跨域如 `math←code (0.4..0.7)`、`dialog←multiling (0.3..0.6)`、`science←books (0.3..0.5)`、`dialog←web (0.2..0.4)`、`math←science (0.2..0.4)`、`code←web (0.1..0.25)`；`synth` 对各域 `0.25..0.40`；`distill` 对各域 `0.40..0.60`；其余 `0.02..0.12`。
+- **独家数据招标**：每周 `0..2` 份，`tokens_b in [50, 500]`，`reserve = tokens_b * 0.03 * heat`，中标独享 `8760` tick 后转入对方公共池。
+- **合成数据 `synth`**：花费 `tokens_b * best_N * 100 * G1按需租价`，`24` tick 入库，质量 `0.6 + 0.6 * best_C`，无污染；单任务累计合成占比 `> 0.30` 触发坍缩加性 loss `0.5 * (fs - 0.30)`。
+- **蒸馏 `distill`**：花费 `tokens_b * price / 1000`（`OPEN-1` 免费；对手收到全额费用进入现金），立即入池，质量 `0.5 + 0.8 * teacher_C`；存档蒸馏占比 `>= 0.10` 时真实能力封顶 `max_teacher_C - 0.03`；凡本周实际训练过或周一处于 `running/paused/review` 且蒸馏占比 `> 0.20` 的任务，每周一按座位无关公共随机数以 `10%` 概率被诉罚没 `15%` 现金且 `rep -= 0.2`。
+- **版权诉讼**：月度训练量中 `web + books` 占比 `> 0.50` 时，当月触发概率 `0.1 * (frac - 0.5) / 0.5`，罚当前现金 `3%`。
+
+---
+
+## 6. 训练动力学与隐藏缩放律
+
+- **吞吐公式**：
+  - `raw = sum(cards_m * power_m)`，`cards = sum(cards_m)`；
+  - `util = min(1.0, 2.0 * batch / cards)`；
+  - 临界批大小 $B_{\text{crit}} = bc_0 (1 + D/50)^{0.4}$（$bc_0 \in [192, 640]$）；
+  - `waste = (min(batch, B_crit) + 0.5 * max(0, batch - B_crit)) / batch`；
+  - `work = raw * util * waste * slow * (0.8 if 本tick自动或手动存档 else 1.0)`；
+  - 本 tick 前进 token：`tok = work / (300 * N)`。
+- **域 Loss 公式**（$d \in \{0..6\}$）：
+  $$L_d = \left(E_d + \frac{A}{N_{\text{eff}}^{\alpha}} + \frac{B}{D_{\text{eff}, d}^{\beta}} + P_{\text{lr}} + P_{\text{collapse}}\right) \times M_{\text{spike}} \times (1 - b_{\text{sched}})$$
+  - 隐藏参数范围：$\alpha \in [0.28, 0.40]$，$\beta \in [0.25, 0.35]$，$A \in [0.30, 0.60]$，$B \in [0.90, 1.50]$，$E_d \in [1.4, 2.2]$；
+  - 最优学习率 $\eta^* = c_{\text{lr}} N^{-0.3}$（$c_{\text{lr}} \in [0.0012, 0.0028]$），默认 `lr` 为 `0.0010 * N^-0.3`；$P_{\text{lr}}$ 为按 token 加权的 $0.08 (\ln(\eta / \eta^*))^2$；
+  - 尖峰：当 $\eta > \eta^*$ 时每 tick 概率 $0.002 \exp(3(\eta/\eta^* - 1))$（`stable` 减半），使 $M_{\text{spike}} \times 1.02$，其中 `10%` 触发 `diverged`。存档先于尖峰判定，回滚即可撤销。
+  - **退火 $b_{\text{sched}}$ 与 `set_tokens`**：`cosine` 为 `0.02 * min(1, prog)^2`；`wsd` 为 `0.03 * clip(min(prog - 0.85, anneal_tok / target) / 0.15, 0, 1)`，须真实训练 `0.15 * target` 退火 token，进入退火或下调至 `D >= 0.85 * target` 后永久锁定禁止上调；`set_tokens` 禁止用于 `done`/`stopped` 任务且要求 `D < v <= 1e6`；`const` 为 `0`。
+- **故障、慢节点与监管审核**：
+  - 硬件故障：每 tick 概率 `cards / 50000`，回退最近存档、停 `2` tick、若用自有卡则坏 1 张 `72` tick；
+  - 慢节点：每天 `1%` 概率触发，吞吐降 `10%..30%`，`diagnose` 恢复（停 `1` tick）；
+  - 监管停审：单任务有效累计算力 `>= 20,000,000 G1·h` 且未审批时强制停审 `336 * reg` tick（`reg` 取最大电力机房所在地区）。
+
+---
+
+## 7. 能力、API 市场、融资与终局估值
+
+- **能力标定**：6 项任务（`reasoning/coding/knowledge/chat/multilingual/general`）加权 7 域无噪 loss 经 sigmoid 均分得 `C in [0, 1]`（标定基准：小模型 `20B/400B` 约 `0.15..0.25`，大模型 `300B/6T` 约 `0.80..0.90`）。
+- **公开榜分与复测**：`pub = C + 加权污染占比`；月度复测若 `pub - C > 0.05`，扣 `rep -= 0.3` 并重置 `pub = C`。
+- **API 竞争**：
+  - 商业门槛：玩家模型须 `C >= API_MIN_C = 0.15` 才进入旗舰竞争；
+  - 旗舰基础效用：$u_{\text{base}} = 6.0 \cdot \text{pub} - 1.5 \ln(\max(\text{price}, 1.0))$，玩家加 `+ rep - 5.0 * drop`；
+  - 反价格震荡：周一 logit 迁移（单周上限 `±0.15`）取当前效用、周峰值价效用与周内最差效用三者最小值；周内无能力补偿的提价使 `u_base < anchor_u - 1.5 * ln(1.5)` 时，当前份额当 tick 按 `exp(u_base - (anchor_u - 1.5 * ln(1.5)))` 立即流失并重分给其他方；
+  - 声誉演化：上周 `drop > 0.001` 时 `rep -= min(0.1, drop)`，否则 `rep += 0.01`，范围 `[-3.0, 0.0]`。服务 `1 B token/tick` 需 `25 * N * infer_mult` G1 算力。
+- **全市场需求**：`Q0 = 5.0 B token/tick`，第 1/2/3 年月增 `8% / 5% / 3%`，乘以 AI 热度（78 周周期正弦 + AR(1)，范围 `[0.6, 1.5]`）与季度冲击（20% 概率 `×0.85` 或 `×1.15`）。
+- **全局事件**：出口管制（60% 种子，Q4–Q8 之一 `G3` 供给减半，提前 2 周公告）；开源事件（30% 种子，第 6–24 月，`OPEN-1` 能力=发布 NPC `-0.05`、价 `3`、蒸馏免费，同时 NPC 全线降价 `×0.7`）；NPC 首代 `C in [0.30, 0.50]`，每 `6..9` 月迭代 `+0.05..0.10`（上限 `0.97`），定价 `10 * (0.5 + C) * npc_mult`。
+- **季度融资**：每 `2190` tick 限 1 次，`V_pre = min(24 * max(0, GM_2190) + 300 * max(0, 己方最高pub - 他方最高pub) + cash + hw_book + site_book, V_true)`，融资后 `equity *= V_pre / (V_pre + amount)`。
+- **终局创始人股权估值**：
+  $$\text{Value} = \text{equity} \times \Big(\text{cash} + \text{recv} + \text{hw\_book} + \text{site\_book} + 24 \cdot \text{GM}_{2190} + 300 \cdot C_{\text{best}}\Big)$$
+  - 硬件 `3` 年（`26280` tick）线性折旧，机房 `10` 年（`87600` tick）线性折旧；
+  - $\text{GM}_{2190}$ 为最后 `1` 季度（`2190` tick）API 收入减去服务卡分摊租金与电费；
+  - $C_{\text{best}}$ 仅统计累计在线 `>= 730` tick 的己方模型，或终局未下架且在线 `>= 72` tick 的己方模型（最晚须在 `t = 26183` 观测后提交 `release`）。
+
+============================ 起步模板 agents/starter.py ============================
+
+```python
+"""前沿实验室协议起步模板（详细规则与字段见 README.md）。"""
+import json
+import sys
+
+
+class Bot:
+    def __init__(self, init):
+        self.rules = init["rules"]
+        self.seat = init["seat"]
+
+    def step(self, obs):
+        return {}
+
+
+def make_bot(init):
+    return Bot(init)
+
+
+if __name__ == "__main__":
+    bot = make_bot(json.loads(sys.stdin.readline()))
+    print("{}", flush=True)
+    for line in sys.stdin:
+        msg = json.loads(line)
+        if msg.get("type") == "end":
+            print("{}", flush=True)
+            break
+        try:
+            act = bot.step(msg)
+        except Exception:
+            act = {}
+        sys.stdout.write(json.dumps(act, separators=(",", ":")) + "\n")
+        sys.stdout.flush()
+```
+
+============================ 输出要求 ============================
+
+现在只输出一个完整的 Python 代码块，实现可直接作为子进程运行的前沿实验室参赛策略（全文无省略）。

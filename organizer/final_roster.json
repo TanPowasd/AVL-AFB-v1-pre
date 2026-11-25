@@ -1,0 +1,158 @@
+{
+  "format": "afb-final-roster/1",
+  "suite_name": "AVL Final Bench · Final",
+  "problems": [
+    "ai_training",
+    "cache_duel",
+    "compression_singularity",
+    "ghost_rabbit",
+    "kaggriculture",
+    "mem_recall",
+    "minimum_effort",
+    "rift_era",
+    "sk_singularity"
+  ],
+  "provisional": [],
+  "catalog": {
+    "ai_training": {
+      "title": "前沿实验室（Frontier Lab）",
+      "category": "strategy",
+      "env": "Python 3.10+，标准库（打包为 `.zip`，根目录含 `main.py`，可含子模块与只读数据）",
+      "submission_ext": ".zip",
+      "starter": "agents/template/",
+      "local_submission": "submissions/ai_training.zip",
+      "has_designs": false,
+      "has_contestant_data": false
+    },
+    "backbone": {
+      "title": "骨干争夺（Backbone Wars）",
+      "category": "strategy",
+      "env": "Python 3.10+，仅标准库",
+      "submission_ext": ".py",
+      "starter": "agents/starter.py",
+      "local_submission": "agents/submissions/my_agent.py",
+      "has_designs": false,
+      "has_contestant_data": false
+    },
+    "ball_machine": {
+      "title": "弹球机（Ball Machine）",
+      "category": "cpp",
+      "env": "C++20",
+      "submission_ext": ".cpp",
+      "starter": "agents/starter.cpp",
+      "local_submission": "agents/submissions/my_solution.cpp",
+      "has_designs": false,
+      "has_contestant_data": false
+    },
+    "cache_duel": {
+      "title": "缓存攻防（Cache Duel）",
+      "category": "strategy",
+      "env": "Python 3.10+，仅标准库",
+      "submission_ext": ".py",
+      "starter": "agents/starter.py",
+      "local_submission": "agents/submissions/my_agent.py",
+      "has_designs": false,
+      "has_contestant_data": false
+    },
+    "compression_singularity": {
+      "title": "压缩奇点（The Compression Singularity）",
+      "category": "cpp",
+      "env": "C++20（标准输入输出，两阶段盲测 Special Judge）",
+      "submission_ext": ".cpp",
+      "starter": "agents/starter.cpp",
+      "local_submission": "agents/submissions/my_solution.cpp",
+      "has_designs": false,
+      "has_contestant_data": false
+    },
+    "fruehlingsbeginn": {
+      "title": "春之始（Frühlingsbeginn）",
+      "category": "cpp",
+      "env": "C++20",
+      "submission_ext": ".cpp",
+      "starter": "agents/starter.cpp",
+      "local_submission": "agents/submissions/my_solution.cpp",
+      "has_designs": false,
+      "has_contestant_data": false
+    },
+    "ghost_rabbit": {
+      "title": "天翼幽灵兔：四重奇点追截战（The Winged Ghost Rabbit）",
+      "category": "cpp",
+      "env": "C++20（标准输入输出在线交互题，单局 5.0 s / 512 MiB）",
+      "submission_ext": ".cpp",
+      "starter": "agents/starter.cpp",
+      "local_submission": "agents/submissions/my_solution.cpp",
+      "has_designs": false,
+      "has_contestant_data": false
+    },
+    "kaggriculture": {
+      "title": "农场经营（Kaggriculture）",
+      "category": "strategy",
+      "env": "Python 3.10+，标准库（打包为 `.zip`，根目录含 `main.py`，可含子模块与只读数据）",
+      "submission_ext": ".zip",
+      "starter": "agents/template/",
+      "local_submission": "submissions/kaggriculture.zip",
+      "has_designs": false,
+      "has_contestant_data": false
+    },
+    "mem_recall": {
+      "title": "记忆检索（Memory Recall）",
+      "category": "retrieval",
+      "env": "Python 3.10+，仅标准库",
+      "submission_ext": ".py",
+      "starter": "agents/starter.py",
+      "local_submission": "agents/submissions/my_agent.py",
+      "has_designs": false,
+      "has_contestant_data": true
+    },
+    "minimum_effort": {
+      "title": "最小努力（Minimum Effort）",
+      "category": "cpp",
+      "env": "C++20（标准输入输出，按点时间/空间效率加权计分，128 MiB，单点 1.0–2.0 s）",
+      "submission_ext": ".cpp",
+      "starter": "agents/starter.cpp",
+      "local_submission": "agents/submissions/my_solution.cpp",
+      "has_designs": false,
+      "has_contestant_data": false
+    },
+    "ms_elucidation": {
+      "title": "质谱分子鉴定（MS Elucidation）",
+      "category": "ml_science",
+      "env": "Python 3.14 科学计算栈（`rdkit==2026.03.3`、PyTorch CUDA、PyArrow；打包为 `.zip`，根目录含 `main.py`；允许 GPU，公开训练集/验证集/候选库已打包在题内 `data/`）",
+      "submission_ext": ".zip",
+      "starter": "agents/template/",
+      "local_submission": "submissions/ms_elucidation.zip",
+      "has_designs": false,
+      "has_contestant_data": true
+    },
+    "partition": {
+      "title": "划分（Partition）",
+      "category": "cpp",
+      "env": "C++20",
+      "submission_ext": ".cpp",
+      "starter": "agents/starter.cpp",
+      "local_submission": "agents/submissions/my_solution.cpp",
+      "has_designs": false,
+      "has_contestant_data": false
+    },
+    "rift_era": {
+      "title": "裂陆纪元（Rift Era）",
+      "category": "strategy",
+      "env": "Python 3.11+，仅标准库（打包为 `.zip`，根目录含 `main.py`）",
+      "submission_ext": ".zip",
+      "starter": "agents/template/",
+      "local_submission": "submissions/rift_era.zip",
+      "has_designs": true,
+      "has_contestant_data": false
+    },
+    "sk_singularity": {
+      "title": "双符奇点（The SK Singularity）",
+      "category": "cpp",
+      "env": "C++20（标准输入输出，盲规则组合子综合与确定性 DAG 裁判，单测 5.0 s / 1024 MiB）",
+      "submission_ext": ".cpp",
+      "starter": "agents/starter.cpp",
+      "local_submission": "agents/submissions/my_solution.cpp",
+      "has_designs": false,
+      "has_contestant_data": false
+    }
+  }
+}

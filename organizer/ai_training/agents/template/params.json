@@ -1,0 +1,11 @@
+{
+  "params_b": 20.0,
+  "tokens_b": 400.0,
+  "release_price": 10.0,
+  "research_order": [
+    "cooling",
+    "algo_eff_1",
+    "infer_opt_1",
+    "stable"
+  ]
+}

@@ -1,0 +1,56 @@
+{
+  "version": "scoring_v2",
+  "problem": "rift_era",
+  "submission_ext": ".zip",
+  "opponents": [
+    {
+      "id": "hegemon",
+      "path": "bots/hegemon/main.py"
+    },
+    {
+      "id": "arbiter",
+      "path": "bots/arbiter/main.py"
+    },
+    {
+      "id": "verdant",
+      "path": "bots/verdant/main.py"
+    }
+  ],
+  "component_weights": {
+    "adv": 1.0
+  },
+  "score_formula": "50+50*tanh(0.6*ln(vtilde(V_player)/vtilde(V_shadow))); vtilde=V+10 (V>=0) else 100/(10-V); shadow = same seed/seat/clock with deterministic N-opponent 8-seat table lineup and rotating shadow opponent at seat k mod 8 (designs/rift_era/07 §3)",
+  "seat_rotation": "seat = k mod 8 for the k-th seed; shadow_idx = (k + k // lcm(N, 8)) mod N",
+  "ticks": 28800,
+  "match": {
+    "sandbox": "auto",
+    "legacy_map": false
+  },
+  "game_timeout_s": 43200,
+  "game_memory_bytes": 1073741824,
+  "frozen_files": {
+    "bots/hegemon/bot.py": "27f22b29017d8e4ae7f945ab00a60849edb5c77ad7879789acaeaec9777eb877",
+    "bots/hegemon/main.py": "94d87e322579e43bd1a897df2829f5c5549dc6d884509dad4de1034ae76a6622",
+    "bots/hegemon/sdk.py": "44210d640d689ac462d66c1200783e73eb0a97b109db1ce7fc192aea4ddf4184",
+    "bots/arbiter/bot.py": "4eeb367f9fe0f42330ff814ec9e0cb087aaa1a872dfc9c7418db497e8e5482c0",
+    "bots/arbiter/main.py": "3d284283fba3ffd98e9b5151acbb513a7825429ab99194a12cb39787e0c4f95d",
+    "bots/arbiter/sdk.py": "44210d640d689ac462d66c1200783e73eb0a97b109db1ce7fc192aea4ddf4184",
+    "bots/verdant/bot.py": "be5d751da9fe4a8972ecff3c3d6bf6bd05b178c3c627d7a868094d8059e490f7",
+    "bots/verdant/main.py": "67aa1fdecc19a1c22f6b3519fcf2b4bb070daeeeebb54f52c18a68443a98d090",
+    "bots/verdant/sdk.py": "44210d640d689ac462d66c1200783e73eb0a97b109db1ce7fc192aea4ddf4184",
+    "pipeline/__init__.py": "0e65f65dfe86ab8188c21e916be84c1f93a261008f621f07ce85e0b956b372a5",
+    "pipeline/hosting.py": "cbaae935b010453b7e00e514f0dbf142a0546ccc1b36251e4ded43848a9638a8",
+    "pipeline/match_runner.py": "d7c0956697eac1f1e5e421047522a187198d563d37432d0c4f4063fc2968d380",
+    "pipeline/scoring.py": "35649f942362892cdf6be865fb87a4f4acbeced2942243e5543ec81ca37ce4f4"
+  },
+  "engine_version": "rift_era_engine_0.4.0",
+  "engine_hash": "ad750c9960693f53d98f982878b103027a909d24a49637711d36ac797e82fc45",
+  "rules_version": "rift_era_rules_r9",
+  "rules_hash": "184f4c681049219166e196c11ecbddbf21e08885eb6dcce60fd025258c5c42b1",
+  "seed_count": 64,
+  "scenario_sampling": "per_run_random",
+  "seed_source": "os_csprng",
+  "calibration_seeds": [],
+  "profile_revision": "2026-11-25-rift-3style-local-designs",
+  "private": "organizer only; never exported to the contestant kit"
+}

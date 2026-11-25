@@ -1,0 +1,33 @@
+{
+  "format": "afb-contestant-kit/2",
+  "submission": "agents/submissions/my_solution.cpp",
+  "unified_submission": "../submissions/ghost_rabbit.cpp",
+  "files": {
+    "agents/baselines/blitz_150.cpp": "ad79b72bc7eece207b79b37427506b665abe20d2bc5bfe9b205c4544cdbbb5fc",
+    "agents/baselines/staggered_125.cpp": "eba4b38eabd69f3cca682bcd51aa18441f3e29079326a8b9c99c5776a1df3737",
+    "agents/starter.cpp": "253bb8a97c01e502f92c5a27cb75b95f04a9b69265268f7252a756140a6817dc",
+    "agents/submissions/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "AGENTS.md": "32e97da22f87d6c8b83dbc0b6a08b68e5687f3728b3f0fc307e49a41f10ada66",
+    "AI_README.md": "b249692b520a0561d355229920787917925bcee9b0912a1e519ec81c4b0eb2ae",
+    "config/format.json": "04e6827e1286689cc2e3091c5095afe7068dfa158890714a8d8df20fc5abb6c8",
+    "config/workspace.json": "9cf4ab89de1894470affdf88a76c64adc0bb0f95a07d131fe986f271c8b47963",
+    "engine/common.py": "fd5bbfbbaf807ee4ea6dfc122bfed8aff1f760f1dc0d1b9a9d0df344962800c1",
+    "engine/judge_core.hpp": "509e4f8f8bad5c33d17cd0ad5c81f69326b5b6469ba3e82e16a8828c90698e0d",
+    "engine/policy.py": "fe2d2437bc23ae10d78d81dbe2a708fed0e9420c738eee2a3516d56b5be27d7f",
+    "engine/practice_interactor.cpp": "b0d74c3a8740821be78e00b0e07c7d0ff1f08d7dcf627cf2910f2f2895a5d296",
+    "engine/replay.py": "1d692d0949d7ade2a282eb63303386c0442bda6e2a7736dabc6c13ba06887694",
+    "engine/runner.py": "473e9970f39ad36e8be66455464fe0adafd65004100dabcb24de955a9b70d046",
+    "FORMAT.md": "0620f9648433870fcef49b0ed9a4039d56ae681608ab626eb1795927dfb197b3",
+    "handbook/contest-rules.md": "8d0a9eda2dadbc0d0754703f4349dda5ac9a96dd0fdc285ed826e7ae5e7f879b",
+    "handbook/geometry-guide.md": "e94d6a1bf57ce4972c2b05c403ae8a746139d59d1090ffc9fa045e330bf0a668",
+    "logs/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "prompts/task.txt": "a2a20a7edd024615e6f05d3b56ba33aabe9c20b7aef5219df0be37b730935870",
+    "README.md": "9c112aedc2ead489f3b9b11590f47684ed49a739365e61d244ea9232491d70a8",
+    "replays/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "replays/replay_demo.json": "4ef02738d19204f7c7750ed321e26a825214fc018acd89ce72db632ab37f7b14",
+    "results/.gitkeep": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855",
+    "scripts/record_replay.py": "6ee578e766996b6691aae3b700512d1199e07fde6016def6fab24fb8078a448e",
+    "scripts/spar.py": "f4fb4138b1f53de2bd3ff5ae003ccd236a8c4221534097b26d341bff33b40ba7",
+    "viz/player.html": "9495f586cdd5c9140861239319ca01366079ee07fa1f1a6ee5b457aa75470d5b"
+  }
+}

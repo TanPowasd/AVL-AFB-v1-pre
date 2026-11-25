@@ -1,0 +1,5 @@
+{
+  "default_crop": "WHEAT",
+  "min_seed_stock": 2,
+  "seed_buy_batch": 2
+}
