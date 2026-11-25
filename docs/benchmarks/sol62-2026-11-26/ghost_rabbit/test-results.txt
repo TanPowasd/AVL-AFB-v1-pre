@@ -1,0 +1,37 @@
+Start UTC: 2026-11-25T16:06:32Z
+Final verification UTC:
+2026-11-25T16:10:18Z
+$ g++ --version | head -n 1
+g++ (Debian 14.2.0-19) 14.2.0
+$ g++ -std=gnu++20 -O2 -pipe -Wall -Wextra -pedantic solution.cpp -o /tmp/avl_ghost_solution
+$ timeout 10s python3 test_protocol.py /tmp/avl_ghost_solution
+Capture in 3 rounds: [(1, 0), (1, 1), (1, 0)]
+  r=(1, 0) place=[(2, 0)] sonar=(1, 1) tokens_after=1 exits=[(0, -1), (1, 1)]
+  r=(1, 1) place=[(2, 2)] sonar=(1, 0) tokens_after=2 exits=[(0, 1), (1, 0)]
+  r=(1, 0) place=[(0, -1), (1, 1)] sonar=(1, 0) tokens_after=0 exits=[]
+Capture in 6 rounds: [(1, 0), (1, 1), (0, 1), (1, 1), (0, 1), (1, 1)]
+  r=(1, 0) place=[(2, 0)] sonar=(1, 1) tokens_after=1 exits=[(0, -1), (1, 1)]
+  r=(1, 1) place=[(2, 2)] sonar=(1, 0) tokens_after=2 exits=[(0, 1), (1, 0)]
+  r=(0, 1) place=[(-1, 0), (0, 2)] sonar=(1, 1) tokens_after=0 exits=[(1, 1)]
+  r=(1, 1) place=[(1, 0)] sonar=(0, 1) tokens_after=1 exits=[(0, 1)]
+  r=(0, 1) place=[] sonar=(1, 1) tokens_after=5 exits=[(1, 1)]
+  r=(1, 1) place=[(0, 1)] sonar=(1, 0) tokens_after=3 exits=[]
+Capture in 3 rounds: [(1, 0), (0, -1), (1, 0)]
+  r=(1, 0) place=[(2, 0)] sonar=(1, 1) tokens_after=1 exits=[(0, -1), (1, 1)]
+  r=(0, -1) place=[(0, -2)] sonar=(1, 0) tokens_after=2 exits=[(-1, -1), (1, 0)]
+  r=(1, 0) place=[(0, -1), (1, 1)] sonar=(1, 0) tokens_after=0 exits=[]
+Capture in 6 rounds: [(1, 0), (0, -1), (-1, -1), (0, -1), (-1, -1), (0, -1)]
+  r=(1, 0) place=[(2, 0)] sonar=(1, 1) tokens_after=1 exits=[(0, -1), (1, 1)]
+  r=(0, -1) place=[(0, -2)] sonar=(1, 0) tokens_after=2 exits=[(-1, -1), (1, 0)]
+  r=(-1, -1) place=[(-2, -2), (-1, 0)] sonar=(0, -1) tokens_after=0 exits=[(0, -1)]
+  r=(0, -1) place=[(1, 0)] sonar=(-1, -1) tokens_after=1 exits=[(-1, -1)]
+  r=(-1, -1) place=[] sonar=(0, -1) tokens_after=5 exits=[(0, -1)]
+  r=(0, -1) place=[(-1, -1)] sonar=(1, 0) tokens_after=3 exits=[]
+Rate 4/3; 13 replayed prefixes; 4 terminal legal histories; capture rounds {3: 2, 6: 2}; clean protocol exit on all.
+$ timeout 10s python3 ring_game.py
+strict_refill=False: 5043 reachable states, start winning in 6 rounds; layers [861, 648, 37, 64, 2, 1]
+strict_refill=True: 5466 reachable states, start not winning; fixed point has 1717 winners; layers [917, 682, 40, 78]
+$ sha256sum solution.cpp test_protocol.py ring_game.py
+b99ab8d90b8a053d9c6c4a2e5571ce250a4b70af7e1396f457f57092d0cb3f4a  solution.cpp
+3f9dafcf238c1bff6f09ba7b8e100ea0012d37160ac5488c5bcc95f09c63679d  test_protocol.py
+ff08dc1ec5e57004185489af881f4c0b71dc70e3a9f21fb96a1c68536f02f42e  ring_game.py

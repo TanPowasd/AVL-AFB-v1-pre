@@ -1,0 +1,794 @@
+[
+  {
+    "opponent": "passive",
+    "entrant_seat": 0,
+    "wall_s": 2.132270852000147,
+    "game": {
+      "seed": 20261126,
+      "cash": [
+        102196.0,
+        3000.0
+      ],
+      "winner": 0,
+      "reason": "cash",
+      "forfeited": [
+        false,
+        false
+      ],
+      "stats": [
+        {
+          "errors": 0,
+          "step_ms_max": 64.0,
+          "total_s": 1.2,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 12.0,
+          "total_s": 0.46,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "final_day": 29
+    },
+    "practice_score": 92.25078787362693
+  },
+  {
+    "opponent": "passive",
+    "entrant_seat": 1,
+    "wall_s": 1.892805131001296,
+    "game": {
+      "seed": 20261126,
+      "cash": [
+        3000.0,
+        109076.0
+      ],
+      "winner": 1,
+      "reason": "cash",
+      "forfeited": [
+        false,
+        false
+      ],
+      "stats": [
+        {
+          "errors": 0,
+          "step_ms_max": 11.7,
+          "total_s": 0.39,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 74.8,
+          "total_s": 1.11,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "final_day": 29
+    },
+    "practice_score": 93.3931618697714
+  },
+  {
+    "opponent": "passive",
+    "entrant_seat": 0,
+    "wall_s": 1.8438794249996135,
+    "game": {
+      "seed": 424242,
+      "cash": [
+        146230.0,
+        3000.0
+      ],
+      "winner": 0,
+      "reason": "cash",
+      "forfeited": [
+        false,
+        false
+      ],
+      "stats": [
+        {
+          "errors": 0,
+          "step_ms_max": 106.7,
+          "total_s": 1.01,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 17.0,
+          "total_s": 0.42,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "final_day": 29
+    },
+    "practice_score": 97.27863724170138
+  },
+  {
+    "opponent": "passive",
+    "entrant_seat": 1,
+    "wall_s": 2.1166043450011784,
+    "game": {
+      "seed": 424242,
+      "cash": [
+        3000.0,
+        146230.0
+      ],
+      "winner": 1,
+      "reason": "cash",
+      "forfeited": [
+        false,
+        false
+      ],
+      "stats": [
+        {
+          "errors": 0,
+          "step_ms_max": 9.5,
+          "total_s": 0.48,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 81.2,
+          "total_s": 1.15,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "final_day": 29
+    },
+    "practice_score": 97.27863724170138
+  },
+  {
+    "opponent": "passive",
+    "entrant_seat": 0,
+    "wall_s": 2.0866755780007225,
+    "game": {
+      "seed": 707070,
+      "cash": [
+        135122.0,
+        3000.0
+      ],
+      "winner": 0,
+      "reason": "cash",
+      "forfeited": [
+        false,
+        false
+      ],
+      "stats": [
+        {
+          "errors": 0,
+          "step_ms_max": 83.5,
+          "total_s": 1.17,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 25.1,
+          "total_s": 0.47,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "final_day": 29
+    },
+    "practice_score": 96.43972489289979
+  },
+  {
+    "opponent": "passive",
+    "entrant_seat": 1,
+    "wall_s": 1.8521159629999602,
+    "game": {
+      "seed": 707070,
+      "cash": [
+        3000.0,
+        135122.0
+      ],
+      "winner": 1,
+      "reason": "cash",
+      "forfeited": [
+        false,
+        false
+      ],
+      "stats": [
+        {
+          "errors": 0,
+          "step_ms_max": 11.8,
+          "total_s": 0.38,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 110.8,
+          "total_s": 1.07,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "final_day": 29
+    },
+    "practice_score": 96.43972489289979
+  },
+  {
+    "opponent": "random",
+    "entrant_seat": 0,
+    "wall_s": 1.878798738000114,
+    "game": {
+      "seed": 20261126,
+      "cash": [
+        144408.0,
+        1840.0
+      ],
+      "winner": 0,
+      "reason": "cash",
+      "forfeited": [
+        false,
+        false
+      ],
+      "stats": [
+        {
+          "errors": 0,
+          "step_ms_max": 68.1,
+          "total_s": 1.09,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 12.4,
+          "total_s": 0.38,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "final_day": 29
+    },
+    "practice_score": 97.23453332785621
+  },
+  {
+    "opponent": "random",
+    "entrant_seat": 1,
+    "wall_s": 2.220461189999696,
+    "game": {
+      "seed": 20261126,
+      "cash": [
+        1878.0,
+        127093.0
+      ],
+      "winner": 1,
+      "reason": "cash",
+      "forfeited": [
+        false,
+        false
+      ],
+      "stats": [
+        {
+          "errors": 0,
+          "step_ms_max": 47.0,
+          "total_s": 0.48,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 74.0,
+          "total_s": 1.29,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "final_day": 29
+    },
+    "practice_score": 95.79772504439342
+  },
+  {
+    "opponent": "random",
+    "entrant_seat": 0,
+    "wall_s": 1.9295710450005572,
+    "game": {
+      "seed": 424242,
+      "cash": [
+        152164.0,
+        1792.0
+      ],
+      "winner": 0,
+      "reason": "cash",
+      "forfeited": [
+        false,
+        false
+      ],
+      "stats": [
+        {
+          "errors": 0,
+          "step_ms_max": 65.5,
+          "total_s": 1.07,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 6.5,
+          "total_s": 0.41,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "final_day": 29
+    },
+    "practice_score": 97.71297399456691
+  },
+  {
+    "opponent": "random",
+    "entrant_seat": 1,
+    "wall_s": 1.9155471729991405,
+    "game": {
+      "seed": 424242,
+      "cash": [
+        1884.0,
+        165303.0
+      ],
+      "winner": 1,
+      "reason": "cash",
+      "forfeited": [
+        false,
+        false
+      ],
+      "stats": [
+        {
+          "errors": 0,
+          "step_ms_max": 2.8,
+          "total_s": 0.41,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 66.2,
+          "total_s": 1.11,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "final_day": 29
+    },
+    "practice_score": 98.33828800566624
+  },
+  {
+    "opponent": "random",
+    "entrant_seat": 0,
+    "wall_s": 1.7301093739988573,
+    "game": {
+      "seed": 707070,
+      "cash": [
+        159602.0,
+        1803.0
+      ],
+      "winner": 0,
+      "reason": "cash",
+      "forfeited": [
+        false,
+        false
+      ],
+      "stats": [
+        {
+          "errors": 0,
+          "step_ms_max": 74.6,
+          "total_s": 0.97,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 4.7,
+          "total_s": 0.36,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "final_day": 29
+    },
+    "practice_score": 98.0927179476814
+  },
+  {
+    "opponent": "random",
+    "entrant_seat": 1,
+    "wall_s": 1.942952420000438,
+    "game": {
+      "seed": 707070,
+      "cash": [
+        1862.0,
+        187064.0
+      ],
+      "winner": 1,
+      "reason": "cash",
+      "forfeited": [
+        false,
+        false
+      ],
+      "stats": [
+        {
+          "errors": 0,
+          "step_ms_max": 24.4,
+          "total_s": 0.4,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 121.6,
+          "total_s": 1.12,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "final_day": 29
+    },
+    "practice_score": 99.02865765970874
+  },
+  {
+    "opponent": "greedy",
+    "entrant_seat": 0,
+    "wall_s": 2.0282462449995364,
+    "game": {
+      "seed": 20261126,
+      "cash": [
+        98442.0,
+        4492.0
+      ],
+      "winner": 0,
+      "reason": "cash",
+      "forfeited": [
+        false,
+        false
+      ],
+      "stats": [
+        {
+          "errors": 0,
+          "step_ms_max": 61.8,
+          "total_s": 1.03,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 62.4,
+          "total_s": 0.52,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "final_day": 29
+    },
+    "practice_score": 91.26099598462517
+  },
+  {
+    "opponent": "greedy",
+    "entrant_seat": 1,
+    "wall_s": 2.0327493700006016,
+    "game": {
+      "seed": 20261126,
+      "cash": [
+        4492.0,
+        99353.0
+      ],
+      "winner": 1,
+      "reason": "cash",
+      "forfeited": [
+        false,
+        false
+      ],
+      "stats": [
+        {
+          "errors": 0,
+          "step_ms_max": 11.7,
+          "total_s": 0.5,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 68.0,
+          "total_s": 1.06,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "final_day": 29
+    },
+    "practice_score": 91.4407205708103
+  },
+  {
+    "opponent": "greedy",
+    "entrant_seat": 0,
+    "wall_s": 2.222965209000904,
+    "game": {
+      "seed": 424242,
+      "cash": [
+        144898.0,
+        4857.0
+      ],
+      "winner": 0,
+      "reason": "cash",
+      "forfeited": [
+        false,
+        false
+      ],
+      "stats": [
+        {
+          "errors": 0,
+          "step_ms_max": 89.4,
+          "total_s": 1.17,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 13.8,
+          "total_s": 0.5,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "final_day": 29
+    },
+    "practice_score": 97.0597080428659
+  },
+  {
+    "opponent": "greedy",
+    "entrant_seat": 1,
+    "wall_s": 2.1068118710009003,
+    "game": {
+      "seed": 424242,
+      "cash": [
+        4857.0,
+        141198.0
+      ],
+      "winner": 1,
+      "reason": "cash",
+      "forfeited": [
+        false,
+        false
+      ],
+      "stats": [
+        {
+          "errors": 0,
+          "step_ms_max": 6.6,
+          "total_s": 0.5,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 93.1,
+          "total_s": 1.11,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "final_day": 29
+    },
+    "practice_score": 96.78426543345006
+  },
+  {
+    "opponent": "greedy",
+    "entrant_seat": 0,
+    "wall_s": 1.8578461749984854,
+    "game": {
+      "seed": 707070,
+      "cash": [
+        130770.0,
+        4766.0
+      ],
+      "winner": 0,
+      "reason": "cash",
+      "forfeited": [
+        false,
+        false
+      ],
+      "stats": [
+        {
+          "errors": 0,
+          "step_ms_max": 55.6,
+          "total_s": 1.0,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 6.9,
+          "total_s": 0.43,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "final_day": 29
+    },
+    "practice_score": 95.87632450120056
+  },
+  {
+    "opponent": "greedy",
+    "entrant_seat": 1,
+    "wall_s": 1.9363795980007126,
+    "game": {
+      "seed": 707070,
+      "cash": [
+        4764.0,
+        128817.0
+      ],
+      "winner": 1,
+      "reason": "cash",
+      "forfeited": [
+        false,
+        false
+      ],
+      "stats": [
+        {
+          "errors": 0,
+          "step_ms_max": 6.7,
+          "total_s": 0.44,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        },
+        {
+          "errors": 0,
+          "step_ms_max": 74.6,
+          "total_s": 1.07,
+          "calls": 719,
+          "overage_used_s": 0.0,
+          "overage_left_s": 60.0,
+          "timeout": false,
+          "timeout_step": -1,
+          "first_error": ""
+        }
+      ],
+      "final_day": 29
+    },
+    "practice_score": 95.67935484760687
+  }
+]

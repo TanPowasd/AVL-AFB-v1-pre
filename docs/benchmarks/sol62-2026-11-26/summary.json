@@ -1,0 +1,116 @@
+{
+  "upstream_commit": "c868c07b2e46abb59ec17ab4987b6f22bd2a5435",
+  "model_requested": "gpt-6.2-sol",
+  "maximum_task_minutes": 12,
+  "actual_total_tokens": null,
+  "billing_receipt": null,
+  "official_leaderboard_score": null,
+  "minimum_effort": {
+    "status_counts": {
+      "AC": 9,
+      "WA": 19,
+      "TLE": 8
+    },
+    "raw_correctness_points": 27.0,
+    "groups": {
+      "1": {
+        "AC": 2
+      },
+      "2": {
+        "AC": 4
+      },
+      "3": {
+        "WA": 19,
+        "AC": 1
+      },
+      "4": {
+        "TLE": 8,
+        "AC": 2
+      }
+    },
+    "source_sha256": "0704af26b9e5846d9b35685cb35fa7380bc3db52aee3e3bb1a3b37b70f8073d6"
+  },
+  "ghost_rabbit": {
+    "summary": {
+      "score": 28.57,
+      "max_score": 100.0,
+      "raw_score": 80.0,
+      "singularity": false,
+      "ac_count": 9,
+      "total_cases": 9,
+      "by_family": {
+        "P1_BasicEscape": {
+          "cases": 3,
+          "ac": 3,
+          "singularity": false,
+          "raw_score": 80.0,
+          "norm_score": 28.57,
+          "avg_turns": 6.0,
+          "avg_traps": 6.0
+        },
+        "P2_PrimeGreedy": {
+          "cases": 3,
+          "ac": 3,
+          "singularity": false,
+          "raw_score": 80.0,
+          "norm_score": 28.57,
+          "avg_turns": 6.0,
+          "avg_traps": 6.0
+        },
+        "P3_LiteBelief": {
+          "cases": 3,
+          "ac": 3,
+          "singularity": false,
+          "raw_score": 80.0,
+          "norm_score": 28.57,
+          "avg_turns": 4.0,
+          "avg_traps": 4.7
+        }
+      },
+      "status": "AC"
+    },
+    "source_sha256": "b99ab8d90b8a053d9c6c4a2e5571ce250a4b70af7e1396f457f57092d0cb3f4a"
+  },
+  "kaggriculture": {
+    "by_opponent": [
+      {
+        "opp": "passive",
+        "score": 95.51344566876678,
+        "w": 6,
+        "d": 0,
+        "l": 0,
+        "mine_cash": 128996.0,
+        "opp_cash": 3000.0,
+        "sec": 12.6,
+        "games": 6
+      },
+      {
+        "opp": "random",
+        "score": 97.70081599664549,
+        "w": 6,
+        "d": 0,
+        "l": 0,
+        "mine_cash": 155939.0,
+        "opp_cash": 1843.1666666666667,
+        "sec": 12.2,
+        "games": 6
+      },
+      {
+        "opp": "greedy",
+        "score": 94.68356156342647,
+        "w": 6,
+        "d": 0,
+        "l": 0,
+        "mine_cash": 123913.0,
+        "opp_cash": 4704.666666666667,
+        "sec": 12.8,
+        "games": 6
+      }
+    ],
+    "games": 18,
+    "technical_forfeits": 0,
+    "source_sha256": "5ada72fca606a9821732566c2039f1b77ab7774a8b02fe345f59b004b149076e",
+    "started_utc": "2026-11-25T16:17:32Z",
+    "ended_utc": "2026-11-25T16:18:09Z"
+  }
+}
